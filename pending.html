@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Pending Requests</title>
 
@@ -56,7 +56,7 @@ body{
     padding:22px;
     border-radius:18px;
     box-shadow:0 5px 25px rgba(0,0,0,.08);
-    margin-bottom:18px;
+    margin-bottom:15px;
 }
 
 .title{
@@ -69,30 +69,39 @@ body{
     color:#666;
     font-size:14px;
     line-height:1.5;
+    margin-bottom:18px;
+}
+
+.user-box{
+    background:#f4f5f7;
+    padding:12px;
+    border-radius:10px;
+    font-size:13px;
+    word-break:break-all;
 }
 
 .request{
-    border:1px solid #e1e1e1;
-    border-radius:14px;
-    padding:16px;
-    margin-top:14px;
+    border:1px solid #ddd;
+    border-radius:13px;
+    padding:15px;
+    margin-top:12px;
 }
 
-.username{
-    font-size:17px;
+.email{
     font-weight:bold;
 }
 
-.info{
+.uid{
     color:#777;
-    font-size:13px;
-    margin-top:6px;
+    font-size:12px;
+    margin-top:5px;
+    word-break:break-all;
 }
 
 .buttons{
     display:flex;
     gap:10px;
-    margin-top:15px;
+    margin-top:13px;
 }
 
 .btn{
@@ -100,7 +109,7 @@ body{
     padding:12px;
     border:0;
     border-radius:10px;
-    font-size:14px;
+    cursor:pointer;
 }
 
 .confirm{
@@ -110,17 +119,12 @@ body{
 
 .reject{
     background:#eee;
-    color:#111;
 }
 
-.message{
+.empty{
     text-align:center;
     color:#777;
-    padding:25px 5px;
-}
-
-.error{
-    color:#b42318;
+    padding:20px;
 }
 
 </style>
@@ -137,7 +141,7 @@ body{
 
     <button
         class="logout"
-        onclick="logout()"
+        onclick="logoutUser()"
     >
         Logout
     </button>
@@ -147,38 +151,47 @@ body{
 
 <div class="container">
 
-<div class="card">
+    <div class="card">
 
-    <div class="title">
-        Pending Requests
+        <div class="title">
+            Pending Requests
+        </div>
+
+        <div class="subtitle">
+            Requests sent to your Account Connect account.
+        </div>
+
+        <div
+            id="userBox"
+            class="user-box"
+        >
+            Loading...
+        </div>
+
     </div>
 
-    <div class="subtitle">
-        Requests sent to your account will appear
-        here.
+
+    <div
+        class="card"
+        id="requestList"
+    >
+
+        <div class="empty">
+            Loading requests...
+        </div>
+
     </div>
-
-</div>
-
-
-<div
-    class="card"
-    id="requestContainer"
->
-
-    <div class="message">
-        Loading requests...
-    </div>
-
-</div>
 
 </div>
 
 
 <script type="module">
 
-import { initializeApp }
+import {
+    initializeApp
+}
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
 
 import {
     getAuth,
@@ -186,6 +199,7 @@ import {
     signOut
 }
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
 
 import {
     getDatabase,
@@ -247,11 +261,21 @@ onAuthStateChanged(
                 "login.html";
 
             return;
-
         }
 
 
         currentUser = user;
+
+
+        document
+            .getElementById("userBox")
+            .innerHTML =
+                "<b>Email:</b> " +
+                user.email +
+                "<br><br>" +
+                "<b>Your UID:</b><br>" +
+                user.uid;
+
 
         loadRequests();
 
@@ -261,9 +285,9 @@ onAuthStateChanged(
 
 function loadRequests(){
 
-    const container =
+    const list =
         document.getElementById(
-            "requestContainer"
+            "requestList"
         );
 
 
@@ -282,59 +306,51 @@ function loadRequests(){
                 snapshot.val() || {};
 
 
-            container.innerHTML = "";
+            list.innerHTML = "";
 
 
             let found = false;
 
 
             Object.entries(data)
-            .forEach(
-                function([id,request]){
+                .forEach(
+                    function([
+                        id,
+                        request
+                    ]){
 
+                        if(
+                            request.receiverUid ===
+                            currentUser.uid
+                            &&
+                            request.status ===
+                            "pending"
+                        ){
 
-                    if(
-                        request.targetUid ===
-                        currentUser.uid
-                        &&
-                        request.status ===
-                        "pending"
-                    ){
+                            found = true;
 
-                        found = true;
+                            showRequest(
+                                id,
+                                request,
+                                list
+                            );
 
-                        createRequestBox(
-                            id,
-                            request,
-                            container
-                        );
+                        }
 
                     }
-
-                }
-            );
+                );
 
 
             if(!found){
 
-                container.innerHTML = `
-                    <div class="message">
+                list.innerHTML =
+                    `
+                    <div class="empty">
                         No pending requests.
                     </div>
-                `;
+                    `;
 
             }
-
-        },
-        function(error){
-
-            console.error(error);
-
-            container.innerHTML = `
-                <div class="message error">
-                    Could not load requests.
-                </div>
-            `;
 
         }
     );
@@ -342,10 +358,10 @@ function loadRequests(){
 }
 
 
-function createRequestBox(
+function showRequest(
     id,
     request,
-    container
+    list
 ){
 
     const box =
@@ -355,24 +371,26 @@ function createRequestBox(
         "request";
 
 
-    const username =
+    const email =
         document.createElement("div");
 
-    username.className =
-        "username";
+    email.className =
+        "email";
 
-    username.textContent =
-        "@" + request.username;
+    email.textContent =
+        "Request from: " +
+        request.senderEmail;
 
 
-    const info =
+    const uid =
         document.createElement("div");
 
-    info.className =
-        "info";
+    uid.className =
+        "uid";
 
-    info.textContent =
-        "Someone wants to connect this account.";
+    uid.textContent =
+        "Sender UID: " +
+        request.senderUid;
 
 
     const buttons =
@@ -425,13 +443,18 @@ function createRequestBox(
 
 
     buttons.appendChild(confirm);
+
     buttons.appendChild(reject);
 
-    box.appendChild(username);
-    box.appendChild(info);
+
+    box.appendChild(email);
+
+    box.appendChild(uid);
+
     box.appendChild(buttons);
 
-    container.appendChild(box);
+
+    list.appendChild(box);
 
 }
 
@@ -447,7 +470,8 @@ async function changeStatus(
 
             ref(
                 db,
-                "accountRequests/" + id
+                "accountRequests/" +
+                id
             ),
 
             {
@@ -457,13 +481,12 @@ async function changeStatus(
 
                 confirmedAt:
                     status === "confirmed"
-                    ? new Date().toISOString()
-                    : null
+                        ? new Date().toISOString()
+                        : null
 
             }
 
         );
-
 
     }
     catch(error){
@@ -471,7 +494,7 @@ async function changeStatus(
         console.error(error);
 
         alert(
-            "Request update झाली नाही."
+            "Something went wrong."
         );
 
     }
@@ -479,7 +502,7 @@ async function changeStatus(
 }
 
 
-window.logout =
+window.logoutUser =
 async function(){
 
     await signOut(auth);
