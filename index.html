@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="mr">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Family Tracker</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-family: Arial, sans-serif;
+
+      background: linear-gradient(
+        135deg,
+        #111827,
+        #1e3a8a
+      );
+
+      color: white;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 400px;
+
+      text-align: center;
+
+      padding: 30px;
+
+      background: rgba(255,255,255,0.08);
+
+      border-radius: 20px;
+
+      backdrop-filter: blur(10px);
+
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #d1d5db;
+      margin-bottom: 30px;
+    }
+
+    .role-button {
+
+      width: 100%;
+
+      padding: 18px;
+
+      margin: 10px 0;
+
+      border: none;
+
+      border-radius: 14px;
+
+      font-size: 18px;
+
+      font-weight: bold;
+
+      color: white;
+
+      cursor: pointer;
+
+      background: #2563eb;
+
+      transition: 0.2s;
+    }
+
+    .role-button:hover {
+      transform: scale(1.02);
+      background: #1d4ed8;
+    }
+
+    .child {
+      background: #16a34a;
+    }
+
+    .child:hover {
+      background: #15803d;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>📱 Family Tracker</h1>
+
+    <p>
+      Select your role
+    </p>
+
+    <button
+      class="role-button"
+      onclick="openParent()">
+
+      👨‍👩‍👧 Parent
+
+    </button>
+
+    <button
+      class="role-button child"
+      onclick="openChild()">
+
+      👦 Child
+
+    </button>
+
+  </div>
+
+
+  <script>
+
+    function openParent() {
+
+      window.location.href = "parent.html";
+
+    }
+
+
+    function openChild() {
+
+      window.location.href = "child.html";
+
+    }
+
+  </script>
+
+</body>
+
+</html>
