@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sign Up - Account Connect</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f5f7;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#111;
+}
+
+.card{
+    width:92%;
+    max-width:400px;
+    background:white;
+    padding:28px;
+    border-radius:20px;
+    box-shadow:0 5px 25px rgba(0,0,0,.08);
+}
+
+.logo{
+    text-align:center;
+    font-size:26px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+.input{
+    width:100%;
+    padding:14px;
+    margin-top:10px;
+    border:1px solid #ddd;
+    border-radius:11px;
+    font-size:16px;
+    outline:none;
+}
+
+.btn{
+    width:100%;
+    padding:14px;
+    margin-top:15px;
+    border:0;
+    border-radius:11px;
+    background:#111;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.login-btn{
+    background:#eee;
+    color:#111;
+}
+
+.message{
+    display:none;
+    margin-top:15px;
+    padding:12px;
+    border-radius:10px;
+    font-size:14px;
+}
+
+.error{
+    display:block;
+    background:#fff0f0;
+    color:#b42318;
+}
+
+.success{
+    display:block;
+    background:#e9f8ee;
+    color:#16733a;
+}
+
+.uid-box{
+    display:none;
+    margin-top:15px;
+    padding:12px;
+    background:#f4f5f7;
+    border-radius:10px;
+    font-size:12px;
+    word-break:break-all;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="logo">
+        Account Connect
+    </div>
+
+    <div class="subtitle">
+        Create your own account.
+    </div>
+
+    <input
+        id="email"
+        class="input"
+        type="email"
+        placeholder="Enter email"
+        autocomplete="email"
+    >
+
+    <input
+        id="password"
+        class="input"
+        type="password"
+        placeholder="Create password"
+        autocomplete="new-password"
+    >
+
+    <input
+        id="confirmPassword"
+        class="input"
+        type="password"
+        placeholder="Confirm password"
+        autocomplete="new-password"
+    >
+
+    <button
+        class="btn"
+        onclick="signupUser()"
+    >
+        Sign Up
+    </button>
+
+    <button
+        class="btn login-btn"
+        onclick="location.href='login.html'"
+    >
+        Already have an account? Login
+    </button>
+
+    <div id="message" class="message"></div>
+
+    <div id="uidBox" class="uid-box"></div>
+
+</div>
+
+
+<script type="module">
+
+import {
+    initializeApp
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {
+    getAuth,
+    createUserWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDul4AsRqtVgXlaN-7ery3ElF-ycONE0Tw",
+
+    authDomain:
+        "family-connect-65de6.firebaseapp.com",
+
+    databaseURL:
+        "https://family-connect-65de6-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+    projectId:
+        "family-connect-65de6",
+
+    storageBucket:
+        "family-connect-65de6.firebasestorage.app",
+
+    messagingSenderId:
+        "819152591874",
+
+    appId:
+        "1:819152591874:web:3214a0348da687f9351b1b",
+
+    measurementId:
+        "G-2WN5DF6TPL"
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+
+window.signupUser = async function(){
+
+    const email =
+        document.getElementById("email")
+        .value.trim();
+
+    const password =
+        document.getElementById("password")
+        .value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword")
+        .value;
+
+    const message =
+        document.getElementById("message");
+
+    const uidBox =
+        document.getElementById("uidBox");
+
+
+    message.className = "message";
+
+    uidBox.style.display = "none";
+
+
+    if(email === "" ||
+       password === "" ||
+       confirmPassword === ""){
+
+        message.textContent =
+            "सर्व fields भरा.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+
+    if(password !== confirmPassword){
+
+        message.textContent =
+            "दोन्ही passwords सारखे असणे आवश्यक आहे.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+
+    if(password.length < 6){
+
+        message.textContent =
+            "Password कमीत कमी 6 characters चा असावा.";
+
+        message.classList.add("error");
+
+        return;
+    }
+
+
+    try{
+
+        const result =
+            await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+
+        message.textContent =
+            "Account तयार झाला!";
+
+        message.classList.add("success");
+
+
+        uidBox.innerHTML =
+            "<b>Your Firebase UID:</b><br>" +
+            result.user.uid;
+
+        uidBox.style.display =
+            "block";
+
+
+        setTimeout(function(){
+
+            location.href =
+                "account-connect.html";
+
+        },1500);
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        let msg =
+            "Account तयार करता आला नाही.";
+
+        if(error.code ===
+           "auth/email-already-in-use"){
+
+            msg =
+                "हा email आधीपासून वापरला आहे.";
+
+        }
+
+        if(error.code ===
+           "auth/invalid-email"){
+
+            msg =
+                "Email चुकीचा आहे.";
+
+        }
+
+        message.textContent =
+            msg;
+
+        message.classList.add("error");
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
