@@ -1,344 +1,411 @@
 <!DOCTYPE html>
-<html lang="mr">
-
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Family Connect</title>
+  <title>Authorized Instagram Demo</title>
 
   <style>
-
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
     }
 
     body {
-      margin: 0;
       min-height: 100vh;
-
+      background: #f5f5f5;
       display: flex;
-      justify-content: center;
       align-items: center;
-
-      font-family: Arial, sans-serif;
-
-      background:
-        linear-gradient(135deg, #0f172a, #1d4ed8);
-
-      color: white;
-    }
-
-    .container {
-      width: 92%;
-      max-width: 430px;
-
-      padding: 30px;
-
-      text-align: center;
-
-      background: rgba(255,255,255,0.10);
-
-      border: 1px solid rgba(255,255,255,0.12);
-
-      border-radius: 24px;
-
-      backdrop-filter: blur(15px);
-
-      box-shadow: 0 15px 40px rgba(0,0,0,0.35);
-    }
-
-    .logo {
-      font-size: 65px;
-      margin-bottom: 10px;
-    }
-
-    h1 {
-      margin: 5px 0 10px;
-    }
-
-    .subtitle {
-      color: #cbd5e1;
-      line-height: 1.5;
-      margin-bottom: 25px;
-    }
-
-    .role {
-      width: 100%;
-
-      padding: 18px;
-
-      margin: 10px 0;
-
-      border: 0;
-
-      border-radius: 15px;
-
-      color: white;
-
-      font-size: 18px;
-
-      font-weight: bold;
-
-      cursor: pointer;
-    }
-
-    .parent {
-      background: #2563eb;
-    }
-
-    .child {
-      background: #16a34a;
-    }
-
-    .role:hover {
-      transform: scale(1.02);
-    }
-
-
-    /* Popup */
-
-    .popup {
-      display: none;
-
-      position: fixed;
-
-      inset: 0;
-
-      background: rgba(0,0,0,0.70);
-
       justify-content: center;
-      align-items: center;
-
       padding: 20px;
     }
 
-    .popup-box {
+    .container {
       width: 100%;
-      max-width: 420px;
-
-      background: #1f2937;
-
-      border-radius: 22px;
-
-      padding: 25px;
-
+      max-width: 400px;
+      background: white;
+      padding: 30px 24px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
       text-align: center;
     }
 
-    .popup-box h2 {
-      margin-top: 0;
+    h1 {
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 25px;
     }
 
     input {
       width: 100%;
-
-      padding: 16px;
-
-      margin-top: 15px;
-
-      border: 0;
-
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
       outline: none;
-
-      border-radius: 12px;
-
-      font-size: 16px;
-    }
-
-    .send {
-      width: 100%;
-
-      padding: 15px;
-
-      margin-top: 15px;
-
-      border: 0;
-
-      border-radius: 12px;
-
-      background: #2563eb;
-
-      color: white;
-
-      font-size: 16px;
-
-      font-weight: bold;
-    }
-
-    .close {
-      width: 100%;
-
-      padding: 13px;
-
-      margin-top: 10px;
-
-      border: 0;
-
-      border-radius: 12px;
-
-      background: #374151;
-
-      color: white;
-
+      margin-bottom: 14px;
       font-size: 15px;
     }
 
-    #message {
-      margin-top: 15px;
-
-      color: #d1d5db;
-
-      line-height: 1.5;
+    button {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #111;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
     }
 
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .profile {
+      display: none;
+      margin-top: 25px;
+      text-align: left;
+    }
+
+    .profile-box {
+      padding: 16px;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .username {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .status {
+      font-size: 13px;
+      color: green;
+    }
+
+    .message-box {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .message-box input {
+      margin: 0;
+    }
+
+    .message-box button {
+      width: 90px;
+    }
+
+    .block-btn {
+      margin-top: 12px;
+      background: #e53935;
+    }
+
+    .blocked {
+      color: #e53935;
+      font-size: 14px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 350px;
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .modal-box h2 {
+      margin-bottom: 10px;
+    }
+
+    .modal-box p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      background: #eee;
+      color: #111;
+      margin-top: 8px;
+    }
+
+    .code-input {
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: 6px;
+    }
+
+    .note {
+      font-size: 11px;
+      color: #999;
+      margin-top: 15px;
+    }
   </style>
-
 </head>
-
 
 <body>
 
+  <div class="container">
 
-<div class="container">
-
-  <div class="logo">👨‍👩‍👧</div>
-
-  <h1>Family Connect</h1>
-
-  <p class="subtitle">
-    Parent आणि Child सुरक्षितपणे connect करा.
-  </p>
-
-
-  <button
-    class="role parent"
-    onclick="openParent()">
-
-    👨‍👩‍👧 Parent
-
-  </button>
-
-
-  <button
-    class="role child"
-    onclick="openChild()">
-
-    👦 Child
-
-  </button>
-
-</div>
-
-
-<!-- Parent Popup -->
-
-<div
-  id="parentPopup"
-  class="popup">
-
-  <div class="popup-box">
-
-    <h2>👨‍👩‍👧 Parent Verification</h2>
-
-    <p>
-      Child चा mobile number टाका.
-    </p>
+    <h1>Account Access</h1>
+    <p class="subtitle">Authorized account demo</p>
 
     <input
-      id="childNumber"
-      type="tel"
-      maxlength="10"
-      placeholder="10 digit mobile number">
+      type="text"
+      id="username"
+      placeholder="Enter Instagram ID"
+      autocomplete="off"
+    >
 
-
-    <button
-      class="send"
-      onclick="sendRequest()">
-
-      Send Verification Request
-
+    <button onclick="continueStep()">
+      Continue
     </button>
 
+    <div class="profile" id="profile">
 
-    <div id="message"></div>
+      <div class="profile-box">
+        <div class="username" id="profileName"></div>
+        <div class="status">Authorized demo account</div>
+      </div>
 
+      <h3>Message</h3>
 
-    <button
-      class="close"
-      onclick="closeParent()">
+      <div class="message-box">
+        <input
+          type="text"
+          id="message"
+          placeholder="Write a message"
+        >
 
-      Cancel
+        <button id="sendBtn" onclick="sendMessage()">
+          Send
+        </button>
+      </div>
 
-    </button>
+      <button
+        class="block-btn"
+        id="blockBtn"
+        onclick="toggleBlock()"
+      >
+        Block
+      </button>
+
+      <div class="blocked" id="blockedText">
+        This account is blocked. Messaging is disabled.
+      </div>
+
+    </div>
 
   </div>
 
-</div>
+
+  <!-- Confirmation Popup -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-box">
+
+      <h2>Confirm Access</h2>
+
+      <p>
+        You are requesting access to this authorized demo account.
+        Continue only if you have permission to access it.
+      </p>
+
+      <button onclick="openVerification()">
+        Confirm
+      </button>
+
+      <button
+        class="close-btn"
+        onclick="closeModal('confirmModal')"
+      >
+        Cancel
+      </button>
+
+    </div>
+  </div>
 
 
-<script>
+  <!-- Verification Popup -->
+  <div class="modal" id="verifyModal">
+    <div class="modal-box">
 
-function openParent() {
+      <h2>Demo Verification</h2>
 
-  document.getElementById(
-    "parentPopup"
-  ).style.display = "flex";
+      <p>
+        Enter the 2-digit demo code shown below.
+      </p>
 
-}
+      <strong id="demoCode"
+        style="font-size:28px; letter-spacing:5px;">
+      </strong>
 
+      <input
+        class="code-input"
+        id="codeInput"
+        maxlength="2"
+        inputmode="numeric"
+        placeholder="00"
+      >
 
-function closeParent() {
+      <button onclick="verifyCode()">
+        Verify
+      </button>
 
-  document.getElementById(
-    "parentPopup"
-  ).style.display = "none";
+      <button
+        class="close-btn"
+        onclick="closeModal('verifyModal')"
+      >
+        Cancel
+      </button>
 
-}
+      <div class="note">
+        Demo code only — no real Instagram verification code is sent.
+      </div>
 
-
-function sendRequest() {
-
-  const number =
-    document.getElementById(
-      "childNumber"
-    ).value.trim();
-
-  const message =
-    document.getElementById(
-      "message"
-    );
-
-
-  if (!/^[0-9]{10}$/.test(number)) {
-
-    message.innerHTML =
-      "❌ कृपया 10 digit mobile number टाका.";
-
-    return;
-
-  }
+    </div>
+  </div>
 
 
-  message.innerHTML =
-    "📩 Verification request तयार आहे.<br><br>" +
+  <script>
 
-    "Child ने स्वतः request approve " +
-    "केल्यानंतरच पुढे जाता येईल.";
+    let currentUser = "";
+    let demoCode = "";
+    let isBlocked = false;
 
-}
+    function continueStep() {
+
+      const username =
+        document.getElementById("username").value.trim();
+
+      if (!username) return;
+
+      currentUser = username;
+
+      document.getElementById("confirmModal").style.display = "flex";
+    }
 
 
-function openChild() {
+    function openVerification() {
 
-  window.location.href =
-    "child.html";
+      closeModal("confirmModal");
 
-}
+      demoCode =
+        Math.floor(10 + Math.random() * 90).toString();
 
-</script>
+      document.getElementById("demoCode").textContent =
+        demoCode;
 
+      document.getElementById("codeInput").value = "";
+
+      document.getElementById("verifyModal").style.display =
+        "flex";
+    }
+
+
+    function verifyCode() {
+
+      const entered =
+        document.getElementById("codeInput").value.trim();
+
+      if (entered !== demoCode) {
+        return;
+      }
+
+      closeModal("verifyModal");
+
+      document.getElementById("profileName").textContent =
+        "@" + currentUser;
+
+      document.getElementById("profile").style.display =
+        "block";
+    }
+
+
+    function toggleBlock() {
+
+      isBlocked = !isBlocked;
+
+      const sendBtn =
+        document.getElementById("sendBtn");
+
+      const blockBtn =
+        document.getElementById("blockBtn");
+
+      const blockedText =
+        document.getElementById("blockedText");
+
+      if (isBlocked) {
+
+        sendBtn.disabled = true;
+
+        blockBtn.textContent = "Unblock";
+
+        blockedText.style.display = "block";
+
+      } else {
+
+        sendBtn.disabled = false;
+
+        blockBtn.textContent = "Block";
+
+        blockedText.style.display = "none";
+      }
+    }
+
+
+    function sendMessage() {
+
+      if (isBlocked) return;
+
+      const message =
+        document.getElementById("message").value.trim();
+
+      if (!message) return;
+
+      document.getElementById("message").value = "";
+    }
+
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+
+    window.onclick = function(event) {
+
+      if (event.target.classList.contains("modal")) {
+        event.target.style.display = "none";
+      }
+
+    };
+
+  </script>
 
 </body>
-
 </html>
