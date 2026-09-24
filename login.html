@@ -2,94 +2,151 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - Account Connect</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Account Connect - Login</title>
 
 <style>
-body{
+*{
+    box-sizing:border-box;
     margin:0;
-    background:#f4f5f7;
+    padding:0;
     font-family:Arial,sans-serif;
 }
 
-.box{
-    width:90%;
-    max-width:400px;
-    margin:80px auto;
+body{
+    background:#f4f5f7;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#111;
+}
+
+.card{
+    width:92%;
+    max-width:420px;
     background:white;
     padding:25px;
     border-radius:18px;
     box-shadow:0 5px 25px rgba(0,0,0,.08);
 }
 
-h2{
-    margin-bottom:20px;
+.logo{
+    font-size:25px;
+    font-weight:bold;
+    margin-bottom:8px;
 }
 
-input{
+.subtitle{
+    color:#666;
+    font-size:14px;
+    line-height:1.5;
+    margin-bottom:22px;
+}
+
+.input{
     width:100%;
     padding:14px;
-    margin-bottom:12px;
     border:1px solid #ddd;
-    border-radius:10px;
-    box-sizing:border-box;
+    border-radius:11px;
     font-size:16px;
+    margin-top:10px;
+    outline:none;
+}
+
+.input:focus{
+    border-color:#111;
 }
 
 button{
     width:100%;
     padding:14px;
     border:0;
-    border-radius:10px;
+    border-radius:11px;
     background:#111;
     color:white;
     font-size:16px;
+    margin-top:14px;
+    cursor:pointer;
 }
 
-#message{
+.message{
+    display:none;
     margin-top:15px;
+    padding:13px;
+    border-radius:10px;
+    font-size:14px;
+}
+
+.error{
+    background:#fff0f0;
     color:#b42318;
+}
+
+.success{
+    background:#e9f8ee;
+    color:#16733a;
+}
+
+.link{
+    text-align:center;
+    margin-top:18px;
+    color:#555;
+    font-size:14px;
+}
+
+.link a{
+    color:#111;
+    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="card">
 
-    <h2>Account Connect Login</h2>
+    <div class="logo">
+        Account Connect
+    </div>
+
+    <div class="subtitle">
+        Login to continue.
+    </div>
 
     <input
         id="email"
+        class="input"
         type="email"
         placeholder="Email"
+        autocomplete="email"
     >
 
     <input
         id="password"
+        class="input"
         type="password"
         placeholder="Password"
+        autocomplete="current-password"
     >
 
     <button onclick="login()">
         Login
     </button>
 
-    <div id="message"></div>
+    <div id="message" class="message"></div>
 
 </div>
 
-
 <script type="module">
 
-import {
-    initializeApp
-}
+import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
 import {
     getAuth,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    onAuthStateChanged
 }
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
@@ -122,39 +179,47 @@ const firebaseConfig = {
 };
 
 
-const app =
-    initializeApp(firebaseConfig);
-
-const auth =
-    getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 
-window.login =
-async function(){
+onAuthStateChanged(auth,function(user){
+
+    if(user){
+
+        location.href = "index.html";
+
+    }
+
+});
+
+
+window.login = async function(){
 
     const email =
-        document.getElementById(
-            "email"
-        ).value.trim();
+        document.getElementById("email")
+        .value
+        .trim();
 
     const password =
-        document.getElementById(
-            "password"
-        ).value;
+        document.getElementById("password")
+        .value;
 
     const message =
-        document.getElementById(
-            "message"
-        );
+        document.getElementById("message");
 
 
-    if(
-        email === "" ||
-        password === ""
-    ){
+    message.className = "message";
+    message.style.display = "none";
+
+
+    if(!email || !password){
 
         message.textContent =
-            "Email and password required.";
+            "Email आणि password भरा.";
+
+        message.classList.add("error");
+        message.style.display = "block";
 
         return;
     }
@@ -168,9 +233,19 @@ async function(){
             password
         );
 
+        message.textContent =
+            "Login successful.";
 
-        window.location.href =
-            "pending.html";
+        message.classList.add("success");
+        message.style.display = "block";
+
+
+        setTimeout(function(){
+
+            location.href = "index.html";
+
+        },500);
+
 
     }
     catch(error){
@@ -178,7 +253,10 @@ async function(){
         console.error(error);
 
         message.textContent =
-            "Login failed. Check email and password.";
+            "Login failed. Email किंवा password तपासा.";
+
+        message.classList.add("error");
+        message.style.display = "block";
 
     }
 
