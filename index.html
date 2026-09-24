@@ -237,6 +237,8 @@ body{
 
 <body>
 
+<!-- TOP BAR -->
+
 <div class="topbar">
 
     <div class="logo">
@@ -252,6 +254,8 @@ body{
 
 </div>
 
+
+<!-- MAIN -->
 
 <div class="container">
 
@@ -385,7 +389,7 @@ body{
 </div>
 
 
-<!-- CONFIRMED ACCOUNTS -->
+<!-- CONFIRMED ACCOUNTS POPUP -->
 
 <div
     class="overlay"
@@ -436,25 +440,29 @@ from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
 const firebaseConfig = {
 
-    apiKey: "YOUR_API_KEY",
+    apiKey:
+        "AIzaSyDul4AsRqtVgXlaN-7ery3ElF-ycONE0Tw",
 
     authDomain:
-        "YOUR_PROJECT_ID.firebaseapp.com",
+        "family-connect-65de6.firebaseapp.com",
 
     databaseURL:
-        "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+        "https://family-connect-65de6-default-rtdb.asia-southeast1.firebasedatabase.app",
 
     projectId:
-        "YOUR_PROJECT_ID",
+        "family-connect-65de6",
 
     storageBucket:
-        "YOUR_PROJECT_ID.firebasestorage.app",
+        "family-connect-65de6.firebasestorage.app",
 
     messagingSenderId:
-        "YOUR_MESSAGING_SENDER_ID",
+        "819152591874",
 
     appId:
-        "YOUR_APP_ID"
+        "1:819152591874:web:3214a0348da687f9351b1b",
+
+    measurementId:
+        "G-2WN5DF6TPL"
 
 };
 
@@ -480,12 +488,11 @@ let currentRequestId = null;
 
 
 /* =====================================
-   LOAD REQUESTS FROM FIREBASE
+   LOAD REQUESTS
 ===================================== */
 
 const requestsRef =
     ref(db, "accountRequests");
-
 
 onValue(
     requestsRef,
@@ -528,7 +535,6 @@ async function(){
             "createStatus"
         );
 
-
     status.className =
         "status";
 
@@ -547,11 +553,6 @@ async function(){
 
 
     try{
-
-        /*
-          Firebase automatically
-          creates a unique ID.
-        */
 
         const newRequestRef =
             push(
@@ -612,7 +613,6 @@ async function(){
             )
             .textContent =
                 "@" + username;
-
 
     }
     catch(error){
@@ -852,9 +852,7 @@ function(){
         );
 
 
-    if(
-        confirmed.length === 0
-    ){
+    if(confirmed.length === 0){
 
         list.innerHTML =
             '<div class="empty">' +
