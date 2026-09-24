@@ -3,9 +3,9 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Account Request</title>
+<title>Account Connect</title>
 
 <style>
 
@@ -30,9 +30,6 @@ body{
     justify-content:space-between;
     padding:0 18px;
     box-shadow:0 1px 8px rgba(0,0,0,.08);
-    position:sticky;
-    top:0;
-    z-index:10;
 }
 
 .logo{
@@ -40,14 +37,12 @@ body{
     font-weight:bold;
 }
 
-.confirmed-btn{
+.logout{
     border:0;
     background:#111;
     color:white;
     padding:10px 14px;
     border-radius:10px;
-    cursor:pointer;
-    font-size:14px;
 }
 
 .container{
@@ -83,13 +78,14 @@ body{
     border-radius:11px;
     outline:none;
     font-size:16px;
+    margin-top:10px;
 }
 
 .input:focus{
     border-color:#111;
 }
 
-.send-btn{
+button{
     width:100%;
     margin-top:14px;
     padding:14px;
@@ -98,11 +94,21 @@ body{
     background:#111;
     color:white;
     font-size:16px;
-    cursor:pointer;
 }
 
-.send-btn:active{
-    transform:scale(.98);
+.pending{
+    background:#fff7df;
+    color:#8a6100;
+}
+
+.success{
+    background:#e9f8ee;
+    color:#16733a;
+}
+
+.error{
+    background:#fff0f0;
+    color:#b42318;
 }
 
 .status{
@@ -114,129 +120,11 @@ body{
     line-height:1.5;
 }
 
-.status.success{
-    display:block;
-    background:#e9f8ee;
-    color:#16733a;
-}
-
-.status.error{
-    display:block;
-    background:#fff0f0;
-    color:#b42318;
-}
-
-.sent-card{
-    display:none;
-    text-align:center;
-}
-
-.request-icon{
-    width:65px;
-    height:65px;
-    border-radius:50%;
-    background:#eee;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:28px;
-    margin:0 auto 18px;
-}
-
-.username{
-    font-weight:bold;
-}
-
-.back-btn{
-    width:100%;
-    padding:14px;
-    border:0;
-    border-radius:11px;
-    background:#111;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    margin-top:10px;
-}
-
-.overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:100;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.popup{
-    width:100%;
-    max-width:380px;
-    background:white;
-    border-radius:20px;
-    padding:24px;
-    max-height:80vh;
-    overflow:auto;
-}
-
-.popup-title{
-    font-size:21px;
-    font-weight:bold;
-    margin-bottom:18px;
-}
-
-.close-btn{
-    width:100%;
-    padding:13px;
-    border:0;
-    border-radius:10px;
-    background:#eee;
-    margin-top:18px;
-    cursor:pointer;
-}
-
-.account{
-    border:1px solid #e1e1e1;
-    border-radius:13px;
-    padding:14px;
-    margin-bottom:10px;
-}
-
-.account-name{
-    font-weight:bold;
-}
-
-.account-status{
-    color:#16883b;
-    font-size:13px;
-    margin-top:4px;
-}
-
-.empty{
-    text-align:center;
-    color:#777;
-    padding:25px 5px;
-}
-
-.user-info{
-    background:#f4f5f7;
-    padding:12px;
-    border-radius:10px;
-    margin-bottom:18px;
-    font-size:13px;
-    color:#555;
-    word-break:break-all;
-}
-
 </style>
 
 </head>
 
 <body>
-
-
-<!-- TOP BAR -->
 
 <div class="topbar">
 
@@ -245,179 +133,88 @@ body{
     </div>
 
     <button
-        class="confirmed-btn"
-        onclick="openConfirmed()"
+        style="width:auto;margin:0"
+        onclick="logout()"
     >
-        Confirmed Accounts
+        Logout
     </button>
 
 </div>
 
 
-<!-- MAIN -->
-
 <div class="container">
 
+<div class="card">
 
-    <!-- CREATE REQUEST -->
+    <div class="title">
+        Request Access
+    </div>
 
-    <div
-        class="card"
-        id="createCard"
-    >
-
-        <div class="title">
-            Request Access
-        </div>
-
-        <div class="subtitle">
-            Enter the account username to create a
-            connection request.
-        </div>
-
-
-        <div
-            class="user-info"
-            id="userInfo"
-        >
-            Checking login...
-        </div>
-
-
-        <input
-            id="usernameInput"
-            class="input"
-            type="text"
-            placeholder="Enter Instagram username"
-            autocomplete="off"
-        >
-
-
-        <button
-            class="send-btn"
-            onclick="createRequest()"
-        >
-            Send Request
-        </button>
-
-
-        <div
-            id="createStatus"
-            class="status"
-        ></div>
-
+    <div class="subtitle">
+        Send a connection request to another
+        Account Connect user.
     </div>
 
 
-    <!-- REQUEST SENT -->
-
-    <div
-        class="card sent-card"
-        id="sentCard"
+    <input
+        id="targetUid"
+        class="input"
+        type="text"
+        placeholder="Enter User B Firebase UID"
     >
 
-        <div class="request-icon">
-            ✓
-        </div>
 
-        <div class="title">
-            Request Sent
-        </div>
-
-        <div class="subtitle">
-
-            Your connection request for
-
-            <span
-                id="requestUsername"
-                class="username"
-            ></span>
-
-            has been sent to the account owner.
-
-            <br><br>
-
-            The account owner must open their
-            Account Connect account and confirm
-            the request.
-
-        </div>
+    <input
+        id="username"
+        class="input"
+        type="text"
+        placeholder="Enter account username"
+    >
 
 
-        <button
-            class="back-btn"
-            onclick="newRequest()"
-        >
-            Create New Request
-        </button>
+    <button onclick="sendRequest()">
+        Send Request
+    </button>
 
-    </div>
+
+    <button
+        onclick="location.href='pending.html'"
+        style="background:#eee;color:#111"
+    >
+        View My Requests
+    </button>
+
+
+    <div
+        id="status"
+        class="status"
+    ></div>
 
 </div>
 
-
-<!-- CONFIRMED ACCOUNTS POPUP -->
-
-<div
-    class="overlay"
-    id="confirmedOverlay"
->
-
-    <div class="popup">
-
-        <div class="popup-title">
-            Confirmed Accounts
-        </div>
-
-        <div id="accountList"></div>
-
-        <button
-            class="close-btn"
-            onclick="closeConfirmed()"
-        >
-            Close
-        </button>
-
-    </div>
-
 </div>
 
-
-<!-- FIREBASE -->
 
 <script type="module">
 
-
-/* =====================================
-   FIREBASE IMPORT
-===================================== */
-
-import {
-    initializeApp
-}
+import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-
 
 import {
     getAuth,
-    onAuthStateChanged
+    onAuthStateChanged,
+    signOut
 }
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
 
 import {
     getDatabase,
     ref,
     push,
-    set,
-    onValue
+    set
 }
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
-
-/* =====================================
-   FIREBASE CONFIG
-===================================== */
 
 const firebaseConfig = {
 
@@ -444,179 +241,100 @@ const firebaseConfig = {
 
     measurementId:
         "G-2WN5DF6TPL"
-
 };
 
 
-/* =====================================
-   START FIREBASE
-===================================== */
+const app = initializeApp(firebaseConfig);
 
-const app =
-    initializeApp(
-        firebaseConfig
-    );
+const auth = getAuth(app);
+
+const db = getDatabase(app);
 
 
-const auth =
-    getAuth(app);
+let currentUser = null;
 
 
-const db =
-    getDatabase(app);
+onAuthStateChanged(auth,function(user){
 
+    if(!user){
 
-/* =====================================
-   USER B UID
-=====================================
-
-   This is the Firebase UID of User B.
-
-===================================== */
-
-const USER_B_UID =
-    "O8jz1r1oHrMMTpqrdQLAsEKuEKL2";
-
-
-/* =====================================
-   VARIABLES
-===================================== */
-
-let currentUser =
-    null;
-
-
-/* =====================================
-   CHECK LOGIN
-===================================== */
-
-onAuthStateChanged(
-    auth,
-    function(user){
-
-        const userInfo =
-            document.getElementById(
-                "userInfo"
-            );
-
-
-        if(!user){
-
-            currentUser =
-                null;
-
-
-            userInfo.innerHTML =
-                "You are not logged in.<br><br>" +
-                "Please login first.";
-
-
-            return;
-
-        }
-
-
-        currentUser =
-            user;
-
-
-        userInfo.innerHTML =
-            "Logged in as:<br><b>" +
-            (
-                user.email ||
-                "Account"
-            ) +
-            "</b>";
+        location.href = "login.html";
+        return;
 
     }
-);
+
+    currentUser = user;
+
+});
 
 
-/* =====================================
-   CREATE REQUEST
-===================================== */
-
-window.createRequest =
-async function(){
-
-    const input =
-        document.getElementById(
-            "usernameInput"
-        );
-
-
-    const username =
-        input.value
-            .trim()
-            .replace(/^@/,"");
-
-
-    const status =
-        document.getElementById(
-            "createStatus"
-        );
-
-
-    status.className =
-        "status";
-
-
-    /* LOGIN CHECK */
+window.sendRequest = async function(){
 
     if(!currentUser){
 
-        status.textContent =
-            "Please login before sending a request.";
-
-        status.classList.add(
-            "error"
-        );
-
         return;
-
     }
 
 
-    /* USERNAME CHECK */
+    const targetUid =
+        document
+        .getElementById("targetUid")
+        .value
+        .trim();
 
-    if(username === ""){
 
-        status.textContent =
-            "Please enter a username.";
+    const username =
+        document
+        .getElementById("username")
+        .value
+        .trim()
+        .replace(/^@/,"");
 
-        status.classList.add(
+
+    const status =
+        document.getElementById("status");
+
+
+    status.className = "status";
+    status.style.display = "none";
+
+
+    if(!targetUid){
+
+        showStatus(
+            "User B चा Firebase UID टाका.",
             "error"
         );
 
         return;
-
     }
 
 
-    /* PREVENT SELF REQUEST */
+    if(!username){
 
-    if(
-        currentUser.uid ===
-        USER_B_UID
-    ){
-
-        status.textContent =
-            "You cannot send a request to yourself.";
-
-        status.classList.add(
+        showStatus(
+            "Username टाका.",
             "error"
         );
 
         return;
+    }
 
+
+    if(targetUid === currentUser.uid){
+
+        showStatus(
+            "स्वतःलाच request पाठवता येणार नाही.",
+            "error"
+        );
+
+        return;
     }
 
 
     try{
 
-        /* CREATE UNIQUE REQUEST */
-
-        const newRequestRef =
+        const requestRef =
             push(
                 ref(
                     db,
@@ -625,81 +343,50 @@ async function(){
             );
 
 
-        /* REQUEST DATA */
-
-        const request = {
-
-            username:
-                username,
-
-            targetUid:
-                USER_B_UID,
-
-            senderUid:
-                currentUser.uid,
-
-            senderEmail:
-                currentUser.email || "",
-
-            status:
-                "pending",
-
-            createdAt:
-                new Date().toISOString(),
-
-            confirmedAt:
-                null
-
-        };
-
-
-        /* SAVE TO FIREBASE */
-
         await set(
-            newRequestRef,
-            request
+            requestRef,
+            {
+
+                senderUid:
+                    currentUser.uid,
+
+                targetUid:
+                    targetUid,
+
+                username:
+                    username,
+
+                status:
+                    "pending",
+
+                createdAt:
+                    new Date().toISOString(),
+
+                confirmedAt:
+                    null
+
+            }
         );
 
 
-        /* SHOW SENT SCREEN */
-
-        document
-            .getElementById(
-                "createCard"
-            )
-            .style.display =
-                "none";
+        showStatus(
+            "Request successfully sent. User B ने Confirm केल्यावरच connection होईल.",
+            "pending"
+        );
 
 
         document
-            .getElementById(
-                "sentCard"
-            )
-            .style.display =
-                "block";
-
-
-        document
-            .getElementById(
-                "requestUsername"
-            )
-            .textContent =
-                "@" + username;
+            .getElementById("username")
+            .value = "";
 
 
     }
     catch(error){
 
-        console.error(
-            "Create request error:",
-            error
-        );
+        console.error(error);
 
-
-        status.textContent =
-            "Something went wrong. Please try again.";
-
-        status.classList.add(
+        showStatus(
+            "Request send झाली नाही.",
             "error"
         );
 
@@ -708,250 +395,29 @@ async function(){
 };
 
 
-/* =====================================
-   NEW REQUEST
-===================================== */
+function showStatus(text,type){
 
-window.newRequest =
-function(){
+    const status =
+        document.getElementById("status");
 
-    document
-        .getElementById(
-            "sentCard"
-        )
-        .style.display =
-            "none";
+    status.textContent = text;
 
+    status.className =
+        "status " + type;
 
-    document
-        .getElementById(
-            "createCard"
-        )
-        .style.display =
-            "block";
+    status.style.display =
+        "block";
+
+}
 
 
-    document
-        .getElementById(
-            "usernameInput"
-        )
-        .value =
-            "";
+window.logout = async function(){
 
+    await signOut(auth);
 
-    document
-        .getElementById(
-            "createStatus"
-        )
-        .className =
-            "status";
+    location.href = "login.html";
 
 };
-
-
-/* =====================================
-   CONFIRMED ACCOUNTS
-===================================== */
-
-window.openConfirmed =
-function(){
-
-    const overlay =
-        document.getElementById(
-            "confirmedOverlay"
-        );
-
-
-    const list =
-        document.getElementById(
-            "accountList"
-        );
-
-
-    list.innerHTML =
-        "";
-
-
-    const requestsRef =
-        ref(
-            db,
-            "accountRequests"
-        );
-
-
-    onValue(
-
-        requestsRef,
-
-        function(snapshot){
-
-            const data =
-                snapshot.val() || {};
-
-
-            const confirmed =
-                Object.entries(
-                    data
-                )
-                .filter(
-                    ([id, account]) =>
-                        account &&
-                        account.status ===
-                        "confirmed"
-                );
-
-
-            list.innerHTML =
-                "";
-
-
-            if(
-                confirmed.length ===
-                0
-            ){
-
-                list.innerHTML =
-                    '<div class="empty">' +
-                    'No confirmed accounts yet.' +
-                    '</div>';
-
-                return;
-
-            }
-
-
-            confirmed.forEach(
-                function([
-                    id,
-                    account
-                ]){
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    item.className =
-                        "account";
-
-
-                    const name =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    name.className =
-                        "account-name";
-
-
-                    name.textContent =
-                        "@" +
-                        (
-                            account.username ||
-                            "Unknown"
-                        );
-
-
-                    const status =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    status.className =
-                        "account-status";
-
-
-                    status.textContent =
-                        "✓ Confirmed";
-
-
-                    item.appendChild(
-                        name
-                    );
-
-
-                    item.appendChild(
-                        status
-                    );
-
-
-                    list.appendChild(
-                        item
-                    );
-
-                }
-            );
-
-        },
-
-        function(error){
-
-            console.error(
-                "Firebase read error:",
-                error
-            );
-
-
-            list.innerHTML =
-                '<div class="empty">' +
-                'Could not load confirmed accounts.' +
-                '</div>';
-
-        }
-
-    );
-
-
-    overlay.style.display =
-        "flex";
-
-};
-
-
-/* =====================================
-   CLOSE CONFIRMED
-===================================== */
-
-window.closeConfirmed =
-function(){
-
-    document
-        .getElementById(
-            "confirmedOverlay"
-        )
-        .style.display =
-            "none";
-
-};
-
-
-/* =====================================
-   OUTSIDE CLICK
-===================================== */
-
-document
-    .getElementById(
-        "confirmedOverlay"
-    )
-    .addEventListener(
-        "click",
-        function(event){
-
-            if(
-                event.target ===
-                this
-            ){
-
-                closeConfirmed();
-
-            }
-
-        }
-    );
-
 
 </script>
 
