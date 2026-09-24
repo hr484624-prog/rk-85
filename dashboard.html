@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="mr">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Parent Dashboard</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      font-family: Arial, sans-serif;
+
+      background: linear-gradient(
+        135deg,
+        #0f172a,
+        #1e3a8a
+      );
+
+      color: white;
+    }
+
+    .header {
+      padding: 22px 18px;
+
+      background: rgba(0,0,0,0.25);
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h2 {
+      margin: 0;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 650px;
+
+      margin: 25px auto;
+    }
+
+    .child-info {
+      padding: 18px;
+
+      border-radius: 18px;
+
+      background: rgba(255,255,255,0.10);
+
+      margin-bottom: 20px;
+    }
+
+    .online {
+      color: #4ade80;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+
+      grid-template-columns: repeat(2, 1fr);
+
+      gap: 15px;
+    }
+
+    .card {
+      padding: 22px 15px;
+
+      border-radius: 18px;
+
+      background: rgba(255,255,255,0.10);
+
+      text-align: center;
+
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .icon {
+      font-size: 40px;
+    }
+
+    .card h3 {
+      margin: 10px 0 5px;
+    }
+
+    .card p {
+      font-size: 13px;
+
+      color: #cbd5e1;
+    }
+
+    button {
+      width: 100%;
+
+      padding: 13px;
+
+      margin-top: 10px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #2563eb;
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: bold;
+    }
+
+    .all {
+      grid-column: 1 / -1;
+
+      background: rgba(37,99,235,0.20);
+    }
+
+    .notice {
+      margin-top: 20px;
+
+      padding: 15px;
+
+      border-radius: 14px;
+
+      background: rgba(255,255,255,0.08);
+
+      color: #cbd5e1;
+
+      font-size: 13px;
+
+      line-height: 1.5;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div class="header">
+
+    <h2>👨‍👩‍👧 Parent</h2>
+
+    <span>🔒</span>
+
+  </div>
+
+
+  <div class="container">
+
+    <div class="child-info">
+
+      <h3>👦 Child Device</h3>
+
+      <p>
+        Status:
+        <span class="online">● Connected</span>
+      </p>
+
+    </div>
+
+
+    <div class="grid">
+
+
+      <!-- Camera -->
+
+      <div class="card">
+
+        <div class="icon">📷</div>
+
+        <h3>Camera</h3>
+
+        <p>
+          Request camera permission
+        </p>
+
+        <button onclick="requestPermission('Camera')">
+          Request
+        </button>
+
+      </div>
+
+
+      <!-- Voice -->
+
+      <div class="card">
+
+        <div class="icon">🎙️</div>
+
+        <h3>Voice</h3>
+
+        <p>
+          Request microphone permission
+        </p>
+
+        <button onclick="requestPermission('Microphone')">
+          Request
+        </button>
+
+      </div>
+
+
+      <!-- Screen -->
+
+      <div class="card">
+
+        <div class="icon">📱</div>
+
+        <h3>Screen</h3>
+
+        <p>
+          Request screen sharing
+        </p>
+
+        <button onclick="requestPermission('Screen sharing')">
+          Request
+        </button>
+
+      </div>
+
+
+      <!-- Location -->
+
+      <div class="card">
+
+        <div class="icon">📍</div>
+
+        <h3>Location</h3>
+
+        <p>
+          Request location permission
+        </p>
+
+        <button onclick="requestPermission('Location')">
+          Request
+        </button>
+
+      </div>
+
+
+      <!-- All -->
+
+      <div class="card all">
+
+        <div class="icon">🔐</div>
+
+        <h3>All Access</h3>
+
+        <p>
+          Request all available permissions
+        </p>
+
+        <button onclick="requestAll()">
+          Request All
+        </button>
+
+      </div>
+
+
+    </div>
+
+
+    <div class="notice">
+
+      🔒 <b>Privacy:</b>
+      Camera, microphone, screen sharing आणि
+      location यांचा access Child च्या स्पष्ट
+      permission नंतरच सुरू होईल.
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    function requestPermission(type) {
+
+      alert(
+        type +
+        " permission request Child च्या device वर पाठवली जाईल."
+      );
+
+    }
+
+
+    function requestAll() {
+
+      alert(
+        "Camera, Microphone, Screen आणि Location " +
+        "साठी permission request पाठवली जाईल. " +
+        "Child ने स्वतः Allow केल्यावरच access मिळेल."
+      );
+
+    }
+
+  </script>
+
+</body>
+
+</html>
