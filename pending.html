@@ -43,6 +43,7 @@ body{
     color:white;
     padding:9px 13px;
     border-radius:9px;
+    cursor:pointer;
 }
 
 .container{
@@ -72,24 +73,22 @@ body{
     margin-bottom:20px;
 }
 
-.input{
-    width:100%;
+.user-box{
+    background:#f4f5f7;
     padding:14px;
-    border:1px solid #ddd;
-    border-radius:11px;
-    font-size:16px;
-    outline:none;
+    border-radius:12px;
+    margin-top:10px;
 }
 
-.search-btn{
-    width:100%;
-    padding:14px;
-    margin-top:12px;
-    border:0;
-    border-radius:11px;
-    background:#111;
-    color:white;
-    font-size:16px;
+.user-label{
+    color:#777;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.user-email{
+    font-weight:bold;
+    word-break:break-all;
 }
 
 .request{
@@ -122,6 +121,7 @@ body{
     border:0;
     border-radius:10px;
     font-size:14px;
+    cursor:pointer;
 }
 
 .confirm{
@@ -140,6 +140,21 @@ body{
     padding:20px 5px;
 }
 
+.loading{
+    text-align:center;
+    color:#777;
+    padding:20px 5px;
+}
+
+.success{
+    color:#16883b;
+    background:#e9f8ee;
+    padding:12px;
+    border-radius:10px;
+    margin-top:12px;
+    display:none;
+}
+
 .error{
     color:#b42318;
     background:#fff0f0;
@@ -149,11 +164,21 @@ body{
     display:none;
 }
 
+.uid-box{
+    margin-top:12px;
+    font-size:11px;
+    color:#999;
+    word-break:break-all;
+}
+
 </style>
 
 </head>
 
 <body>
+
+
+<!-- TOP BAR -->
 
 <div class="topbar">
 
@@ -171,7 +196,12 @@ body{
 </div>
 
 
+<!-- MAIN -->
+
 <div class="container">
+
+
+    <!-- USER CARD -->
 
     <div class="card">
 
@@ -180,40 +210,55 @@ body{
         </div>
 
         <div class="subtitle">
-            Enter the username of this account to
-            check connection requests.
+            Connection requests sent to your account
+            will appear here.
         </div>
 
-        <input
-            id="usernameInput"
-            class="input"
-            type="text"
-            placeholder="Enter your username"
-            autocomplete="off"
-        >
 
-        <button
-            class="search-btn"
-            onclick="loadRequests()"
-        >
-            Check Requests
-        </button>
+        <div class="user-box">
+
+            <div class="user-label">
+                Logged in as
+            </div>
+
+            <div
+                id="userEmail"
+                class="user-email"
+            >
+                Checking login...
+            </div>
+
+            <div
+                id="userUid"
+                class="uid-box"
+            ></div>
+
+        </div>
+
 
         <div
             id="error"
             class="error"
         ></div>
 
+
+        <div
+            id="success"
+            class="success"
+        ></div>
+
     </div>
 
+
+    <!-- REQUESTS -->
 
     <div
         class="card"
         id="requestContainer"
     >
 
-        <div class="message">
-            Enter your username above.
+        <div class="loading">
+            Loading requests...
         </div>
 
     </div>
@@ -222,6 +267,11 @@ body{
 
 
 <script type="module">
+
+
+/* =====================================
+   FIREBASE IMPORT
+===================================== */
 
 import {
     initializeApp
@@ -294,10 +344,47 @@ const db =
 
 
 /* =====================================
-   CHECK LOGIN
+   VARIABLES
 ===================================== */
 
 let currentUser = null;
+
+let requestsListener = null;
+
+
+/* =====================================
+   ELEMENTS
+===================================== */
+
+const requestContainer =
+    document.getElementById(
+        "requestContainer"
+    );
+
+const userEmail =
+    document.getElementById(
+        "userEmail"
+    );
+
+const userUid =
+    document.getElementById(
+        "userUid"
+    );
+
+const errorBox =
+    document.getElementById(
+        "error"
+    );
+
+const successBox =
+    document.getElementById(
+        "success"
+    );
+
+
+/* =====================================
+   AUTH CHECK
+===================================== */
 
 onAuthStateChanged(
     auth,
@@ -305,21 +392,13 @@ onAuthStateChanged(
 
         if(!user){
 
-            document.body.innerHTML = `
-                <div style="
-                    padding:40px;
-                    text-align:center;
-                    font-family:Arial;
-                ">
+            userEmail.textContent =
+                "Not logged in";
 
-                    <h2>Login Required</h2>
+            requestContainer.innerHTML = `
+                <div class="message">
 
-                    <p style="
-                        margin-top:10px;
-                        color:#666;
-                    ">
-                        Please login first.
-                    </p>
+                    Please login first.
 
                 </div>
             `;
@@ -327,11 +406,27 @@ onAuthStateChanged(
             return;
         }
 
-        currentUser = user;
 
-        console.log(
-            "Logged in:",
-            user.email
+        currentUser =
+            user;
+
+
+        /* Show logged-in email */
+
+        userEmail.textContent =
+            user.email || "Account";
+
+
+        /* Show UID for testing */
+
+        userUid.textContent =
+            "UID: " + user.uid;
+
+
+        /* Load only this user's requests */
+
+        loadRequestsForUser(
+            user.uid
         );
 
     }
@@ -339,53 +434,18 @@ onAuthStateChanged(
 
 
 /* =====================================
-   LOAD REQUESTS
+   LOAD USER REQUESTS
 ===================================== */
 
-window.loadRequests =
-function(){
+function loadRequestsForUser(
+    uid
+){
 
-    const usernameInput =
-        document.getElementById(
-            "usernameInput"
-        );
-
-    const username =
-        usernameInput.value
-            .trim()
-            .replace(/^@/,"")
-            .toLowerCase();
-
-
-    const error =
-        document.getElementById(
-            "error"
-        );
-
-
-    const container =
-        document.getElementById(
-            "requestContainer"
-        );
-
-
-    error.style.display =
-        "none";
-
-
-    container.innerHTML = "";
-
-
-    if(username === ""){
-
-        error.textContent =
-            "Please enter your username.";
-
-        error.style.display =
-            "block";
-
-        return;
-    }
+    requestContainer.innerHTML = `
+        <div class="loading">
+            Loading requests...
+        </div>
+    `;
 
 
     const requestsRef =
@@ -395,73 +455,123 @@ function(){
         );
 
 
-    onValue(
-        requestsRef,
-        function(snapshot){
+    /*
+       Listen for Firebase changes.
+       Only requests whose targetUid
+       matches logged-in user's UID
+       will be displayed.
+    */
 
-            const data =
-                snapshot.val() || {};
+    requestsListener =
+        onValue(
+
+            requestsRef,
+
+            function(snapshot){
+
+                const data =
+                    snapshot.val() || {};
 
 
-            let found = false;
+                requestContainer.innerHTML = "";
 
 
-            Object.entries(data)
-                .forEach(
-                    function([
-                        id,
-                        request
-                    ]){
+                let found =
+                    false;
 
-                        if(
-                            String(
-                                request.username
-                            ).toLowerCase()
-                            === username
-                            &&
-                            request.status
-                            === "pending"
-                        ){
 
-                            found = true;
+                Object.entries(data)
+                    .forEach(
+                        function([
+                            id,
+                            request
+                        ]){
 
-                            showRequest(
-                                id,
-                                request,
-                                container
-                            );
+
+                            if(
+                                !request
+                            ){
+
+                                return;
+
+                            }
+
+
+                            /*
+                               IMPORTANT:
+
+                               targetUid must be saved
+                               by Account Request page.
+                            */
+
+                            const targetUid =
+                                request.targetUid;
+
+
+                            const status =
+                                request.status;
+
+
+                            if(
+                                targetUid === uid
+                                &&
+                                status === "pending"
+                            ){
+
+                                found =
+                                    true;
+
+
+                                showRequest(
+                                    id,
+                                    request
+                                );
+
+                            }
 
                         }
+                    );
 
-                    }
+
+                if(!found){
+
+                    requestContainer.innerHTML = `
+                        <div class="message">
+
+                            No pending requests.
+
+                        </div>
+                    `;
+
+                }
+
+            },
+
+            function(firebaseError){
+
+                console.error(
+                    "Firebase error:",
+                    firebaseError
                 );
 
 
-            if(!found){
-
-                container.innerHTML = `
+                requestContainer.innerHTML = `
                     <div class="message">
-                        No pending requests.
+
+                        Could not load requests.
+
+                        <br><br>
+
+                        Check Firebase Database Rules.
+
                     </div>
                 `;
 
             }
 
-        },
-        function(error){
+        );
 
-            console.error(error);
-
-            container.innerHTML = `
-                <div class="message">
-                    Could not load requests.
-                </div>
-            `;
-
-        }
-    );
-
-};
+}
 
 
 /* =====================================
@@ -470,8 +580,7 @@ function(){
 
 function showRequest(
     id,
-    request,
-    container
+    request
 ){
 
     const box =
@@ -479,66 +588,90 @@ function showRequest(
             "div"
         );
 
+
     box.className =
         "request";
 
+
+    /* USERNAME */
 
     const username =
         document.createElement(
             "div"
         );
 
+
     username.className =
         "username";
 
+
     username.textContent =
         "@" +
-        request.username;
+        (
+            request.username ||
+            "Unknown user"
+        );
 
+
+    /* DATE */
 
     const date =
         document.createElement(
             "div"
         );
 
+
     date.className =
         "date";
 
-    date.textContent =
-        "Connection request received";
 
+    if(request.createdAt){
+
+        const dateObject =
+            new Date(
+                request.createdAt
+            );
+
+
+        date.textContent =
+            "Request received: " +
+            dateObject.toLocaleString();
+
+    }
+    else{
+
+        date.textContent =
+            "Connection request received";
+
+    }
+
+
+    /* BUTTON AREA */
 
     const buttons =
         document.createElement(
             "div"
         );
 
+
     buttons.className =
         "buttons";
 
+
+    /* CONFIRM */
 
     const confirmBtn =
         document.createElement(
             "button"
         );
 
+
     confirmBtn.className =
         "btn confirm";
 
+
     confirmBtn.textContent =
         "✓ Confirm";
-
-
-    const rejectBtn =
-        document.createElement(
-            "button"
-        );
-
-    rejectBtn.className =
-        "btn reject";
-
-    rejectBtn.textContent =
-        "Reject";
 
 
     confirmBtn.onclick =
@@ -550,6 +683,22 @@ function showRequest(
             );
 
         };
+
+
+    /* REJECT */
+
+    const rejectBtn =
+        document.createElement(
+            "button"
+        );
+
+
+    rejectBtn.className =
+        "btn reject";
+
+
+    rejectBtn.textContent =
+        "Reject";
 
 
     rejectBtn.onclick =
@@ -567,6 +716,7 @@ function showRequest(
         confirmBtn
     );
 
+
     buttons.appendChild(
         rejectBtn
     );
@@ -576,16 +726,18 @@ function showRequest(
         username
     );
 
+
     box.appendChild(
         date
     );
+
 
     box.appendChild(
         buttons
     );
 
 
-    container.appendChild(
+    requestContainer.appendChild(
         box
     );
 
@@ -600,6 +752,17 @@ async function changeRequestStatus(
     id,
     status
 ){
+
+    if(!currentUser){
+
+        showError(
+            "You must be logged in."
+        );
+
+        return;
+
+    }
+
 
     try{
 
@@ -626,25 +789,92 @@ async function changeRequestStatus(
         );
 
 
-        alert(
+        if(
             status === "confirmed"
-                ? "Request confirmed."
-                : "Request rejected."
-        );
+        ){
 
+            showSuccess(
+                "Connection request confirmed."
+            );
 
-        loadRequests();
+        }
+        else{
+
+            showSuccess(
+                "Connection request rejected."
+            );
+
+        }
 
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Update error:",
+            error
+        );
 
-        alert(
-            "Something went wrong."
+
+        showError(
+            "Could not update request. Check Firebase Rules."
         );
 
     }
+
+}
+
+
+/* =====================================
+   SUCCESS MESSAGE
+===================================== */
+
+function showSuccess(
+    message
+){
+
+    successBox.textContent =
+        message;
+
+
+    successBox.style.display =
+        "block";
+
+
+    errorBox.style.display =
+        "none";
+
+
+    setTimeout(
+        function(){
+
+            successBox.style.display =
+                "none";
+
+        },
+        3000
+    );
+
+}
+
+
+/* =====================================
+   ERROR MESSAGE
+===================================== */
+
+function showError(
+    message
+){
+
+    errorBox.textContent =
+        message;
+
+
+    errorBox.style.display =
+        "block";
+
+
+    successBox.style.display =
+        "none";
 
 }
 
@@ -658,18 +888,26 @@ async function(){
 
     try{
 
-        await signOut(auth);
+        await signOut(
+            auth
+        );
 
-        location.reload();
+
+        window.location.href =
+            "login.html";
 
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Logout error:",
+            error
+        );
 
     }
 
 };
+
 
 </script>
 
