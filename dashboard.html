@@ -2,312 +2,414 @@
 <html lang="mr">
 
 <head>
-  <meta charset="UTF-8">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-  <title>Parent Dashboard</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-  <style>
+<title>Parent Dashboard</title>
 
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      min-height: 100vh;
+*{
+  box-sizing:border-box;
+}
 
-      font-family: Arial, sans-serif;
+body{
+  margin:0;
+  min-height:100vh;
 
-      background: linear-gradient(
-        135deg,
-        #0f172a,
-        #1e3a8a
-      );
+  font-family:Arial,sans-serif;
 
-      color: white;
-    }
+  background:linear-gradient(
+    135deg,
+    #0f172a,
+    #1e3a8a
+  );
 
-    .header {
-      padding: 22px 18px;
+  color:white;
+}
 
-      background: rgba(0,0,0,0.25);
+/* Header */
 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.header{
+  padding:20px;
 
-    .header h2 {
-      margin: 0;
-    }
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 
-    .container {
-      width: 92%;
-      max-width: 650px;
+  background:rgba(0,0,0,0.25);
+}
 
-      margin: 25px auto;
-    }
+.header h2{
+  margin:0;
+}
 
-    .child-info {
-      padding: 18px;
+.lock{
+  font-size:24px;
+}
 
-      border-radius: 18px;
 
-      background: rgba(255,255,255,0.10);
+/* Main */
 
-      margin-bottom: 20px;
-    }
+.container{
+  width:92%;
+  max-width:700px;
 
-    .online {
-      color: #4ade80;
-      font-weight: bold;
-    }
+  margin:25px auto;
+}
 
-    .grid {
-      display: grid;
 
-      grid-template-columns: repeat(2, 1fr);
+/* Child status */
 
-      gap: 15px;
-    }
+.child-info{
 
-    .card {
-      padding: 22px 15px;
+  padding:18px;
 
-      border-radius: 18px;
+  margin-bottom:20px;
 
-      background: rgba(255,255,255,0.10);
+  border-radius:18px;
 
-      text-align: center;
+  background:rgba(255,255,255,0.10);
 
-      border: 1px solid rgba(255,255,255,0.08);
-    }
+  border:1px solid
+  rgba(255,255,255,0.08);
+}
 
-    .icon {
-      font-size: 40px;
-    }
+.child-info h3{
+  margin-top:0;
+}
 
-    .card h3 {
-      margin: 10px 0 5px;
-    }
+.online{
+  color:#4ade80;
+  font-weight:bold;
+}
 
-    .card p {
-      font-size: 13px;
 
-      color: #cbd5e1;
-    }
+/* Grid */
 
-    button {
-      width: 100%;
+.grid{
 
-      padding: 13px;
+  display:grid;
 
-      margin-top: 10px;
+  grid-template-columns:
+  repeat(2,1fr);
 
-      border: none;
+  gap:15px;
+}
 
-      border-radius: 10px;
 
-      background: #2563eb;
+/* Cards */
 
-      color: white;
+.card{
 
-      font-size: 15px;
+  padding:22px 15px;
 
-      font-weight: bold;
-    }
+  border-radius:18px;
 
-    .all {
-      grid-column: 1 / -1;
+  background:rgba(255,255,255,0.10);
 
-      background: rgba(37,99,235,0.20);
-    }
+  text-align:center;
 
-    .notice {
-      margin-top: 20px;
+  border:1px solid
+  rgba(255,255,255,0.08);
+}
 
-      padding: 15px;
+.icon{
+  font-size:40px;
+}
 
-      border-radius: 14px;
+.card h3{
+  margin:10px 0 5px;
+}
 
-      background: rgba(255,255,255,0.08);
+.card p{
 
-      color: #cbd5e1;
+  font-size:13px;
 
-      font-size: 13px;
+  color:#cbd5e1;
 
-      line-height: 1.5;
-    }
+  min-height:35px;
+}
 
-  </style>
+
+/* Buttons */
+
+button{
+
+  width:100%;
+
+  padding:13px;
+
+  margin-top:10px;
+
+  border:0;
+
+  border-radius:10px;
+
+  background:#2563eb;
+
+  color:white;
+
+  font-size:15px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+button:hover{
+  background:#1d4ed8;
+}
+
+
+/* All button */
+
+.all{
+
+  grid-column:1 / -1;
+
+  background:
+  rgba(37,99,235,0.20);
+}
+
+
+/* Notice */
+
+.notice{
+
+  margin-top:20px;
+
+  padding:16px;
+
+  border-radius:14px;
+
+  background:
+  rgba(255,255,255,0.08);
+
+  color:#cbd5e1;
+
+  font-size:13px;
+
+  line-height:1.6;
+}
+
+
+/* Mobile */
+
+@media(max-width:500px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .all{
+    grid-column:auto;
+  }
+
+}
+
+</style>
 
 </head>
 
 
 <body>
 
-  <div class="header">
 
-    <h2>👨‍👩‍👧 Parent</h2>
+<!-- Header -->
 
-    <span>🔒</span>
+<div class="header">
+
+  <h2>👨‍👩‍👧 Parent Dashboard</h2>
+
+  <div class="lock">🔒</div>
+
+</div>
+
+
+<!-- Main -->
+
+<div class="container">
+
+
+  <!-- Child Status -->
+
+  <div class="child-info">
+
+    <h3>👦 Child Device</h3>
+
+    <p>
+      Status:
+      <span class="online">
+        ● Connected
+      </span>
+    </p>
 
   </div>
 
 
-  <div class="container">
+  <!-- Cards -->
 
-    <div class="child-info">
+  <div class="grid">
 
-      <h3>👦 Child Device</h3>
+
+    <!-- Camera -->
+
+    <div class="card">
+
+      <div class="icon">📷</div>
+
+      <h3>Camera</h3>
 
       <p>
-        Status:
-        <span class="online">● Connected</span>
+        Camera permission request
       </p>
 
-    </div>
-
-
-    <div class="grid">
-
-
-      <!-- Camera -->
-
-      <div class="card">
-
-        <div class="icon">📷</div>
-
-        <h3>Camera</h3>
-
-        <p>
-          Request camera permission
-        </p>
-
-        <button onclick="requestPermission('Camera')">
-          Request
-        </button>
-
-      </div>
-
-
-      <!-- Voice -->
-
-      <div class="card">
-
-        <div class="icon">🎙️</div>
-
-        <h3>Voice</h3>
-
-        <p>
-          Request microphone permission
-        </p>
-
-        <button onclick="requestPermission('Microphone')">
-          Request
-        </button>
-
-      </div>
-
-
-      <!-- Screen -->
-
-      <div class="card">
-
-        <div class="icon">📱</div>
-
-        <h3>Screen</h3>
-
-        <p>
-          Request screen sharing
-        </p>
-
-        <button onclick="requestPermission('Screen sharing')">
-          Request
-        </button>
-
-      </div>
-
-
-      <!-- Location -->
-
-      <div class="card">
-
-        <div class="icon">📍</div>
-
-        <h3>Location</h3>
-
-        <p>
-          Request location permission
-        </p>
-
-        <button onclick="requestPermission('Location')">
-          Request
-        </button>
-
-      </div>
-
-
-      <!-- All -->
-
-      <div class="card all">
-
-        <div class="icon">🔐</div>
-
-        <h3>All Access</h3>
-
-        <p>
-          Request all available permissions
-        </p>
-
-        <button onclick="requestAll()">
-          Request All
-        </button>
-
-      </div>
-
+      <button onclick="openPage('camera.html')">
+        Open
+      </button>
 
     </div>
 
 
-    <div class="notice">
+    <!-- Voice -->
 
-      🔒 <b>Privacy:</b>
-      Camera, microphone, screen sharing आणि
-      location यांचा access Child च्या स्पष्ट
-      permission नंतरच सुरू होईल.
+    <div class="card">
+
+      <div class="icon">🎙️</div>
+
+      <h3>Voice</h3>
+
+      <p>
+        Microphone permission request
+      </p>
+
+      <button onclick="openPage('voice.html')">
+        Open
+      </button>
 
     </div>
+
+
+    <!-- Screen -->
+
+    <div class="card">
+
+      <div class="icon">📱</div>
+
+      <h3>Screen</h3>
+
+      <p>
+        Screen sharing request
+      </p>
+
+      <button onclick="openPage('screen.html')">
+        Open
+      </button>
+
+    </div>
+
+
+    <!-- Location -->
+
+    <div class="card">
+
+      <div class="icon">📍</div>
+
+      <h3>Location</h3>
+
+      <p>
+        Location permission request
+      </p>
+
+      <button onclick="openPage('location.html')">
+        Open
+      </button>
+
+    </div>
+
+
+    <!-- Messages -->
+
+    <div class="card">
+
+      <div class="icon">💬</div>
+
+      <h3>Messages</h3>
+
+      <p>
+        Consent-based messaging
+      </p>
+
+      <button onclick="openPage('messages.html')">
+        Open
+      </button>
+
+    </div>
+
+
+    <!-- All -->
+
+    <div class="card all">
+
+      <div class="icon">🔐</div>
+
+      <h3>All Access</h3>
+
+      <p>
+        Open all available features
+      </p>
+
+      <button onclick="openAll()">
+        Open All
+      </button>
+
+    </div>
+
 
   </div>
 
 
-  <script>
+  <!-- Privacy -->
 
-    function requestPermission(type) {
+  <div class="notice">
 
-      alert(
-        type +
-        " permission request Child च्या device वर पाठवली जाईल."
-      );
+    🔒 <b>Privacy:</b><br>
 
-    }
+    Camera, microphone, screen sharing आणि
+    location यांचा access Child च्या
+    स्पष्ट permission नंतरच सुरू होईल.
+
+  </div>
 
 
-    function requestAll() {
+</div>
 
-      alert(
-        "Camera, Microphone, Screen आणि Location " +
-        "साठी permission request पाठवली जाईल. " +
-        "Child ने स्वतः Allow केल्यावरच access मिळेल."
-      );
 
-    }
+<script>
 
-  </script>
+
+function openPage(page){
+
+  window.location.href = page;
+
+}
+
+
+function openAll(){
+
+  alert(
+    "Camera, Voice, Screen, Location आणि Messages features उपलब्ध आहेत. प्रत्येक feature साठी Child ची स्पष्ट permission आवश्यक आहे."
+  );
+
+}
+
+
+</script>
+
 
 </body>
 
