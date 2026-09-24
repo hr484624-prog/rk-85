@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Account Connect - Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login - Account Connect</title>
 
 <style>
 *{
@@ -24,80 +25,72 @@ body{
 
 .card{
     width:92%;
-    max-width:420px;
+    max-width:400px;
     background:white;
-    padding:25px;
-    border-radius:18px;
+    padding:28px;
+    border-radius:20px;
     box-shadow:0 5px 25px rgba(0,0,0,.08);
 }
 
 .logo{
-    font-size:25px;
+    text-align:center;
+    font-size:26px;
     font-weight:bold;
     margin-bottom:8px;
 }
 
 .subtitle{
+    text-align:center;
     color:#666;
     font-size:14px;
-    line-height:1.5;
-    margin-bottom:22px;
+    margin-bottom:25px;
 }
 
 .input{
     width:100%;
     padding:14px;
+    margin-top:10px;
     border:1px solid #ddd;
     border-radius:11px;
     font-size:16px;
-    margin-top:10px;
     outline:none;
 }
 
-.input:focus{
-    border-color:#111;
-}
-
-button{
+.btn{
     width:100%;
     padding:14px;
+    margin-top:15px;
     border:0;
     border-radius:11px;
     background:#111;
     color:white;
     font-size:16px;
-    margin-top:14px;
     cursor:pointer;
+}
+
+.signup-btn{
+    background:#eee;
+    color:#111;
 }
 
 .message{
     display:none;
     margin-top:15px;
-    padding:13px;
+    padding:12px;
     border-radius:10px;
     font-size:14px;
 }
 
 .error{
+    display:block;
     background:#fff0f0;
     color:#b42318;
 }
 
 .success{
+    display:block;
     background:#e9f8ee;
     color:#16733a;
-}
-
-.link{
-    text-align:center;
-    margin-top:18px;
-    color:#555;
-    font-size:14px;
-}
-
-.link a{
-    color:#111;
-    font-weight:bold;
 }
 </style>
 </head>
@@ -118,7 +111,7 @@ button{
         id="email"
         class="input"
         type="email"
-        placeholder="Email"
+        placeholder="Enter email"
         autocomplete="email"
     >
 
@@ -126,27 +119,39 @@ button{
         id="password"
         class="input"
         type="password"
-        placeholder="Password"
+        placeholder="Enter password"
         autocomplete="current-password"
     >
 
-    <button onclick="login()">
+    <button
+        class="btn"
+        onclick="loginUser()"
+    >
         Login
+    </button>
+
+    <button
+        class="btn signup-btn"
+        onclick="location.href='signup.html'"
+    >
+        Create New Account
     </button>
 
     <div id="message" class="message"></div>
 
 </div>
 
+
 <script type="module">
 
-import { initializeApp }
+import {
+    initializeApp
+}
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
 import {
     getAuth,
-    signInWithEmailAndPassword,
-    onAuthStateChanged
+    signInWithEmailAndPassword
 }
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
@@ -180,26 +185,15 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
 
 
-onAuthStateChanged(auth,function(user){
-
-    if(user){
-
-        location.href = "index.html";
-
-    }
-
-});
-
-
-window.login = async function(){
+window.loginUser = async function(){
 
     const email =
         document.getElementById("email")
-        .value
-        .trim();
+        .value.trim();
 
     const password =
         document.getElementById("password")
@@ -208,18 +202,15 @@ window.login = async function(){
     const message =
         document.getElementById("message");
 
-
     message.className = "message";
-    message.style.display = "none";
 
 
-    if(!email || !password){
+    if(email === "" || password === ""){
 
         message.textContent =
             "Email आणि password भरा.";
 
         message.classList.add("error");
-        message.style.display = "block";
 
         return;
     }
@@ -237,15 +228,14 @@ window.login = async function(){
             "Login successful.";
 
         message.classList.add("success");
-        message.style.display = "block";
 
 
         setTimeout(function(){
 
-            location.href = "index.html";
+            location.href =
+                "account-connect.html";
 
         },500);
-
 
     }
     catch(error){
@@ -256,7 +246,6 @@ window.login = async function(){
             "Login failed. Email किंवा password तपासा.";
 
         message.classList.add("error");
-        message.style.display = "block";
 
     }
 
