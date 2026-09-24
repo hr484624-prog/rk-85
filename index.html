@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -125,8 +126,9 @@ body{
     color:#b42318;
 }
 
-.request-screen{
+.sent-card{
     display:none;
+    text-align:center;
 }
 
 .request-icon{
@@ -145,24 +147,16 @@ body{
     font-weight:bold;
 }
 
-.action-btn{
+.back-btn{
     width:100%;
     padding:14px;
     border:0;
     border-radius:11px;
+    background:#111;
+    color:white;
     font-size:16px;
     cursor:pointer;
     margin-top:10px;
-}
-
-.confirm-btn{
-    background:#16883b;
-    color:white;
-}
-
-.reject-btn{
-    background:#eee;
-    color:#111;
 }
 
 .overlay{
@@ -207,9 +201,6 @@ body{
     border-radius:13px;
     padding:14px;
     margin-bottom:10px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
 }
 
 .account-name{
@@ -228,14 +219,22 @@ body{
     padding:25px 5px;
 }
 
-.hidden{
-    display:none !important;
+.user-info{
+    background:#f4f5f7;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:18px;
+    font-size:13px;
+    color:#555;
+    word-break:break-all;
 }
 
 </style>
+
 </head>
 
 <body>
+
 
 <!-- TOP BAR -->
 
@@ -259,9 +258,13 @@ body{
 
 <div class="container">
 
+
     <!-- CREATE REQUEST -->
 
-    <div class="card" id="createCard">
+    <div
+        class="card"
+        id="createCard"
+    >
 
         <div class="title">
             Request Access
@@ -272,6 +275,15 @@ body{
             connection request.
         </div>
 
+
+        <div
+            class="user-info"
+            id="userInfo"
+        >
+            Checking login...
+        </div>
+
+
         <input
             id="usernameInput"
             class="input"
@@ -280,12 +292,14 @@ body{
             autocomplete="off"
         >
 
+
         <button
             class="send-btn"
             onclick="createRequest()"
         >
             Send Request
         </button>
+
 
         <div
             id="createStatus"
@@ -295,61 +309,11 @@ body{
     </div>
 
 
-    <!-- REQUEST CONFIRMATION -->
+    <!-- REQUEST SENT -->
 
     <div
-        class="card request-screen"
-        id="requestCard"
-    >
-
-        <div class="request-icon">
-            🔐
-        </div>
-
-        <div class="title">
-            Connection Request
-        </div>
-
-        <div class="subtitle">
-
-            A connection request has been created
-            for
-
-            <span
-                id="requestUsername"
-                class="username"
-            ></span>.
-
-            <br><br>
-
-            Confirm only if you are the account owner
-            and want to connect this account with
-            this website.
-
-        </div>
-
-        <button
-            class="action-btn confirm-btn"
-            onclick="confirmRequest()"
-        >
-            ✓ Confirm Connection
-        </button>
-
-        <button
-            class="action-btn reject-btn"
-            onclick="rejectRequest()"
-        >
-            Cancel Request
-        </button>
-
-    </div>
-
-
-    <!-- CONFIRMED -->
-
-    <div
-        class="card request-screen"
-        id="confirmedCard"
+        class="card sent-card"
+        id="sentCard"
     >
 
         <div class="request-icon">
@@ -357,28 +321,31 @@ body{
         </div>
 
         <div class="title">
-            Connection Confirmed
+            Request Sent
         </div>
 
         <div class="subtitle">
 
+            Your connection request for
+
             <span
-                id="confirmedUsername"
+                id="requestUsername"
                 class="username"
             ></span>
 
-            has confirmed the connection.
+            has been sent to the account owner.
 
             <br><br>
 
-            This prototype only records consent.
-            It does not log into Instagram or collect
-            Instagram passwords.
+            The account owner must open their
+            Account Connect account and confirm
+            the request.
 
         </div>
 
+
         <button
-            class="send-btn"
+            class="back-btn"
             onclick="newRequest()"
         >
             Create New Request
@@ -420,15 +387,29 @@ body{
 
 <script type="module">
 
-import { initializeApp }
+
+/* =====================================
+   FIREBASE IMPORT
+===================================== */
+
+import {
+    initializeApp
+}
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+
+import {
+    getAuth,
+    onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
 
 import {
     getDatabase,
     ref,
     push,
     set,
-    update,
     onValue
 }
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
@@ -468,46 +449,84 @@ const firebaseConfig = {
 
 
 /* =====================================
-   FIREBASE START
+   START FIREBASE
 ===================================== */
 
 const app =
-    initializeApp(firebaseConfig);
+    initializeApp(
+        firebaseConfig
+    );
+
+
+const auth =
+    getAuth(app);
+
 
 const db =
     getDatabase(app);
 
 
 /* =====================================
-   VARIABLES
+   USER B UID
+=====================================
+
+   This is the Firebase UID of User B.
+
 ===================================== */
 
-let requests = {};
-
-let currentRequestId = null;
+const USER_B_UID =
+    "O8jz1r1oHrMMTpqrdQLAsEKuEKL2";
 
 
 /* =====================================
-   LOAD REQUESTS
+   VARIABLES
 ===================================== */
 
-const requestsRef =
-    ref(db, "accountRequests");
+let currentUser =
+    null;
 
-onValue(
-    requestsRef,
-    (snapshot) => {
 
-        requests =
-            snapshot.val() || {};
+/* =====================================
+   CHECK LOGIN
+===================================== */
 
-    },
-    (error) => {
+onAuthStateChanged(
+    auth,
+    function(user){
 
-        console.error(
-            "Firebase read error:",
-            error
-        );
+        const userInfo =
+            document.getElementById(
+                "userInfo"
+            );
+
+
+        if(!user){
+
+            currentUser =
+                null;
+
+
+            userInfo.innerHTML =
+                "You are not logged in.<br><br>" +
+                "Please login first.";
+
+
+            return;
+
+        }
+
+
+        currentUser =
+            user;
+
+
+        userInfo.innerHTML =
+            "Logged in as:<br><b>" +
+            (
+                user.email ||
+                "Account"
+            ) +
+            "</b>";
 
     }
 );
@@ -525,19 +544,40 @@ async function(){
             "usernameInput"
         );
 
+
     const username =
         input.value
             .trim()
-            .replace(/^@/, "");
+            .replace(/^@/,"");
+
 
     const status =
         document.getElementById(
             "createStatus"
         );
 
+
     status.className =
         "status";
 
+
+    /* LOGIN CHECK */
+
+    if(!currentUser){
+
+        status.textContent =
+            "Please login before sending a request.";
+
+        status.classList.add(
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /* USERNAME CHECK */
 
     if(username === ""){
 
@@ -549,10 +589,32 @@ async function(){
         );
 
         return;
+
+    }
+
+
+    /* PREVENT SELF REQUEST */
+
+    if(
+        currentUser.uid ===
+        USER_B_UID
+    ){
+
+        status.textContent =
+            "You cannot send a request to yourself.";
+
+        status.classList.add(
+            "error"
+        );
+
+        return;
+
     }
 
 
     try{
+
+        /* CREATE UNIQUE REQUEST */
 
         const newRequestRef =
             push(
@@ -563,10 +625,21 @@ async function(){
             );
 
 
+        /* REQUEST DATA */
+
         const request = {
 
             username:
                 username,
+
+            targetUid:
+                USER_B_UID,
+
+            senderUid:
+                currentUser.uid,
+
+            senderEmail:
+                currentUser.email || "",
 
             status:
                 "pending",
@@ -580,28 +653,27 @@ async function(){
         };
 
 
+        /* SAVE TO FIREBASE */
+
         await set(
             newRequestRef,
             request
         );
 
 
-        currentRequestId =
-            newRequestRef.key;
-
+        /* SHOW SENT SCREEN */
 
         document
             .getElementById(
                 "createCard"
             )
-            .classList.add(
-                "hidden"
-            );
+            .style.display =
+                "none";
 
 
         document
             .getElementById(
-                "requestCard"
+                "sentCard"
             )
             .style.display =
                 "block";
@@ -614,10 +686,15 @@ async function(){
             .textContent =
                 "@" + username;
 
+
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Create request error:",
+            error
+        );
+
 
         status.textContent =
             "Something went wrong. Please try again.";
@@ -632,163 +709,15 @@ async function(){
 
 
 /* =====================================
-   CONFIRM REQUEST
-===================================== */
-
-window.confirmRequest =
-async function(){
-
-    if(!currentRequestId){
-
-        return;
-
-    }
-
-
-    const request =
-        requests[
-            currentRequestId
-        ];
-
-
-    if(!request){
-
-        return;
-
-    }
-
-
-    try{
-
-        await update(
-
-            ref(
-                db,
-                "accountRequests/" +
-                currentRequestId
-            ),
-
-            {
-
-                status:
-                    "confirmed",
-
-                confirmedAt:
-                    new Date().toISOString()
-
-            }
-
-        );
-
-
-        document
-            .getElementById(
-                "requestCard"
-            )
-            .style.display =
-                "none";
-
-
-        document
-            .getElementById(
-                "confirmedCard"
-            )
-            .style.display =
-                "block";
-
-
-        document
-            .getElementById(
-                "confirmedUsername"
-            )
-            .textContent =
-                "@" +
-                request.username;
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "Could not confirm request."
-        );
-
-    }
-
-};
-
-
-/* =====================================
-   REJECT REQUEST
-===================================== */
-
-window.rejectRequest =
-async function(){
-
-    if(!currentRequestId){
-
-        newRequest();
-
-        return;
-
-    }
-
-
-    try{
-
-        await update(
-
-            ref(
-                db,
-                "accountRequests/" +
-                currentRequestId
-            ),
-
-            {
-
-                status:
-                    "rejected"
-
-            }
-
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-    }
-
-
-    newRequest();
-
-};
-
-
-/* =====================================
    NEW REQUEST
 ===================================== */
 
 window.newRequest =
 function(){
 
-    currentRequestId =
-        null;
-
-
     document
         .getElementById(
-            "requestCard"
-        )
-        .style.display =
-            "none";
-
-
-    document
-        .getElementById(
-            "confirmedCard"
+            "sentCard"
         )
         .style.display =
             "none";
@@ -798,16 +727,16 @@ function(){
         .getElementById(
             "createCard"
         )
-        .classList.remove(
-            "hidden"
-        );
+        .style.display =
+            "block";
 
 
     document
         .getElementById(
             "usernameInput"
         )
-        .value = "";
+        .value =
+            "";
 
 
     document
@@ -832,91 +761,148 @@ function(){
             "confirmedOverlay"
         );
 
+
     const list =
         document.getElementById(
             "accountList"
         );
 
 
-    list.innerHTML = "";
+    list.innerHTML =
+        "";
 
 
-    const confirmed =
-        Object.entries(
-            requests
-        )
-        .filter(
-            ([id, account]) =>
-                account.status ===
-                "confirmed"
+    const requestsRef =
+        ref(
+            db,
+            "accountRequests"
         );
 
 
-    if(confirmed.length === 0){
+    onValue(
 
-        list.innerHTML =
-            '<div class="empty">' +
-            'No confirmed accounts yet.' +
-            '</div>';
+        requestsRef,
 
-    }
-    else{
+        function(snapshot){
 
-        confirmed.forEach(
-            ([id, account]) => {
-
-                const item =
-                    document.createElement(
-                        "div"
-                    );
-
-                item.className =
-                    "account";
+            const data =
+                snapshot.val() || {};
 
 
-                const left =
-                    document.createElement(
-                        "div"
-                    );
+            const confirmed =
+                Object.entries(
+                    data
+                )
+                .filter(
+                    ([id, account]) =>
+                        account &&
+                        account.status ===
+                        "confirmed"
+                );
 
 
-                const name =
-                    document.createElement(
-                        "div"
-                    );
-
-                name.className =
-                    "account-name";
-
-                name.textContent =
-                    "@" +
-                    account.username;
+            list.innerHTML =
+                "";
 
 
-                const status =
-                    document.createElement(
-                        "div"
-                    );
+            if(
+                confirmed.length ===
+                0
+            ){
 
-                status.className =
-                    "account-status";
+                list.innerHTML =
+                    '<div class="empty">' +
+                    'No confirmed accounts yet.' +
+                    '</div>';
 
-                status.textContent =
-                    "✓ Confirmed";
-
-
-                left.appendChild(name);
-
-                left.appendChild(status);
-
-                item.appendChild(left);
-
-                list.appendChild(item);
+                return;
 
             }
-        );
 
-    }
+
+            confirmed.forEach(
+                function([
+                    id,
+                    account
+                ]){
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "account";
+
+
+                    const name =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    name.className =
+                        "account-name";
+
+
+                    name.textContent =
+                        "@" +
+                        (
+                            account.username ||
+                            "Unknown"
+                        );
+
+
+                    const status =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    status.className =
+                        "account-status";
+
+
+                    status.textContent =
+                        "✓ Confirmed";
+
+
+                    item.appendChild(
+                        name
+                    );
+
+
+                    item.appendChild(
+                        status
+                    );
+
+
+                    list.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        },
+
+        function(error){
+
+            console.error(
+                "Firebase read error:",
+                error
+            );
+
+
+            list.innerHTML =
+                '<div class="empty">' +
+                'Could not load confirmed accounts.' +
+                '</div>';
+
+        }
+
+    );
 
 
     overlay.style.display =
@@ -926,7 +912,7 @@ function(){
 
 
 /* =====================================
-   CLOSE POPUP
+   CLOSE CONFIRMED
 ===================================== */
 
 window.closeConfirmed =
@@ -965,6 +951,7 @@ document
 
         }
     );
+
 
 </script>
 
