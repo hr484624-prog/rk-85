@@ -1,1721 +1,489 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="mr">
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
-
-<title>GyanSetu Admin Messages</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>दोरवीर: रात्रीचं शहर</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;800&display=swap" rel="stylesheet">
 <style>
-
-*{
-  box-sizing:border-box;
-}
-
-html,
-body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-  background:#f4f8ff;
-  color:#172033;
-}
-
-body{
-  overflow:hidden;
-}
-
-
-/* =====================================================
-   APP
-===================================================== */
-
-.app{
-  width:100%;
-  height:100vh;
-  display:flex;
-  overflow:hidden;
-}
-
-
-/* =====================================================
-   USERS PANEL
-===================================================== */
-
-.users-panel{
-  width:350px;
-  min-width:300px;
-  height:100%;
-  background:white;
-  border-right:1px solid #e3ebf7;
-  display:flex;
-  flex-direction:column;
-}
-
-
-/* HEADER */
-
-.users-header{
-  padding:18px 18px 14px;
-  background:
-    linear-gradient(
-      135deg,
-      #1261d6,
-      #2678ef
-    );
-  color:white;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.brand-icon{
-  width:42px;
-  height:42px;
-  border-radius:13px;
-  background:rgba(255,255,255,.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-}
-
-.brand-name{
-  font-size:20px;
-  font-weight:800;
-}
-
-.admin-label{
-  font-size:11px;
-  opacity:.85;
-  margin-top:2px;
-}
-
-
-/* SEARCH */
-
-.search-area{
-  padding:13px;
-  background:white;
-  border-bottom:1px solid #edf1f7;
-}
-
-.search{
-  width:100%;
-  border:1px solid #dce6f3;
-  background:#f7faff;
-  border-radius:13px;
-  padding:12px 14px;
-  outline:none;
-  font-size:14px;
-}
-
-.search:focus{
-  border-color:#2879e8;
-  box-shadow:
-    0 0 0 3px
-    rgba(40,121,232,.09);
-}
-
-
-/* USER LIST */
-
-.user-list{
-  flex:1;
-  overflow-y:auto;
-  padding:8px;
-}
-
-.user-card{
-  width:100%;
-  border:0;
-  background:white;
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:6px;
-  display:flex;
-  align-items:center;
-  gap:11px;
-  cursor:pointer;
-  text-align:left;
-  transition:.15s;
-}
-
-.user-card:hover{
-  background:#f3f8ff;
-}
-
-.user-card.active{
-  background:#eaf3ff;
-  box-shadow:
-    inset 3px 0 0 #1976d2;
-}
-
-.avatar{
-  width:46px;
-  height:46px;
-  flex-shrink:0;
-  border-radius:50%;
-  background:
-    linear-gradient(
-      135deg,
-      #dcebff,
-      #b9d7ff
-    );
-  color:#1359b7;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-  font-weight:bold;
-}
-
-.user-info{
-  flex:1;
-  min-width:0;
-}
-
-.user-name{
-  font-size:15px;
-  font-weight:bold;
-  color:#172033;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.user-email{
-  margin-top:4px;
-  font-size:12px;
-  color:#7a8798;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.user-arrow{
-  color:#a5b1c2;
-  font-size:19px;
-}
-
-
-/* =====================================================
-   CHAT PANEL
-===================================================== */
-
-.chat-panel{
-  flex:1;
-  height:100%;
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  background:#f4f8ff;
-}
-
-
-/* CHAT HEADER */
-
-.chat-header{
-  height:68px;
-  flex-shrink:0;
-  background:white;
-  border-bottom:1px solid #e3ebf7;
-  display:flex;
-  align-items:center;
-  padding:0 18px;
-  gap:12px;
-}
-
-.mobile-back{
-  display:none;
-  border:0;
-  background:#eef5ff;
-  color:#1464ce;
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  font-size:22px;
-}
-
-.chat-avatar{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  background:#e4f0ff;
-  color:#1261d6;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-}
-
-.chat-user{
-  min-width:0;
-}
-
-.chat-name{
-  font-size:16px;
-  font-weight:bold;
-}
-
-.chat-email{
-  font-size:12px;
-  color:#7b8798;
-  margin-top:3px;
-}
-
-
-/* =====================================================
-   CHAT AREA
-===================================================== */
-
-.chat{
-  flex:1;
-  overflow-y:auto;
-  padding:20px;
-}
-
-.welcome{
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  color:#718096;
-}
-
-.welcome-icon{
-  width:80px;
-  height:80px;
-  border-radius:25px;
-  background:#e4f0ff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:38px;
-  margin-bottom:15px;
-}
-
-.welcome h2{
-  margin:0 0 8px;
-  color:#26354a;
-}
-
-.welcome p{
-  margin:0;
-  font-size:14px;
-}
-
-
-/* MESSAGE */
-
-.message-row{
-  display:flex;
-  margin-bottom:10px;
-}
-
-.message-row.admin{
-  justify-content:flex-end;
-}
-
-.message-row.user{
-  justify-content:flex-start;
-}
-
-.message-bubble{
-  max-width:min(75%,560px);
-  padding:10px 13px;
-  border-radius:16px;
-  background:white;
-  box-shadow:
-    0 2px 8px
-    rgba(22,65,115,.07);
-  word-break:break-word;
-}
-
-.message-row.admin
-.message-bubble{
-  background:#1769e0;
-  color:white;
-  border-bottom-right-radius:5px;
-}
-
-.message-row.user
-.message-bubble{
-  border-bottom-left-radius:5px;
-}
-
-.message-text{
-  font-size:14px;
-  line-height:1.45;
-}
-
-.message-time{
-  margin-top:5px;
-  font-size:10px;
-  opacity:.62;
-  text-align:right;
-}
-
-
-/* =====================================================
-   INPUT
-===================================================== */
-
-.message-input-area{
-  flex-shrink:0;
-  padding:10px;
-  background:white;
-  border-top:1px solid #e0e8f2;
-  display:flex;
-  gap:9px;
-}
-
-.message-input{
-  flex:1;
-  min-width:0;
-  border:1px solid #d7e3f1;
-  border-radius:24px;
-  padding:12px 15px;
-  outline:none;
-  font-size:14px;
-  background:#f9fbff;
-}
-
-.message-input:focus{
-  background:white;
-  border-color:#2879e8;
-  box-shadow:
-    0 0 0 3px
-    rgba(40,121,232,.08);
-}
-
-.send-button{
-  width:46px;
-  height:46px;
-  border:0;
-  border-radius:50%;
-  background:
-    linear-gradient(
-      135deg,
-      #1976d2,
-      #0d47a1
-    );
-  color:white;
-  font-size:18px;
-  cursor:pointer;
-}
-
-.send-button:disabled{
-  opacity:.5;
-  cursor:not-allowed;
-}
-
-
-/* =====================================================
-   STATUS
-===================================================== */
-
-.status{
-  padding:9px 15px;
-  font-size:12px;
-  text-align:center;
-  background:#f7faff;
-  color:#6d7b8f;
-  border-bottom:1px solid #e7edf5;
-}
-
-.loading{
-  text-align:center;
-  color:#78869a;
-  padding:30px 15px;
-}
-
-.empty{
-  text-align:center;
-  color:#8995a5;
-  padding:35px 15px;
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media(max-width:720px){
-
-  .users-panel{
-    width:100%;
-    min-width:100%;
-  }
-
-  .chat-panel{
-    display:none;
-    width:100%;
-  }
-
-  .app.show-chat .users-panel{
-    display:none;
-  }
-
-  .app.show-chat .chat-panel{
-    display:flex;
-  }
-
-  .mobile-back{
-    display:block;
-  }
-
-  .message-bubble{
-    max-width:84%;
-  }
-
-}
-
-
-/* =====================================================
-   NO SCROLLBAR
-===================================================== */
-
-::-webkit-scrollbar{
-  width:5px;
-}
-
-::-webkit-scrollbar-thumb{
-  background:#cbd8e8;
-  border-radius:10px;
-}
-
+:root{--bg:#0b0610;--ink:#f6ece4;--red:#ff3b4e;--panel:rgba(14,8,18,.72);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0610}}
+:root[data-theme="dark"]{--bg:#0b0610}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;font-family:'Baloo 2','Noto Sans Devanagari',sans-serif}
+canvas#c{position:fixed;inset:0;width:100%;height:100%}
+#hud{position:fixed;left:10px;top:calc(10px + env(safe-area-inset-top,0px));background:var(--panel);padding:8px 12px;border-radius:12px;min-width:150px}
+#hpbar{height:10px;background:#331018;border-radius:6px;overflow:hidden;margin:4px 0}
+#hp{height:100%;width:100%;background:var(--red)}
+#kills{position:fixed;right:10px;top:calc(10px + env(safe-area-inset-top,0px));background:var(--panel);padding:8px 12px;border-radius:12px;font-size:16px;text-align:right}
+#toast{position:fixed;left:50%;top:30%;transform:translateX(-50%);font-size:28px;font-weight:800;color:#ffd27a;text-shadow:0 2px 8px #000;opacity:0;transition:opacity .2s;pointer-events:none;text-align:center;white-space:nowrap}
+#joy{position:fixed;left:22px;bottom:calc(26px + env(safe-area-inset-bottom,0px));width:130px;height:130px;border-radius:50%;background:var(--panel);border:2px solid rgba(255,255,255,.2);display:none}
+#knob{position:absolute;left:40px;top:40px;width:50px;height:50px;border-radius:50%;background:rgba(255,59,78,.85)}
+#btns{position:fixed;right:16px;bottom:calc(26px + env(safe-area-inset-bottom,0px));display:none;gap:12px;align-items:flex-end}
+.btn{width:74px;height:74px;border-radius:50%;background:var(--panel);border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800}
+.btn.big{width:96px;height:96px;font-size:24px;border-color:var(--red)}
+.btn.on{background:var(--red)}
+@media (pointer:coarse){#joy{display:block}#btns{display:flex}}
+#rot{position:fixed;inset:0;z-index:99;background:#0b0610;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:24px;font-weight:800;padding:20px}
+#rot span{font-size:70px;display:block;animation:tw 1.6s ease-in-out infinite}
+@keyframes tw{0%,30%{transform:rotate(0)}70%,100%{transform:rotate(-90deg)}}
+@media (orientation:portrait) and (pointer:coarse){#rot{display:flex}}
+#start{overflow:auto}
+#tod{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));background:var(--panel);padding:6px 16px;border-radius:20px;font-weight:800;font-size:16px;border:2px solid rgba(255,255,255,.25)}
+@media (max-height:480px){#start{justify-content:flex-start}#start h1{font-size:34px}#start p{font-size:14px;margin:3px 0}#go{margin-top:8px;font-size:18px}}
+#start{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#4a0f22,#0b0610 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+#start h1{font-size:52px;margin:0;font-weight:800;color:var(--red);line-height:1}
+#start p{max-width:430px;margin:8px 0;font-size:17px}
+#go{margin-top:16px;font:800 22px 'Baloo 2',sans-serif;background:var(--red);color:#fff;border:0;border-radius:14px;padding:10px 36px}
 </style>
-
 </head>
-
-
 <body>
-
-
-<div class="app" id="app">
-
-
-<!-- ===================================================
-     USERS
-=================================================== -->
-
-<section class="users-panel">
-
-  <div class="users-header">
-
-    <div class="brand">
-
-      <div class="brand-icon">
-        📚
-      </div>
-
-      <div>
-
-        <div class="brand-name">
-          GyanSetu
-        </div>
-
-        <div class="admin-label">
-          ADMIN MESSAGES
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="search-area">
-
-    <input
-      id="searchInput"
-      class="search"
-      type="text"
-      placeholder="Search users..."
-      autocomplete="off"
-    >
-
-  </div>
-
-
-  <div
-    id="userList"
-    class="user-list"
-  >
-
-    <div class="loading">
-      Loading users...
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ===================================================
-     CHAT
-=================================================== -->
-
-<section class="chat-panel">
-
-
-  <header class="chat-header">
-
-    <button
-      id="mobileBack"
-      class="mobile-back"
-      type="button"
-    >
-      ‹
-    </button>
-
-
-    <div
-      id="chatAvatar"
-      class="chat-avatar"
-    >
-      ?
-    </div>
-
-
-    <div class="chat-user">
-
-      <div
-        id="chatName"
-        class="chat-name"
-      >
-        Select a user
-      </div>
-
-      <div
-        id="chatEmail"
-        class="chat-email"
-      >
-        Choose a user to open conversation
-      </div>
-
-    </div>
-
-  </header>
-
-
-  <div
-    id="status"
-    class="status"
-  >
-    Secure admin conversation
-  </div>
-
-
-  <main
-    id="chat"
-    class="chat"
-  >
-
-    <div class="welcome">
-
-      <div class="welcome-icon">
-        💬
-      </div>
-
-      <h2>
-        GyanSetu Messages
-      </h2>
-
-      <p>
-        डावीकडून user निवडा आणि conversation उघडा.
-      </p>
-
-    </div>
-
-  </main>
-
-
-  <div class="message-input-area">
-
-    <input
-      id="messageInput"
-      class="message-input"
-      type="text"
-      placeholder="Type a message..."
-      autocomplete="off"
-      disabled
-    >
-
-    <button
-      id="sendButton"
-      class="send-button"
-      type="button"
-      disabled
-    >
-      ➤
-    </button>
-
-  </div>
-
-</section>
-
+<canvas id="c"></canvas>
+<div id="hud"><div>आरोग्य &nbsp; गुण: <b id="score">0</b></div><div id="hpbar"><div id="hp"></div></div></div>
+<div id="kills">गुंडे संपवले: <b id="k">0</b></div>
+<div id="toast"></div>
+<div id="tod">रात्र 🌙</div>
+<div id="joy"><div id="knob"></div></div>
+<div id="btns">
+  <span class="btn" data-k="jump">उडी</span>
+  <span class="btn" data-k="punch">मार</span>
+  <span class="btn big" data-k="rope">दोरी</span>
 </div>
-
-
+<div id="rot"><span>📱</span>खेळण्यासाठी फोन आडवा करा</div>
+<div id="start">
+  <h1>दोरवीर</h1>
+  <p>रात्रीच्या शहरात गुंडांचा सुळसुळाट झालाय. दोरीने इमारतींवरून झोके घ्या आणि सगळ्यांना धडा शिकवा.</p>
+  <p><b>दोरी बटण दाबून धरा</b> म्हणजे झोका सुरू. सोडलं की हवेत उडाल. वेगात झोका घेऊन गुंडाला धडकलात तर जोरदार लाथ बसते.</p>
+  <p>संगणक: WASD चाला, Space उडी, E दोरी (दाबून धरा), F मार, माउस ड्रॅग कॅमेरा. मोबाईल: डावीकडे जॉयस्टिक, उजवीकडे बटणं, स्क्रीन ड्रॅग करून कॅमेरा फिरवा.</p>
+  <button id="go">खेळ सुरू करा</button>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
 <script>
+const T=THREE,V=(x,y,z)=>new T.Vector3(x,y,z),rnd=(a,b)=>a+Math.random()*(b-a),PI=Math.PI;
+const $=id=>document.getElementById(id);
+const R=new T.WebGLRenderer({canvas:$('c'),antialias:true});
+R.setPixelRatio(Math.min(devicePixelRatio||1,1.5));R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.25;R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;
+const sc=new T.Scene();sc.fog=new T.FogExp2(0x2a0a16,.0042);
+const cam=new T.PerspectiveCamera(70,1,.5,3000);
+function rs(){R.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();}
+addEventListener('resize',rs);rs();
 
-/* =====================================================
-   SUPABASE
-===================================================== */
+// Lights
+const amb=new T.AmbientLight(0x6a4a7a,.9);sc.add(amb);
+const dl=new T.DirectionalLight(0xaab8ff,1.1);dl.castShadow=true;dl.shadow.mapSize.set(1024,1024);const sh=dl.shadow.camera;sh.left=sh.bottom=-70;sh.right=sh.top=70;sh.near=10;sh.far=420;dl.shadow.bias=-.0008;sc.add(dl);sc.add(dl.target);
+const dl2=new T.DirectionalLight(0xff4a3a,.55);dl2.position.set(200,40,200);sc.add(dl2);
+const hemi=new T.HemisphereLight(0x5a4a9a,0x2a0a14,.5);sc.add(hemi);
 
-const SUPABASE_URL =
-  "https://eqglttfffhvoyvrclzse.supabase.co";
+// Sky, moon, stars
+const sk=document.createElement('canvas');sk.width=4;sk.height=256;
+const sg=sk.getContext('2d'),gr=sg.createLinearGradient(0,0,0,256);
+[[0,'#05010d'],[.35,'#1a0522'],[.47,'#7a1428'],[.5,'#d23a30'],[.52,'#3a0c16'],[1,'#14040a']].forEach(s=>gr.addColorStop(s[0],s[1]));
+sg.fillStyle=gr;sg.fillRect(0,0,4,256);
+const sky=new T.Mesh(new T.SphereGeometry(1500,24,16),new T.MeshBasicMaterial({map:new T.CanvasTexture(sk),side:T.BackSide,fog:false,toneMapped:false}));sc.add(sky);
+const moon=new T.Mesh(new T.SphereGeometry(55,20,14),new T.MeshBasicMaterial({color:0xffe2c4,fog:false,toneMapped:false}));moon.position.set(-420,380,-900);sc.add(moon);
+{const p=[];for(let i=0;i<500;i++){const a=rnd(0,PI*2),e=rnd(.15,1.3),r=1400;p.push(Math.cos(a)*Math.cos(e)*r,Math.sin(e)*r,Math.sin(a)*Math.cos(e)*r);}
+const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));
+sc.add(new T.Points(g,new T.PointsMaterial({color:0xffffff,size:3,fog:false})));}
 
-const SUPABASE_KEY =
-  "sb_publishable_rR4xxl0dW5DJrhhjqiFHLw_uJ-HakAb";
+// City
+const CELL=64,B=[];
+const wc=document.createElement('canvas');wc.width=wc.height=128;const wx=wc.getContext('2d');
+wx.fillStyle='#0b0b12';wx.fillRect(0,0,128,128);
+for(let y=0;y<8;y++)for(let x=0;x<8;x++)if(Math.random()<.45){wx.fillStyle=['#ffb347','#ffd27a','#6fe3ff','#ff5ea8'][Math.floor(Math.random()*4)];wx.fillRect(x*16+3,y*16+4,10,8);}
+const wt=new T.CanvasTexture(wc);wt.wrapS=wt.wrapT=T.RepeatWrapping;wt.magFilter=T.NearestFilter;
+const mats=[0x9a8ab8,0x8a9ab8,0xb89a9a,0x7a7a90].map(c=>new T.MeshStandardMaterial({color:c,map:wt,emissive:0xffffff,emissiveMap:wt,emissiveIntensity:.9,roughness:.7,metalness:.2}));
+const ac=document.createElement('canvas');ac.width=ac.height=128;const ax=ac.getContext('2d');ax.fillStyle='#1a1820';ax.fillRect(0,0,128,128);
+for(let i=0;i<1800;i++){const v=20+Math.random()*30|0;ax.fillStyle=`rgb(${v},${v},${v+6})`;ax.fillRect(Math.random()*128,Math.random()*128,2,2);}
+const at=new T.CanvasTexture(ac);at.wrapS=at.wrapT=T.RepeatWrapping;at.repeat.set(60,60);
+const ground=new T.Mesh(new T.PlaneGeometry(700,700),new T.MeshStandardMaterial({map:at,roughness:.45,metalness:.25}));ground.rotation.x=-PI/2;ground.receiveShadow=true;sc.add(ground);
+const lineM=new T.MeshBasicMaterial({color:0x7a6420});
+for(let i=-5;i<=4;i++){const c=(i+.5)*CELL;
+  const a=new T.Mesh(new T.BoxGeometry(640,.06,.6),lineM);a.position.set(0,.04,c);sc.add(a);
+  const b=new T.Mesh(new T.BoxGeometry(.6,.06,640),lineM);b.position.set(c,.04,0);sc.add(b);}
+const baseG=new T.BoxGeometry(42,.8,42),baseM=new T.MeshStandardMaterial({color:0x3a3640,roughness:.9});
+const lampG=new T.CylinderGeometry(.12,.16,7,6),lampM=new T.MeshStandardMaterial({color:0x222226}),lampHG=new T.SphereGeometry(.45,8,6),lampHM=new T.MeshBasicMaterial({color:0xffd9a0});
+const neon=[0xff2e88,0x2ee6ff,0xffd23a,0x8aff4a];
+for(let i=-4;i<=4;i++)for(let j=-4;j<=4;j++){
+  const base=new T.Mesh(baseG,baseM);base.position.set(i*CELL,.4,j*CELL);base.receiveShadow=true;sc.add(base);
+  const lp=new T.Mesh(lampG,lampM);lp.position.set(i*CELL+22.5,3.5,j*CELL+22.5);sc.add(lp);const lh=new T.Mesh(lampHG,lampHM);lh.position.set(i*CELL+22.5,7.2,j*CELL+22.5);sc.add(lh);
+  for(let q=0;q<4;q++){
+    const w=rnd(15,19),d=rnd(15,19),h=rnd(30,150),x=i*CELL+(q%2?10.5:-10.5),z=j*CELL+(q>>1?10.5:-10.5);
+    const g=new T.BoxGeometry(w,h,d),uv=g.attributes.uv;
+    for(let k=0;k<uv.count;k++)uv.setXY(k,uv.getX(k)*(w+d)/48,uv.getY(k)*h/24);
+    const m=new T.Mesh(g,mats[Math.floor(Math.random()*4)]);m.position.set(x,h/2,z);m.castShadow=m.receiveShadow=true;sc.add(m);
+    B.push({x,z,w,d,h});m.userData.old=1;
+    if(h>95){const bc=new T.Mesh(new T.BoxGeometry(1.4,2.4,1.4),new T.MeshBasicMaterial({color:0xff2030}));bc.position.set(x,h+1.2,z);bc.userData.old=1;sc.add(bc);}
+    if(Math.random()<.28){const s=new T.Mesh(new T.BoxGeometry(.6,h*.35,3.2),new T.MeshBasicMaterial({color:neon[Math.floor(Math.random()*4)]}));s.position.set(x+w/2+.4,h*.62,z);s.userData.old=1;sc.add(s);}
+  }
+}
+const LIM=CELL*4.5;
 
+// Characters
+function box(w,h,d,c,y,x,z,em){const m=new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshLambertMaterial({color:c,emissive:em||0}));m.position.set(x||0,y||0,z||0);return m;}
+function pivot(parent,x,y,z,mesh,off){const p=new T.Group();p.position.set(x,y,z);mesh.position.y=off;p.add(mesh);parent.add(p);return p;}
+function cyl(rt,rb,h,c,y,x,z,em){const m=new T.Mesh(new T.CylinderGeometry(rt,rb,h,14),new T.MeshStandardMaterial({color:c,roughness:.5,metalness:.2,emissive:em||0}));m.position.set(x||0,y||0,z||0);return m;}
+function ball(r,c,y,x,z,em){const m=new T.Mesh(new T.SphereGeometry(r,18,14),new T.MeshStandardMaterial({color:c,roughness:.45,metalness:.15,emissive:em||0}));m.position.set(x||0,y||0,z||0);return m;}
+function mkHero(){
+  const g=new T.Group();
+  g.add(cyl(.62,.42,1.5,0xb01830,2.25));g.add(cyl(.45,.45,.22,0x15151c,1.62));
+  g.add(ball(.42,0xb01830,3.28));
+  g.add(box(.2,.12,.05,0xffffff,3.32,-.17,.38,0xffffff));g.add(box(.2,.12,.05,0xffffff,3.32,.17,.38,0xffffff));
+  g.add(ball(.27,0xb01830,2.85,-.72));g.add(ball(.27,0xb01830,2.85,.72));
+  const legL=pivot(g,-.3,1.5,0,cyl(.23,.17,1.5,0x15151c),-.75),legR=pivot(g,.3,1.5,0,cyl(.23,.17,1.5,0x15151c),-.75);
+  const armL=pivot(g,-.78,2.8,0,cyl(.17,.14,1.3,0x15151c),-.55),armR=pivot(g,.78,2.8,0,cyl(.17,.14,1.3,0x15151c),-.55);
+  g.legL=legL;g.legR=legR;g.armL=armL;g.armR=armR;return g;
+}
+const ET=[{s:1,hp:100,sp:6,dm:9,sc:100},{s:1.45,hp:250,sp:4.5,dm:18,sc:300},{s:.9,hp:60,sp:9.5,dm:5,sc:150},{s:1.9,hp:600,sp:5,dm:25,sc:1000}];
+function mkEnemy(t){
+  const g=new T.Group(),c=t===1?0x7a1a1a:t===2?0x9a8a1a:t===3?0x4a1a6a:[0x3a5a2a,0x5a2a5a,0x2a4a6a][Math.floor(Math.random()*3)];
+  g.scale.setScalar(ET[t].s);
+  const body=cyl(.6,.5,1.7,c,1.9);g.add(body);g.add(ball(.4,0x8a6a50,3.1));
+  g.add(box(.5,.12,.05,0xff2020,3.15,0,.37,0xff2020));
+  g.add(cyl(.2,.16,1.1,0x222222,.55,-.3));g.add(cyl(.2,.16,1.1,0x222222,.55,.3));
+  g.add(cyl(.15,.12,1.2,c,2.2,-.78));g.add(cyl(.15,.12,1.2,c,2.2,.78));
+  if(t===3){g.add(cyl(.05,.14,.8,0xffd23a,3.8,-.25));g.add(cyl(.05,.14,.8,0xffd23a,3.8,.25));}
+  g.body=body;return g;
+}
+const hero=mkHero();sc.add(hero);hero.traverse(o=>{if(o.isMesh)o.castShadow=true;});
+const P={pos:V(CELL/2,0,CELL/2),vel:V(),face:0,hp:100,grounded:true,rope:null,ropeT:0,lock:false,punchT:0,pcd:0,hurt:0,ph:0,score:0,kills:0};
+const rope=new T.Line(new T.BufferGeometry().setFromPoints([V(),V()]),new T.LineBasicMaterial({color:0xffffff}));rope.frustumCulled=false;rope.visible=false;sc.add(rope);
+const hook=new T.Mesh(new T.SphereGeometry(.6,8,8),new T.MeshBasicMaterial({color:0xff5060}));hook.visible=false;sc.add(hook);
+const E=[];
+function spawnE(e){
+  let x,z;do{const r=(Math.floor(rnd(-5,5))+.5)*CELL,t=rnd(-LIM+10,LIM-10);if(Math.random()<.5){x=r;z=t;}else{x=t;z=r;}}while(Math.hypot(x-P.pos.x,z-P.pos.z)<70);
+  e.pos.set(x,0,z);e.hp=ET[e.t].hp;e.cd=0;e.flash=0;e.hitCd=0;e.dead=0;e.g.visible=true;
+}
+for(let i=0;i<14;i++){const t=i===13?3:i%7===0?1:i%5===0?2:0,e={t,g:mkEnemy(t),pos:V(),vel:V()};sc.add(e.g);e.g.traverse(o=>{if(o.isMesh)o.castShadow=true;});spawnE(e);E.push(e);}
 
-const supabaseClient =
-  supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY,
-    {
-      auth:{
-        persistSession:true,
-        autoRefreshToken:true,
-        detectSessionInUrl:true
+// Civilians
+const C=[];
+function mkCiv(){
+  const g=new T.Group(),c=[0x3a6ea5,0xc9a227,0x8a3a6a,0x4a8a5a,0xd8d8d8,0xb85a2a][Math.floor(Math.random()*6)];
+  g.add(cyl(.5,.42,1.5,c,2.2));g.add(ball(.36,[0xd9a37a,0x8a5a3a,0xf0c8a0][Math.floor(Math.random()*3)],3.15));
+  g.legL=pivot(g,-.25,1.5,0,cyl(.2,.17,1.5,0x2a3a5a),-.75);g.legR=pivot(g,.25,1.5,0,cyl(.2,.17,1.5,0x2a3a5a),-.75);
+  return g;
+}
+for(let i=0;i<14;i++){
+  const g=mkCiv(),v=Math.random()<.5,rc=(Math.floor(rnd(-5,5))+.5)*CELL,side=Math.random()<.5?-8.5:8.5,t=rnd(-LIM+10,LIM-10);
+  const c={g,pos:V(v?rc+side:t,0,v?t:rc+side),v,d:Math.random()<.5?1:-1,ph:rnd(0,6),flee:0};
+  sc.add(g);g.traverse(o=>{if(o.isMesh)o.castShadow=true;});C.push(c);
+}
+function updateCivs(dt){
+  const sp=Math.hypot(P.vel.x,P.vel.z);
+  for(const c of C){
+    const dx=c.pos.x-P.pos.x,dz=c.pos.z-P.pos.z,d=Math.hypot(dx,dz)||1;
+    let vx=0,vz=0,s=2.2;
+    if(d<22&&(P.rope||sp>12)&&P.pos.y<14)c.flee=1.5;
+    c.flee-=dt;
+    if(c.flee>0){s=7;vx=dx/d;vz=dz/d;}
+    else{
+      const q=c.v?c.pos.z:c.pos.x;if(q>LIM-8)c.d=-1;else if(q<-LIM+8)c.d=1;
+      if(c.v)vz=c.d;else vx=c.d;
+    }
+    c.pos.x+=vx*s*dt;c.pos.z+=vz*s*dt;
+    collide(c.pos,.5,null);c.pos.y=0;
+    c.pos.x=Math.max(-LIM,Math.min(LIM,c.pos.x));c.pos.z=Math.max(-LIM,Math.min(LIM,c.pos.z));
+    c.g.position.copy(c.pos);
+    if(vx||vz)c.g.rotation.y=Math.atan2(vx,vz);
+    c.ph+=dt*s*2.4;const a=Math.sin(c.ph)*.8;c.g.legL.rotation.x=a;c.g.legR.rotation.x=-a;
+    c.g.visible=d<140;
+    if(c.mix&&d<140){const tg=c.flee>0?c.run:c.walk;if(c.cur!==tg){tg.reset().play();if(c.cur)c.cur.crossFadeTo(tg,.2,false);c.cur=tg;}c.mix.update(dt);}
+  }
+}
+
+// Input
+const keys={},act={jump:0,punch:0,rope:0};let jumpReq=0,punchReq=0,jx=0,jy=0;
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(e.repeat)return;keys[k]=1;if(k===' ')jumpReq=1;if(k==='f')punchReq=1;if(' '===k)e.preventDefault();});
+addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=0;});
+document.querySelectorAll('.btn').forEach(b=>{
+  const k=b.dataset.k,on=v=>e=>{e.preventDefault();e.stopPropagation();act[k]=v;b.classList.toggle('on',!!v);if(v&&k==='jump')jumpReq=1;if(v&&k==='punch')punchReq=1;};
+  b.addEventListener('pointerdown',on(1));['pointerup','pointerleave','pointercancel'].forEach(t=>b.addEventListener(t,on(0)));
+});
+const joy=$('joy'),knob=$('knob');let jid=null;
+function jm(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+65),dy=e.clientY-(r.top+65),l=Math.min(50,Math.hypot(dx,dy)),a=Math.atan2(dy,dx);
+  jx=Math.cos(a)*l/50;jy=Math.sin(a)*l/50;knob.style.transform=`translate(${Math.cos(a)*l}px,${Math.sin(a)*l}px)`;}
+joy.addEventListener('pointerdown',e=>{jid=e.pointerId;joy.setPointerCapture(jid);jm(e);});
+joy.addEventListener('pointermove',e=>{if(e.pointerId===jid)jm(e);});
+['pointerup','pointercancel'].forEach(t=>joy.addEventListener(t,e=>{if(e.pointerId===jid){jid=null;jx=jy=0;knob.style.transform='';}}));
+let yaw=0,pitch=.35,drag=null;
+$('c').addEventListener('pointerdown',e=>{drag={id:e.pointerId,x:e.clientX,y:e.clientY};$('c').setPointerCapture(e.pointerId);});
+$('c').addEventListener('pointermove',e=>{if(drag&&e.pointerId===drag.id){yaw-=(e.clientX-drag.x)*.006;pitch=Math.max(.02,Math.min(1.2,pitch+(e.clientY-drag.y)*.004));drag.x=e.clientX;drag.y=e.clientY;}});
+['pointerup','pointercancel'].forEach(t=>$('c').addEventListener(t,()=>{drag=null;}));
+
+let toastT=0;
+function toast(s){const e=$('toast');e.textContent=s;e.style.opacity=1;toastT=1.4;}
+const lerpA=(a,b,t)=>{let d=((b-a+PI)%(PI*2)+PI*2)%(PI*2)-PI;return a+d*t;};
+
+// Collision: returns floor height under p
+function collide(p,r,vel){
+  let floor=0;
+  for(const b of B){
+    const dx=p.x-b.x,dz=p.z-b.z,ox=b.w/2+r-Math.abs(dx),oz=b.d/2+r-Math.abs(dz);
+    if(ox>0&&oz>0){
+      if(p.y>=b.h-.6){if(b.h>floor)floor=b.h;}
+      else{
+        if(ox<oz){p.x+=(dx>=0?1:-1)*ox;if(vel)vel.x*=-.2;}else{p.z+=(dz>=0?1:-1)*oz;if(vel)vel.z*=-.2;}
       }
     }
-  );
-
-
-/* =====================================================
-   STATE
-===================================================== */
-
-let currentUser = null;
-
-let selectedUser = null;
-
-let allUsers = [];
-
-let realtimeChannel = null;
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const app =
-  document.getElementById("app");
-
-const userList =
-  document.getElementById("userList");
-
-const chat =
-  document.getElementById("chat");
-
-const chatName =
-  document.getElementById("chatName");
-
-const chatEmail =
-  document.getElementById("chatEmail");
-
-const chatAvatar =
-  document.getElementById("chatAvatar");
-
-const statusBar =
-  document.getElementById("status");
-
-const messageInput =
-  document.getElementById("messageInput");
-
-const sendButton =
-  document.getElementById("sendButton");
-
-const searchInput =
-  document.getElementById("searchInput");
-
-
-/* =====================================================
-   HTML ESCAPE
-===================================================== */
-
-function escapeHTML(value){
-
-  const div =
-    document.createElement("div");
-
-  div.textContent =
-    value ?? "";
-
-  return div.innerHTML;
-
+  }
+  return floor;
 }
 
-
-/* =====================================================
-   GET CURRENT USER
-===================================================== */
-
-async function getCurrentUser(){
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth.getUser();
-
-
-  if(error){
-
-    console.error(
-      "AUTH ERROR:",
-      error
-    );
-
-    return null;
-
-  }
-
-
-  return data?.user || null;
-
+function attach(){
+  let fx=-Math.sin(yaw),fz=-Math.cos(yaw);
+  const sp=Math.hypot(P.vel.x,P.vel.z);if(sp>4){fx=P.vel.x/sp;fz=P.vel.z/sp;}
+  const a=V(P.pos.x+fx*22,P.pos.y+32,P.pos.z+fz*22);
+  P.rope={a,len:Math.max(16,a.distanceTo(P.pos)*.96)};P.ropeT=0;
+  if(P.grounded){P.vel.y=9;P.grounded=false;}
+  P.vel.x+=fx*5;P.vel.z+=fz*5;
+}
+function detach(boost){
+  if(!P.rope)return;P.rope=null;rope.visible=hook.visible=false;
+  if(boost){P.vel.multiplyScalar(1.08);P.vel.y+=3;}
 }
 
-
-/* =====================================================
-   ADMIN CHECK
-===================================================== */
-
-async function checkAdmin(){
-
-  if(!currentUser){
-
-    return false;
-
-  }
-
-
-  const {
-    data,
-    error
-  } =
-  await supabaseClient
-    .from("admin_users")
-    .select("user_id")
-    .eq(
-      "user_id",
-      currentUser.id
-    )
-    .maybeSingle();
-
-
-  if(error){
-
-    console.error(
-      "ADMIN CHECK ERROR:",
-      error
-    );
-
-    return false;
-
-  }
-
-
-  return !!data;
-
+function hitEnemy(e,dmg,kx,kz,msg){
+  e.hp-=dmg;e.flash=.12;e.pos.x+=kx*2/ET[e.t].s;e.pos.z+=kz*2/ET[e.t].s;
+  if(e.hp<=0){e.dead=e.t===3?20:3;e.g.visible=false;P.score+=ET[e.t].sc;P.kills++;toast(e.t===3?'म्होरक्या खल्लास! +1000':(msg||'गुंडा खल्लास! +'+ET[e.t].sc));}
+  else toast(msg||'दणका!');
 }
 
-
-/* =====================================================
-   LOAD USERS
-===================================================== */
-
-async function loadUsers(){
-
-  userList.innerHTML =
-    `<div class="loading">
-      Loading users...
-    </div>`;
-
-
-  const {
-    data,
-    error
-  } =
-  await supabaseClient
-    .from("Profiles")
-    .select("id,username,email")
-    .order(
-      "username",
-      {
-        ascending:true
-      }
-    );
-
-
-  if(error){
-
-    console.error(
-      "USERS ERROR:",
-      error
-    );
-
-    userList.innerHTML =
-      `<div class="empty">
-        Users load करता आले नाहीत.
-      </div>`;
-
-    return;
-
+function updatePlayer(dt){
+  const ropeHold=act.rope||keys['e'];
+  if(!ropeHold)P.lock=false;
+  if(ropeHold&&!P.rope&&!P.lock)attach();
+  else if(!ropeHold&&P.rope)detach(true);
+  // move input
+  let ix=(keys['d']?1:0)-(keys['a']?1:0)+jx,iy=(keys['w']?1:0)-(keys['s']?1:0)-jy;
+  const il=Math.hypot(ix,iy);if(il>1){ix/=il;iy/=il;}
+  const fx=-Math.sin(yaw),fz=-Math.cos(yaw),rx=Math.cos(yaw),rz=-Math.sin(yaw);
+  const mx=fx*iy+rx*ix,mz=fz*iy+rz*ix,mag=Math.min(1,il);
+  if(jumpReq){jumpReq=0;if(P.rope){P.lock=true;detach(true);P.vel.y+=9;}else if(P.grounded){P.vel.y=15;P.grounded=false;}}
+  if(P.rope){
+    P.ropeT+=dt;if(P.ropeT>3.2){P.lock=true;detach(true);}
   }
-
-
-  /*
-     स्वतःचा admin account list मधून काढतो.
-  */
-
-  allUsers =
-    (data || []).filter(
-      user =>
-        user.id !== currentUser.id
-    );
-
-
-  renderUsers(
-    allUsers
-  );
-
+  const air=!P.grounded;
+  if(!P.rope&&P.grounded){
+    const k=Math.min(1,14*dt);
+    P.vel.x+=(mx*12-P.vel.x)*k;P.vel.z+=(mz*12-P.vel.z)*k;
+  }else{
+    P.vel.x+=mx*(P.rope?16:10)*dt;P.vel.z+=mz*(P.rope?16:10)*dt;
+  }
+  P.vel.y-=38*dt;
+  const sp=P.vel.length();if(sp>58)P.vel.multiplyScalar(58/sp);
+  P.pos.addScaledVector(P.vel,dt);
+  if(P.rope){
+    P.rope.len=Math.max(12,P.rope.len-2*dt);
+    const d=P.pos.clone().sub(P.rope.a),L=d.length();
+    if(L>P.rope.len){d.multiplyScalar(1/L);P.pos.copy(P.rope.a).addScaledVector(d,P.rope.len);const vr=P.vel.dot(d);if(vr>0)P.vel.addScaledVector(d,-vr);}
+  }
+  const fl=collide(P.pos,.7,P.vel);
+  if(P.pos.y<=fl){P.pos.y=fl;if(P.vel.y<0)P.vel.y=0;P.grounded=true;}else P.grounded=false;
+  P.pos.x=Math.max(-LIM,Math.min(LIM,P.pos.x));P.pos.z=Math.max(-LIM,Math.min(LIM,P.pos.z));
+  if(P.grounded&&P.rope&&P.pos.y<=fl+.01&&P.vel.y<=0&&P.ropeT>.4){/* keep rope while skimming ground */}
+  // facing
+  const hs=Math.hypot(P.vel.x,P.vel.z);
+  if(hs>1.5)P.face=lerpA(P.face,Math.atan2(P.vel.x,P.vel.z),Math.min(1,12*dt));
+  // combat
+  P.pcd-=dt;P.punchT=Math.max(0,P.punchT-dt);P.hurt-=dt;
+  if(punchReq){punchReq=0;if(P.pcd<=0){P.pcd=.35;P.punchT=.25;P.ps=P.ps?0:1;
+    let best=null,bd=4.2;for(const e of E){if(e.dead)continue;const d=Math.hypot(e.pos.x-P.pos.x,e.pos.z-P.pos.z);if(d<bd&&Math.abs(P.pos.y)<6){bd=d;best=e;}}
+    if(best){const dx=best.pos.x-P.pos.x,dz=best.pos.z-P.pos.z,l=Math.hypot(dx,dz)||1;P.face=Math.atan2(dx,dz);hitEnemy(best,40,dx/l,dz/l);}}}
+  if(P.hurt<-4&&P.hp<100)P.hp=Math.min(100,P.hp+3*dt);
+  if(P.hp<=0){P.hp=100;P.pos.set(CELL/2,0,CELL/2);P.vel.set(0,0,0);detach(false);P.score=Math.floor(P.score/2);toast('तुम्ही पडलात! पुन्हा उठा');}
+  // hero model
+  hero.position.copy(P.pos);hero.rotation.y=P.face;
+  P.ph+=hs*dt*.55;const run=Math.min(1,hs/8);
+  if(P.rope){
+    hero.armR.rotation.x=-2.7;hero.armL.rotation.x=.4;hero.legL.rotation.x=.5;hero.legR.rotation.x=-.3;hero.rotation.x=.35;
+    const dir=P.rope.a.clone().sub(P.pos);hero.rotation.z=0;
+  }else if(!P.grounded){
+    hero.armL.rotation.x=hero.armR.rotation.x=-2.2;hero.legL.rotation.x=.6;hero.legR.rotation.x=-.5;hero.rotation.x=0;
+  }else{
+    const s=Math.sin(P.ph)*.9*run;hero.legL.rotation.x=s;hero.legR.rotation.x=-s;hero.armL.rotation.x=-s;hero.armR.rotation.x=s;hero.rotation.x=.1*run;
+  }
+  if(P.punchT>0)hero.armR.rotation.x=-1.6;
+  if(P.hurt>0)hero.rotation.z=Math.sin(P.hurt*60)*.1;else hero.rotation.z=0;
+  P.kickT=Math.max(0,(P.kickT||0)-dt);
+  if(mixer){
+    if(P.hurt>0)play('HitRecieve',.05,true,1.4);
+    else if(P.kickT>0)play('Kick_Right',.05,true,1.8);
+    else if(P.punchT>0)play(P.ps?'Punch_Left':'Punch_Right',.08,true,2.2);
+    else if(P.rope)play('Idle_Gun_Pointing',.15);
+    else if(!P.grounded)play('Roll',.15,false,.7);
+    else if(hs>9)play('Run',.15,false,Math.min(1.5,hs/11));
+    else if(hs>1.5)play('Walk',.15,false,1.1);
+    else play('Idle_Neutral',.2);
+    mixer.update(dt);
+  }
+  // rope visual
+  if(P.rope){
+    const hand=V(P.pos.x,P.pos.y+2.9,P.pos.z);
+    const arr=rope.geometry.attributes.position;arr.setXYZ(0,hand.x,hand.y,hand.z);arr.setXYZ(1,P.rope.a.x,P.rope.a.y,P.rope.a.z);arr.needsUpdate=true;
+    rope.visible=hook.visible=true;hook.position.copy(P.rope.a);
+  }
 }
 
-
-/* =====================================================
-   RENDER USERS
-===================================================== */
-
-function renderUsers(users){
-
-  if(!users.length){
-
-    userList.innerHTML =
-      `<div class="empty">
-        कोणतेही users सापडले नाहीत.
-      </div>`;
-
-    return;
-
-  }
-
-
-  userList.innerHTML =
-    "";
-
-
-  users.forEach(
-    user => {
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-      button.type =
-        "button";
-
-      button.className =
-        "user-card";
-
-
-      if(
-        selectedUser &&
-        selectedUser.id === user.id
-      ){
-
-        button.classList.add(
-          "active"
-        );
-
-      }
-
-
-      const name =
-        user.username ||
-        "Unknown User";
-
-
-      const email =
-        user.email ||
-        "Email unavailable";
-
-
-      const letter =
-        name
-          .charAt(0)
-          .toUpperCase();
-
-
-      button.innerHTML = `
-
-        <div class="avatar">
-          ${escapeHTML(letter)}
-        </div>
-
-        <div class="user-info">
-
-          <div class="user-name">
-            ${escapeHTML(name)}
-          </div>
-
-          <div class="user-email">
-            ${escapeHTML(email)}
-          </div>
-
-        </div>
-
-        <div class="user-arrow">
-          ›
-        </div>
-
-      `;
-
-
-      button.addEventListener(
-        "click",
-        function(){
-
-          selectUser(user);
-
-        }
-      );
-
-
-      userList.appendChild(
-        button
-      );
-
+function updateEnemies(dt){
+  for(const e of E){
+    if(e.dead>0){e.dead-=dt;if(e.dead<=0)spawnE(e);continue;}
+    const dx=P.pos.x-e.pos.x,dz=P.pos.z-e.pos.z,d=Math.hypot(dx,dz)||1;
+    if(d<60){
+      if(d>2.3*ET[e.t].s){e.pos.x+=dx/d*ET[e.t].sp*dt;e.pos.z+=dz/d*ET[e.t].sp*dt;}
+      e.g.rotation.y=Math.atan2(dx,dz);
     }
-  );
-
+    e.cd-=dt;e.hitCd-=dt;
+    if(d<2.5*ET[e.t].s&&P.pos.y<3&&e.cd<=0){e.cd=1;P.hp-=ET[e.t].dm;P.hurt=.3;toast(e.t===3?'म्होरक्या मारतोय!':'गुंडा मारतोय!');}
+    // swing kick
+    const sp=Math.hypot(P.vel.x,P.vel.z);
+    if(P.rope&&sp>16&&e.hitCd<=0&&Math.hypot(dx,dz)<3.4&&P.pos.y<5){e.hitCd=.6;P.kickT=.45;hitEnemy(e,100,P.vel.x/sp,P.vel.z/sp,'झोक्याची लाथ! +100');}
+    collide(e.pos,.6,null);
+    e.pos.y=0;e.g.position.copy(e.pos);
+    e.flash=Math.max(0,e.flash-dt);e.g.body.material.emissive.setHex(e.flash>0?0xffffff:0);
+    e.g.position.y=Math.abs(Math.sin(performance.now()/160+e.pos.x))*.12;
+  }
 }
 
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-searchInput.addEventListener(
-  "input",
-  function(){
-
-    const value =
-      searchInput.value
-        .toLowerCase()
-        .trim();
-
-
-    if(!value){
-
-      renderUsers(
-        allUsers
-      );
-
-      return;
-
-    }
-
-
-    const filtered =
-      allUsers.filter(
-        user => {
-
-          const name =
-            (
-              user.username ||
-              ""
-            ).toLowerCase();
-
-
-          const email =
-            (
-              user.email ||
-              ""
-            ).toLowerCase();
-
-
-          return (
-            name.includes(value) ||
-            email.includes(value)
-          );
-
-        }
-      );
-
-
-    renderUsers(
-      filtered
-    );
-
-  }
-);
-
-
-/* =====================================================
-   SELECT USER
-===================================================== */
-
-async function selectUser(user){
-
-  selectedUser =
-    user;
-
-
-  renderUsers(
-    getFilteredUsers()
-  );
-
-
-  chatName.textContent =
-    user.username ||
-    "Unknown User";
-
-
-  chatEmail.textContent =
-    user.email ||
-    "Email unavailable";
-
-
-  chatAvatar.textContent =
-    (
-      user.username ||
-      "U"
-    )
-    .charAt(0)
-    .toUpperCase();
-
-
-  messageInput.disabled =
-    false;
-
-  sendButton.disabled =
-    false;
-
-
-  statusBar.textContent =
-    "Secure admin conversation";
-
-
-  /*
-     Mobile वर chat panel.
-  */
-
-  app.classList.add(
-    "show-chat"
-  );
-
-
-  await loadConversation();
-
+function updateCam(dt){
+  const sp=Math.hypot(P.vel.x,P.vel.z);
+  if(!drag&&P.rope&&sp>8)yaw=lerpA(yaw,Math.atan2(-P.vel.x,-P.vel.z),Math.min(1,1.3*dt));
+  const dist=P.rope?15:10,tx=P.pos.x,ty=P.pos.y+2.6,tz=P.pos.z;
+  const cp=V(tx+Math.sin(yaw)*Math.cos(pitch)*dist,ty+Math.sin(pitch)*dist+1,tz+Math.cos(yaw)*Math.cos(pitch)*dist);
+  cam.position.lerp(cp,Math.min(1,8*dt));
+  if(cam.position.y<1.2)cam.position.y=1.2;
+  cam.lookAt(tx,ty,tz);
+  cam.fov+=((P.rope?78:70)-cam.fov)*Math.min(1,3*dt);cam.updateProjectionMatrix();
+  sky.position.copy(cam.position);
+  dl.target.position.copy(P.pos);dl.position.set(P.pos.x-90,P.pos.y+150,P.pos.z-60);dl.target.updateMatrixWorld();
 }
 
-
-/* =====================================================
-   FILTER
-===================================================== */
-
-function getFilteredUsers(){
-
-  const value =
-    searchInput.value
-      .toLowerCase()
-      .trim();
-
-
-  if(!value){
-
-    return allUsers;
-
-  }
-
-
-  return allUsers.filter(
-    user => {
-
-      const name =
-        (
-          user.username ||
-          ""
-        ).toLowerCase();
-
-
-      const email =
-        (
-          user.email ||
-          ""
-        ).toLowerCase();
-
-
-      return (
-        name.includes(value) ||
-        email.includes(value)
-      );
-
-    }
-  );
-
+const GLB_B64="...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...";
+let mixer=null,cur=null;const AN={};
+function play(n,fade,once,ts){const a=AN[n];if(!a)return;if(cur===a){a.timeScale=ts||1;return;}a.reset();a.setLoop(once?T.LoopOnce:T.LoopRepeat,Infinity);a.clampWhenFinished=!!once;a.timeScale=ts||1;a.play();if(cur)cur.crossFadeTo(a,fade||.2,false);cur=a;}
+const KB=["...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)..."],KL=["...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)..."];
+const TEXA="...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...",TEXB="...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...";
+function loadCity(){
+  const ld=u=>{const t=new T.TextureLoader().load(u);t.flipY=false;t.magFilter=t.minFilter=T.NearestFilter;t.generateMipmaps=false;return t;};
+  const texA=ld(TEXA),texB=ld(TEXB),full=[],low=[];let pend=KB.length+KL.length;
+  const fin=()=>{if(--pend===0)buildCity(full,low);};
+  const load=(b,out)=>{
+    new T.GLTFLoader().parse(b64buf(b),'',g=>{
+      const s=g.scene;s.updateMatrixWorld(true);
+      const bb=new T.Box3().setFromObject(s),sz=bb.getSize(new T.Vector3());
+      s.traverse(o=>{if(o.isMesh){const m=o.material;m.map=texA;m.emissive=new T.Color(0xffffff);m.emissiveMap=texA;m.emissiveIntensity=.35;m.roughness=.8;m.metalness=0;m.needsUpdate=true;}});
+      const sB=s.clone(true);
+      sB.traverse(o=>{if(o.isMesh){const m=o.material.clone();m.map=texB;m.emissiveMap=texB;o.material=m;}});
+      out.push({s,sB,w:sz.x,h:sz.y,d:sz.z});fin();
+    },e=>{console.error(e);fin();});
+  };
+  KB.forEach(b=>load(b,full));KL.forEach(b=>load(b,low));
 }
-
-
-/* =====================================================
-   LOAD CONVERSATION
-===================================================== */
-
-async function loadConversation(){
-
-  if(
-    !currentUser ||
-    !selectedUser
-  ){
-
-    return;
-
+function buildCity(mods,low){
+  if(!mods.length)return;
+  sc.children.filter(o=>o.userData.old).forEach(o=>sc.remove(o));
+  const bm=new T.MeshBasicMaterial({color:0xff2030}),bg=new T.BoxGeometry(1.4,2.4,1.4);
+  for(const b of B){
+    const r=Math.min(1,Math.hypot(b.x,b.z)/(LIM*1.1)),tgt=(125-r*95)*(.75+Math.random()*.5);
+    let best=null,bs=1e9,bsc=1;
+    for(const m of mods){const s=Math.min(b.w/m.w,b.d/m.d),q=Math.abs(m.h*s-tgt)*(1+Math.random()*.7);if(q<bs){bs=q;best=m;bsc=s;}}
+    const nat=best.h*bsc,ys=nat>40?Math.max(.8,Math.min(1.6,tgt/nat)):1,k=(Math.random()<.4?best.sB:best.s).clone(true);
+    k.scale.set(bsc,bsc*ys,bsc);k.position.set(b.x,.8,b.z);k.rotation.y=Math.random()<.5?0:PI;
+    k.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
+    sc.add(k);
+    b.w=best.w*bsc;b.d=best.d*bsc;b.h=nat*ys+.8;
+    if(b.h>95){const bc=new T.Mesh(bg,bm);bc.position.set(b.x,b.h+1.2,b.z);sc.add(bc);}
+    if(Math.random()<.28){const s=new T.Mesh(new T.BoxGeometry(.6,b.h*.35,3.2),new T.MeshBasicMaterial({color:neon[Math.floor(Math.random()*4)]}));s.position.set(b.x+b.w/2+.4,b.h*.62,b.z);sc.add(s);}
   }
-
-
-  chat.innerHTML =
-    `<div class="loading">
-      Loading conversation...
-    </div>`;
-
-
-  const {
-    data,
-    error
-  } =
-  await supabaseClient
-    .from("Messages")
-    .select(
-      "id,sender_id,receiver_id,message,created_at,is_read"
-    )
-    .or(
-      `and(sender_id.eq.${currentUser.id},receiver_id.eq.${selectedUser.id}),and(sender_id.eq.${selectedUser.id},receiver_id.eq.${currentUser.id})`
-    )
-    .order(
-      "created_at",
-      {
-        ascending:true
-      }
-    );
-
-
-  if(error){
-
-    console.error(
-      "MESSAGE LOAD ERROR:",
-      error
-    );
-
-
-    chat.innerHTML =
-      `<div class="empty">
-        Messages load करता आले नाहीत.
-      </div>`;
-
-    return;
-
+  // distant skyline from the low-detail buildings
+  if(low&&low.length)for(let i=0;i<70;i++){
+    const a=i/70*PI*2+Math.random()*.08,rad=LIM+rnd(25,110),m=low[Math.floor(Math.random()*low.length)];
+    const k=m.s.clone(true),hh=rnd(70,180),sx=rnd(14,26)/Math.max(m.w,m.d);
+    k.scale.set(sx,hh/m.h,sx);k.position.set(Math.cos(a)*rad,0,Math.sin(a)*rad);k.rotation.y=rnd(0,PI);
+    sc.add(k);
   }
-
-
-  chat.innerHTML =
-    "";
-
-
-  if(
-    !data ||
-    data.length === 0
-  ){
-
-    chat.innerHTML =
-      `<div class="empty">
-        अजून messages नाहीत.
-      </div>`;
-
-    return;
-
-  }
-
-
-  data.forEach(
-    message => {
-
-      chat.appendChild(
-        createMessageElement(
-          message
-        )
-      );
-
-    }
-  );
-
-
-  scrollBottom();
-
-
-  /*
-     User कडून आलेले messages
-     read म्हणून mark.
-  */
-
-  await markMessagesRead();
-
 }
-
-
-/* =====================================================
-   MESSAGE ELEMENT
-===================================================== */
-
-function createMessageElement(
-  message
-){
-
-  const row =
-    document.createElement(
-      "div"
-    );
-
-
-  const isAdmin =
-    message.sender_id ===
-    currentUser.id;
-
-
-  row.className =
-    "message-row " +
-    (
-      isAdmin
-      ? "admin"
-      : "user"
-    );
-
-
-  const bubble =
-    document.createElement(
-      "div"
-    );
-
-  bubble.className =
-    "message-bubble";
-
-
-  const text =
-    document.createElement(
-      "div"
-    );
-
-  text.className =
-    "message-text";
-
-  text.textContent =
-    message.message || "";
-
-
-  const time =
-    document.createElement(
-      "div"
-    );
-
-  time.className =
-    "message-time";
-
-  time.textContent =
-    new Date(
-      message.created_at
-    ).toLocaleTimeString(
-      [],
-      {
-        hour:"2-digit",
-        minute:"2-digit"
-      }
-    );
-
-
-  bubble.appendChild(
-    text
-  );
-
-  bubble.appendChild(
-    time
-  );
-
-  row.appendChild(
-    bubble
-  );
-
-
-  return row;
-
-}
-
-
-/* =====================================================
-   MARK READ
-===================================================== */
-
-async function markMessagesRead(){
-
-  if(
-    !currentUser ||
-    !selectedUser
-  ){
-
-    return;
-
-  }
-
-
-  const {
-    error
-  } =
-  await supabaseClient
-    .from("Messages")
-    .update({
-      is_read:true
-    })
-    .eq(
-      "sender_id",
-      selectedUser.id
-    )
-    .eq(
-      "receiver_id",
-      currentUser.id
-    )
-    .eq(
-      "is_read",
-      false
-    );
-
-
-  if(error){
-
-    console.error(
-      "READ UPDATE ERROR:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   SEND MESSAGE
-===================================================== */
-
-async function sendMessage(){
-
-  if(
-    !currentUser ||
-    !selectedUser
-  ){
-
-    return;
-
-  }
-
-
-  const text =
-    messageInput.value
-      .trim();
-
-
-  if(!text){
-
-    return;
-
-  }
-
-
-  sendButton.disabled =
-    true;
-
-
-  const {
-    error
-  } =
-  await supabaseClient
-    .from("Messages")
-    .insert({
-
-      sender_id:
-        currentUser.id,
-
-      receiver_id:
-        selectedUser.id,
-
-      message:
-        text,
-
-      is_read:false
-
+loadCity();
+const CIV_B64=["...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)..."];
+function b64buf(s){const bin=atob(s),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u.buffer;}
+function loadCivs(){
+  const src=[];let pending=CIV_B64.length;
+  const done=()=>{if(--pending>0)return;
+    const ok=src.filter(Boolean);if(!ok.length||!T.SkeletonUtils)return;
+    C.forEach(c=>{
+      const r=Math.random();let o=src[r<.5?0:r<.75?1:2]||ok[0];
+      const k=T.SkeletonUtils.clone(o.s);k.scale.multiplyScalar(.92+Math.random()*.13);
+      k.traverse(x=>{if(x.isMesh){x.frustumCulled=false;x.castShadow=false;x.material=x.material.clone();x.material.metalness=0;x.material.roughness=.7;
+        if(x.material.name==='Shirt')x.material.color.setHSL(Math.random(),.5,.45);
+        else if(x.material.name==='Pants')x.material.color.setHSL(.55+Math.random()*.1,.3,.15+Math.random()*.15);}});
+      while(c.g.children.length)c.g.remove(c.g.children[0]);
+      c.g.add(k);c.mix=new T.AnimationMixer(k);
+      c.walk=c.mix.clipAction(o.wk);c.run=c.mix.clipAction(o.rn);c.walk.time=Math.random()*o.wk.duration;
     });
-
-
-  if(error){
-
-    console.error(
-      "SEND ERROR:",
-      error
-    );
-
-    statusBar.textContent =
-      "Message send करता आले नाही.";
-
-    sendButton.disabled =
-      false;
-
-    return;
-
-  }
-
-
-  messageInput.value =
-    "";
-
-
-  sendButton.disabled =
-    false;
-
-
-  await loadConversation();
-
+  };
+  CIV_B64.forEach((b,i)=>{
+    new T.GLTFLoader().parse(b64buf(b),'',g=>{
+      const s=g.scene,holder=new T.Group();holder.add(s);holder.updateMatrixWorld(true);
+      const hb=s.getObjectByName('Head');
+      if(hb){const hy=new T.Vector3().setFromMatrixPosition(hb.matrixWorld).y;if(hy>.05)s.scale.setScalar(3.3/hy);}
+      const wk=g.animations.find(a=>/Walk$/.test(a.name)),rn=g.animations.find(a=>/\|(Man_)?Run$/.test(a.name));
+      if(wk&&rn)src[i]={s,wk,rn};
+      done();
+    },err=>{console.error(err);done();});
+  });
 }
-
-
-/* =====================================================
-   SEND BUTTON
-===================================================== */
-
-sendButton.addEventListener(
-  "click",
-  sendMessage
-);
-
-
-/* =====================================================
-   ENTER TO SEND
-===================================================== */
-
-messageInput.addEventListener(
-  "keydown",
-  function(event){
-
-    if(
-      event.key === "Enter" &&
-      !event.shiftKey
-    ){
-
-      event.preventDefault();
-
-      sendMessage();
-
-    }
-
-  }
-);
-
-
-/* =====================================================
-   MOBILE BACK
-===================================================== */
-
-document
-  .getElementById("mobileBack")
-  .addEventListener(
-    "click",
-    function(){
-
-      app.classList.remove(
-        "show-chat"
-      );
-
-    }
-  );
-
-
-/* =====================================================
-   SCROLL
-===================================================== */
-
-function scrollBottom(){
-
-  setTimeout(
-    function(){
-
-      chat.scrollTop =
-        chat.scrollHeight;
-
-    },
-    50
-  );
-
+(function(){
+  const bin=atob(GLB_B64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  new T.GLTFLoader().parse(u.buffer,'',gltf=>{
+    const m=gltf.scene;
+    while(hero.children.length)hero.remove(hero.children[0]);
+    hero.add(m);hero.position.set(0,0,0);hero.rotation.set(0,0,0);hero.updateMatrixWorld(true);
+    const hb=m.getObjectByName('Head');
+    if(hb){const hy=new T.Vector3().setFromMatrixPosition(hb.matrixWorld).y;if(hy>.05)m.scale.setScalar(3.45/hy);}
+    m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.frustumCulled=false;if(o.material){o.material.metalness=Math.min(o.material.metalness||0,.25);o.material.roughness=.6;}}});
+    mixer=new T.AnimationMixer(m);
+    gltf.animations.forEach(c=>{AN[c.name.split('|').pop()]=mixer.clipAction(c);});
+    play('Idle_Neutral',0);
+    loadCivs();
+  },err=>console.error(err));
+})();
+let isNight=true,skyNight=sky.material.map,skyDay=null;
+function setTime(n){
+  isNight=n;
+  if(!skyDay){const c=document.createElement('canvas');c.width=4;c.height=256;const g=c.getContext('2d'),gr=g.createLinearGradient(0,0,0,256);
+    [[0,'#2f6fc4'],[.35,'#6aaee8'],[.47,'#b9dcf5'],[.5,'#e6f3fb'],[.52,'#6a7a6a'],[1,'#3a4a3a']].forEach(s=>gr.addColorStop(s[0],s[1]));g.fillStyle=gr;g.fillRect(0,0,4,256);skyDay=new T.CanvasTexture(c);}
+  sky.material.map=n?skyNight:skyDay;sky.material.needsUpdate=true;
+  sc.fog.color.setHex(n?0x2a0a16:0xb7cfe6);sc.fog.density=n?.0042:.0022;
+  dl.color.setHex(n?0xaab8ff:0xfff2d8);dl.intensity=n?1.1:1.6;
+  dl2.color.setHex(n?0xff4a3a:0x9fc0ff);dl2.intensity=n?.55:.2;
+  amb.color.setHex(n?0x6a4a7a:0xbfd4ff);amb.intensity=n?.9:.85;
+  hemi.color.setHex(n?0x5a4a9a:0xbfdcff);hemi.groundColor.setHex(n?0x2a0a14:0x6a6a60);hemi.intensity=n?.5:.8;
+  R.toneMappingExposure=n?1.25:1.0;
+  moon.material.color.setHex(n?0xffe2c4:0xfff0b0);
+  sc.children.forEach(o=>{if(o.isPoints)o.visible=n;});
+  sc.traverse(o=>{if(o.isMesh&&o.material&&o.material.emissiveMap){const m=o.material;if(m.userData.ei===undefined)m.userData.ei=m.emissiveIntensity;m.emissiveIntensity=n?m.userData.ei:.04;}});
+  $('tod').textContent=n?'रात्र 🌙':'दिवस ☀️';
+  try{localStorage.setItem('dorvir_night',n?'1':'0');}catch(e){}
 }
-
-
-/* =====================================================
-   REALTIME
-===================================================== */
-
-function startRealtime(){
-
-  if(
-    realtimeChannel
-  ){
-
-    supabaseClient.removeChannel(
-      realtimeChannel
-    );
-
+$('tod').addEventListener('pointerdown',e=>{e.stopPropagation();setTime(!isNight);});
+addEventListener('keydown',e=>{if(e.key==='t'||e.key==='T')setTime(!isNight);});
+let wantNight=true;try{wantNight=localStorage.getItem('dorvir_night')!=='0';}catch(e){}
+if(!wantNight)setTime(false);
+const _bc=buildCity;buildCity=function(...a){_bc(...a);setTime(isNight);};
+let last=0,running=false;
+function loop(t){
+  const dt=Math.min(.033,(t-last)/1000||0);last=t;
+  if(running&&!matchMedia('(orientation:portrait) and (pointer:coarse)').matches){
+    updatePlayer(dt);updateEnemies(dt);updateCivs(dt);
+    if(toastT>0){toastT-=dt;if(toastT<=0)$('toast').style.opacity=0;}
+    $('hp').style.width=Math.max(0,P.hp)+'%';$('score').textContent=P.score;$('k').textContent=P.kills;
   }
-
-
-  realtimeChannel =
-    supabaseClient
-      .channel(
-        "admin-messages-" +
-        currentUser.id
-      )
-      .on(
-        "postgres_changes",
-        {
-          event:"INSERT",
-          schema:"public",
-          table:"Messages"
-        },
-        function(payload){
-
-          const message =
-            payload.new;
-
-
-          /*
-             फक्त selected conversation
-             असेल तर refresh.
-          */
-
-          if(
-            selectedUser &&
-            (
-              (
-                message.sender_id ===
-                currentUser.id &&
-                message.receiver_id ===
-                selectedUser.id
-              )
-              ||
-              (
-                message.sender_id ===
-                selectedUser.id &&
-                message.receiver_id ===
-                currentUser.id
-              )
-            )
-          ){
-
-            loadConversation();
-
-          }
-
-        }
-      )
-      .subscribe();
-
+  updateCam(dt);
+  R.render(sc,cam);requestAnimationFrame(loop);
 }
-
-
-/* =====================================================
-   START
-===================================================== */
-
-async function start(){
-
-  statusBar.textContent =
-    "Checking admin access...";
-
-
-  currentUser =
-    await getCurrentUser();
-
-
-  /*
-     Login नसल्यास page content दाखवू नका.
-  */
-
-  if(!currentUser){
-
-    document.body.innerHTML =
-      "";
-
-    return;
-
-  }
-
-
-  /*
-     Server-side RLS backed admin check.
-  */
-
-  const admin =
-    await checkAdmin();
-
-
-  if(!admin){
-
-    /*
-       Unauthorized user ला
-       कोणताही admin data दाखवला जात नाही.
-    */
-
-    document.body.innerHTML =
-      "";
-
-    return;
-
-  }
-
-
-  statusBar.textContent =
-    "Admin access verified";
-
-
-  await loadUsers();
-
-
-  startRealtime();
-
-}
-
-
-start();
-
+cam.position.set(P.pos.x,8,P.pos.z+12);
+$('go').onclick=()=>{$('start').style.display='none';running=true;try{const de=document.documentElement,f=de.requestFullscreen||de.webkitRequestFullscreen;if(f){Promise.resolve(f.call(de)).then(()=>screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape')).catch(()=>{});}}catch(e){}};
+requestAnimationFrame(loop);
 </script>
-
 </body>
-
 </html>
