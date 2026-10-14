@@ -1,0 +1,164 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: https://hr484624-prog.github.io/rk-85/
+Subject: OPEN CITY - Zombie Survival
+Date: Wed, 14 Oct 2026 15:57:52 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--rOoUiaAHwAzgjGKUD5ExZmDroh9l0NtA5G0fxIRHUI----"
+
+
+------MultipartBoundary--rOoUiaAHwAzgjGKUD5ExZmDroh9l0NtA5G0fxIRHUI----
+Content-Type: text/html
+Content-ID: <frame-C916276E42C803A9F092E3A9A9FD0DE8@mhtml.blink>
+Content-Transfer-Encoding: binary
+Content-Location: https://hr484624-prog.github.io/rk-85/
+
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-5ba91328-607f-463e-a2a6-c9e367ad3f0b@mhtml.blink" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>OPEN CITY - Zombie Survival</title>
+
+
+</head>
+
+<body>
+
+<div id="rotateScreen">
+ <div class="phone">📱</div>
+ <h1>ROTATE YOUR PHONE</h1>
+ <p>OPEN CITY खेळण्यासाठी<br>मोबाईल आडवा (Landscape) करा.</p>
+ <div>🎮 3D OPEN WORLD</div>
+</div>
+
+<div id="loading">
+ <h1>OPEN <span style="color:#3cebd0">CITY</span></h1>
+ <p>3D OPEN WORLD · SURVIVAL</p>
+ <div id="bar"><div id="progress"></div></div>
+ <p id="loadText">Building your world...</p>
+</div>
+
+<div id="hud">
+
+ <div class="top">
+  <div class="panel">
+   <div class="title">OPEN CITY <span style="color:#3cebd0">// SURVIVAL</span></div>
+   <div class="sub">PLAYER: ASTRONAUT</div>
+   <div class="sub">MODE: <b id="modeText">PEACEFUL</b></div>
+   <div class="sub">❤️ <b id="health">100</b> &nbsp; ⭐ <b id="score">0</b></div>
+  </div>
+
+  <div class="right">
+   <button class="btn" id="modeBtn">🧟 ZOMBIE: OFF</button>
+   <button class="btn" id="viewBtn">📷 CAMERA</button>
+   <button class="btn" id="resetBtn">↻ RESET</button>
+  </div>
+ </div>
+
+ <div id="message"></div>
+
+ <div id="stick"><div id="nub"></div></div>
+
+ <div id="hint">JOYSTICK: MOVE<br>DRAG SCREEN: LOOK</div>
+
+ <div class="actions">
+  <button class="action" id="jumpBtn">JUMP</button>
+  <button class="action" id="runBtn">RUN</button>
+  <button class="action" id="actionBtn">ACTION</button>
+  <button class="action" id="camBtn">LOOK</button>
+ </div>
+
+</div>
+
+
+
+</body></html>
+------MultipartBoundary--rOoUiaAHwAzgjGKUD5ExZmDroh9l0NtA5G0fxIRHUI----
+Content-Type: text/css
+Content-Transfer-Encoding: binary
+Content-Location: cid:css-5ba91328-607f-463e-a2a6-c9e367ad3f0b@mhtml.blink
+
+@charset "utf-8";
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0px; width: 100%; height: 100%; overflow: hidden; background: rgb(8, 13, 19); color: white; font-family: Arial, sans-serif; touch-action: none; }
+
+canvas { display: block; touch-action: none; }
+
+button { cursor: pointer; touch-action: manipulation; }
+
+#rotateScreen { position: fixed; inset: 0px; z-index: 10000; background: radial-gradient(circle, rgb(36, 60, 81), rgb(5, 8, 12)); display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 25px; }
+
+#rotateScreen .phone { font-size: 65px; animation: 1.8s ease 0s infinite normal none running rotate; }
+
+#rotateScreen h1 { font-size: 25px; letter-spacing: 2px; }
+
+#rotateScreen p { color: rgb(189, 202, 213); line-height: 1.7; }
+
+@keyframes rotate { 
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(90deg); }
+}
+
+#loading { position: fixed; inset: 0px; z-index: 9000; background: radial-gradient(circle, rgb(32, 59, 80), rgb(5, 8, 12)); display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px; }
+
+#loading h1 { font-size: clamp(30px, 6vw, 65px); letter-spacing: 5px; margin: 0px; }
+
+#loading p { color: rgb(185, 203, 217); }
+
+#bar { height: 5px; width: min(320px, 80vw); background: rgb(38, 53, 65); border-radius: 9px; overflow: hidden; }
+
+#progress { height: 100%; width: 5%; background: rgb(56, 240, 203); transition: width 0.3s; }
+
+#hud { position: fixed; inset: 0px; pointer-events: none; display: none; }
+
+.top { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+
+.panel { background: rgba(7, 17, 27, 0.863); border: 1px solid rgba(120, 146, 167, 0.333); border-radius: 12px; padding: 9px 12px; backdrop-filter: blur(8px); font-size: 12px; }
+
+.title { font-weight: 900; font-size: 15px; letter-spacing: 1px; }
+
+.sub { color: rgb(189, 203, 215); margin-top: 5px; }
+
+.right { display: flex; gap: 7px; justify-content: flex-end; flex-wrap: wrap; pointer-events: auto; }
+
+.btn { background: rgba(19, 38, 56, 0.91); border: 1px solid rgba(139, 167, 189, 0.533); color: white; border-radius: 10px; padding: 10px 12px; font-weight: bold; font-size: 12px; }
+
+.btn.active { background: rgb(165, 30, 48); border-color: rgb(255, 123, 135); }
+
+#message { position: absolute; top: 95px; left: 50%; transform: translateX(-50%); padding: 10px 14px; background: rgba(7, 17, 29, 0.91); border-radius: 10px; font-size: 12px; opacity: 0; transition: opacity 0.2s; text-align: center; max-width: 80vw; }
+
+#stick { position: absolute; left: 18px; bottom: 18px; width: 120px; height: 120px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.396); background: rgba(7, 21, 34, 0.55); pointer-events: auto; touch-action: none; }
+
+#nub { position: absolute; left: 35px; top: 35px; width: 46px; height: 46px; border-radius: 50%; background: rgba(182, 217, 239, 0.733); border: 2px solid white; }
+
+.actions { position: absolute; right: 18px; bottom: 20px; display: grid; grid-template-columns: repeat(2, 65px); gap: 9px; pointer-events: auto; }
+
+.action { width: 65px; height: 58px; border-radius: 18px; background: rgba(17, 40, 59, 0.867); color: white; border: 1px solid rgba(164, 197, 221, 0.667); font-weight: 900; font-size: 11px; }
+
+#jumpBtn { background: rgba(19, 93, 118, 0.93); }
+
+#actionBtn { background: rgba(143, 37, 54, 0.93); }
+
+#runBtn { background: rgba(22, 76, 54, 0.93); }
+
+#hint { position: absolute; bottom: 18px; left: 155px; font-size: 11px; color: rgba(198, 215, 229, 0.667); max-width: 30vw; }
+
+@media (orientation: portrait) {
+  #rotateScreen { display: flex; }
+  #loading, #hud { visibility: hidden; }
+}
+
+@media (max-width: 750px) and (orientation: landscape) {
+  .panel { padding: 6px 8px; }
+  .title { font-size: 12px; }
+  .sub { font-size: 10px; margin-top: 3px; }
+  .btn { font-size: 10px; padding: 8px; }
+  #stick { width: 100px; height: 100px; bottom: 12px; left: 12px; }
+  #nub { left: 28px; top: 28px; width: 40px; height: 40px; }
+  .actions { right: 10px; bottom: 12px; grid-template-columns: repeat(2, 56px); gap: 6px; }
+  .action { width: 56px; height: 48px; font-size: 10px; }
+  #hint { display: none; }
+}
+------MultipartBoundary--rOoUiaAHwAzgjGKUD5ExZmDroh9l0NtA5G0fxIRHUI------
