@@ -56,6 +56,10 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%}
   <p>संगणक: WASD चाला, Space उडी, E दोरी (दाबून धरा), F मार, माउस ड्रॅग कॅमेरा. मोबाईल: डावीकडे जॉयस्टिक, उजवीकडे बटणं, स्क्रीन ड्रॅग करून कॅमेरा फिरवा.</p>
   <button id="go">खेळ सुरू करा</button>
 </div>
+<script>
+(function(){var b=document.getElementById('go');b.disabled=true;b.style.opacity=.6;b.textContent='लोड होत आहे…';
+setTimeout(function(){if(b.disabled)b.textContent='लोड झालं नाही, पेज रिफ्रेश करा';},15000);})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
@@ -364,6 +368,7 @@ function play(n,fade,once,ts){const a=AN[n];if(!a)return;if(cur===a){a.timeScale
 const KB=["...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)..."],KL=["...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)..."];
 const TEXA="...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...",TEXB="...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...";
 function loadCity(){
+  if(!T.GLTFLoader)return;
   const ld=u=>{const t=new T.TextureLoader().load(u);t.flipY=false;t.magFilter=t.minFilter=T.NearestFilter;t.generateMipmaps=false;return t;};
   const texA=ld(TEXA),texB=ld(TEXB),full=[],low=[];let pend=KB.length+KL.length;
   const fin=()=>{if(--pend===0)buildCity(full,low);};
@@ -403,10 +408,11 @@ function buildCity(mods,low){
     sc.add(k);
   }
 }
-loadCity();
+setTimeout(loadCity,400);
 const CIV_B64=["...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)...","...(मॉडेलचा डेटा इथे आहे, वाचण्यासाठी काढला आहे)..."];
 function b64buf(s){const bin=atob(s),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u.buffer;}
 function loadCivs(){
+  if(!T.GLTFLoader)return;
   const src=[];let pending=CIV_B64.length;
   const done=()=>{if(--pending>0)return;
     const ok=src.filter(Boolean);if(!ok.length||!T.SkeletonUtils)return;
@@ -432,7 +438,8 @@ function loadCivs(){
     },err=>{console.error(err);done();});
   });
 }
-(function(){
+setTimeout(function(){
+  if(!T.GLTFLoader)return;
   const bin=atob(GLB_B64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
   new T.GLTFLoader().parse(u.buffer,'',gltf=>{
     const m=gltf.scene;
@@ -446,7 +453,7 @@ function loadCivs(){
     play('Idle_Neutral',0);
     loadCivs();
   },err=>console.error(err));
-})();
+},150);
 let isNight=true,skyNight=sky.material.map,skyDay=null;
 function setTime(n){
   isNight=n;
@@ -482,6 +489,7 @@ function loop(t){
   R.render(sc,cam);requestAnimationFrame(loop);
 }
 cam.position.set(P.pos.x,8,P.pos.z+12);
+$('go').disabled=false;$('go').style.opacity=1;$('go').textContent='खेळ सुरू करा';
 $('go').onclick=()=>{$('start').style.display='none';running=true;try{const de=document.documentElement,f=de.requestFullscreen||de.webkitRequestFullscreen;if(f){Promise.resolve(f.call(de)).then(()=>screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape')).catch(()=>{});}}catch(e){}};
 requestAnimationFrame(loop);
 </script>
