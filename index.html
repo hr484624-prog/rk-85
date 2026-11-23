@@ -7,74 +7,86 @@
 <style>
 :root{--p1:#ff8fb1;--p2:#ff5d8f;--p3:#ffe0ec;--p4:#c2185b;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(160deg,#ffe0ec,#ffc1d9 50%,#ff9ec2);color:var(--p4);min-height:100vh;overflow-x:hidden}
+html,body{height:100%}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(160deg,#ffe0ec,#ffc1d9 50%,#ff9ec2);color:var(--p4);overflow:hidden}
 /* Splash */
 #splash{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 40%,#ff8fb1,#c2185b);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;transition:opacity 1s,transform 1s;cursor:pointer}
 #splash.hide{opacity:0;transform:scale(1.4);pointer-events:none}
 #splash h1{font-size:clamp(2rem,9vw,4rem);line-height:1.2;text-shadow:0 4px 20px rgba(0,0,0,.3)}
 #splash .name{display:block;font-size:clamp(3rem,15vw,7rem);font-family:'Brush Script MT',cursive;animation:pop 1.2s .8s both,glow 2s 2s infinite alternate}
 #splash .w{display:inline-block;animation:drop .8s both}
-#splash small{margin-top:30px;animation:blink 1.5s infinite;opacity:.9}
+#splash small{margin-top:30px;animation:blink 1.5s infinite}
 @keyframes drop{from{opacity:0;transform:translateY(-80px) rotate(-20deg)}to{opacity:1;transform:none}}
 @keyframes pop{from{opacity:0;transform:scale(0)}60%{transform:scale(1.3)}to{opacity:1;transform:scale(1)}}
 @keyframes glow{to{text-shadow:0 0 30px #fff,0 0 60px #ffd1e3}}
 @keyframes blink{50%{opacity:.2}}
-/* Layout */
-main{max-width:640px;margin:auto;padding:20px 16px 80px;position:relative;z-index:2}
-section{background:rgba(255,255,255,.7);backdrop-filter:blur(6px);border-radius:24px;padding:22px;margin-bottom:22px;box-shadow:0 8px 30px rgba(194,24,91,.15);text-align:center}
-h2{margin-bottom:12px;font-size:1.3rem}
-.title{font-size:clamp(1.8rem,8vw,2.8rem);font-family:'Brush Script MT',cursive}
-button{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border:none;border-radius:50px;padding:12px 22px;font-size:1rem;cursor:pointer;margin:6px;box-shadow:0 4px 14px rgba(255,93,143,.5);transition:transform .15s}
-button:active{transform:scale(.93)}
-button:disabled{opacity:.5}
 /* Balloons */
-.balloon{position:fixed;bottom:-120px;width:50px;height:64px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;z-index:1;opacity:.8;animation:float linear infinite}
+.balloon{position:fixed;bottom:-120px;width:46px;height:60px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;z-index:1;opacity:.7;animation:float linear infinite;pointer-events:none}
 .balloon:after{content:'';position:absolute;left:50%;top:100%;width:1px;height:50px;background:#c2185b88}
 @keyframes float{to{transform:translateY(-120vh) rotate(15deg)}}
-/* Date + timer */
-.date{font-size:1.4rem;font-weight:700}
-#timer{font-size:1.8rem;font-weight:700;font-variant-numeric:tabular-nums}
+/* Pages */
+#app{position:fixed;inset:0 0 76px 0;z-index:2;display:flex;align-items:center;justify-content:center;padding:16px}
+.page{display:none;width:100%;max-width:560px;max-height:100%;overflow:auto;background:rgba(255,255,255,.78);backdrop-filter:blur(6px);border-radius:28px;padding:26px 20px;box-shadow:0 10px 36px rgba(194,24,91,.2);text-align:center}
+.page.active{display:block;animation:in .5s}
+@keyframes in{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+h2{margin-bottom:14px;font-size:1.4rem}
+.big{font-size:clamp(1.9rem,8vw,2.8rem);font-family:'Brush Script MT',cursive;margin-bottom:10px}
+.hint{margin:10px 0;min-height:1.6em}
+button{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border:none;border-radius:50px;padding:12px 24px;font-size:1rem;cursor:pointer;margin:6px;box-shadow:0 4px 14px rgba(255,93,143,.5);transition:transform .15s}
+button:active{transform:scale(.93)}
+button:disabled{opacity:.5}
+/* Nav */
+#nav{position:fixed;left:0;right:0;bottom:0;height:76px;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(255,255,255,.6);backdrop-filter:blur(8px)}
+#nav button{margin:0;min-width:96px}
+#count{font-weight:700}
+#bar{position:fixed;top:0;left:0;height:5px;background:var(--p2);z-index:11;transition:width .4s}
+/* Date / timer */
+.date{font-size:1.5rem;font-weight:700}
+#timer{font-size:2.4rem;font-weight:700;font-variant-numeric:tabular-nums}
 /* Cake */
 svg{max-width:300px;width:100%}
 .flame{transform-origin:center bottom;animation:flick .3s infinite alternate;transition:opacity .4s}
 .flame.off{opacity:0}
 @keyframes flick{from{transform:scale(1,1)}to{transform:scale(.85,1.15)}}
-#slice{transition:transform 1s}
-#slice.out{transform:translate(35px,12px) rotate(8deg)}
-#knife{position:absolute;font-size:3rem;top:-60px;left:50%;opacity:0}
-#knife.go{animation:cut 1.2s}
-@keyframes cut{0%{opacity:1;transform:translate(-20px,-30px) rotate(-30deg)}60%{opacity:1;transform:translate(20px,60px) rotate(10deg)}100%{opacity:0;transform:translate(20px,60px)}}
+.slice{transition:transform 1s}
+.slice.out{transform:translate(35px,12px) rotate(8deg)}
 .cakebox{position:relative;display:inline-block;width:100%}
+#knife{position:absolute;font-size:3rem;top:-20px;left:45%;opacity:0}
+#knife.go{animation:cut 1.2s}
+@keyframes cut{0%{opacity:1;transform:translate(-20px,-30px) rotate(-30deg)}60%{opacity:1;transform:translate(20px,70px) rotate(10deg)}100%{opacity:0;transform:translate(20px,70px)}}
 /* Gifts */
 .gifts{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
-.gift{font-size:3.5rem;cursor:pointer;transition:transform .2s;user-select:none}
+.gift{font-size:3.6rem;cursor:pointer;transition:transform .2s;user-select:none}
 .gift:hover{transform:scale(1.15) rotate(-6deg)}
 .gift.open{animation:pop .6s}
-#giftmsg{margin-top:14px;font-size:1.15rem;min-height:2em}
-/* Wish card */
-#wish{min-height:3.5em;font-size:1.2rem;font-style:italic}
-.card{background:#fff;border:3px dashed var(--p1);border-radius:18px;padding:18px;line-height:1.7}
-/* Hearts / stars */
-.fx{position:fixed;pointer-events:none;z-index:50;font-size:1.6rem;animation:fall 3s linear forwards}
-@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.6}}
-footer{text-align:center;padding-bottom:30px;font-weight:600}
+/* Card */
+.card{background:#fff;border:3px dashed var(--p1);border-radius:18px;padding:22px;line-height:1.7;font-size:1.2rem;font-style:italic;min-height:6em;display:flex;align-items:center;justify-content:center}
+/* Photo */
 #frame{width:220px;height:220px;margin:0 auto 12px;border-radius:50%;border:6px solid var(--p1);background:var(--p3);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 0 0 6px #fff,0 8px 24px rgba(194,24,91,.3)}
 #frame img{width:100%;height:100%;object-fit:cover}
+/* Spin */
+#spinBox{font-size:4rem;min-height:1.3em}
 #spinBox.spin{animation:shake .15s infinite}
 @keyframes shake{50%{transform:rotate(12deg) scale(1.15)}}
-.up{position:fixed;bottom:10vh;left:50%;transform:translateX(-50%);z-index:70;background:#fff;color:var(--p4);padding:8px 16px;border-radius:30px;box-shadow:0 4px 16px rgba(194,24,91,.4);animation:rise 4s ease-out forwards;white-space:nowrap}
+/* Wish jar */
+.up{position:fixed;bottom:15vh;left:50%;transform:translateX(-50%);z-index:70;background:#fff;color:var(--p4);padding:8px 16px;border-radius:30px;box-shadow:0 4px 16px rgba(194,24,91,.4);animation:rise 4s ease-out forwards;white-space:nowrap}
 @keyframes rise{to{bottom:90vh;opacity:0}}
+/* Memory */
 #grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
-.mc{aspect-ratio:1;border-radius:14px;background:linear-gradient(135deg,var(--p1),var(--p2));font-size:0;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;transition:transform .3s}
-.mc.show{background:#fff;font-size:2rem;transform:rotateY(180deg) scaleX(-1)}
+.mc{aspect-ratio:1;border-radius:14px;background:linear-gradient(135deg,var(--p1),var(--p2));font-size:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.mc.show{background:#fff;font-size:2rem}
 .mc.done{background:var(--p3);font-size:2rem;opacity:.7}
+/* Party */
 body.party{animation:disco 1s infinite}
 @keyframes disco{0%{background:#ff8fb1}25%{background:#f48fb1}50%{background:#ce93d8}75%{background:#ffcc80}100%{background:#ff8fb1}}
+/* FX */
+.fx{position:fixed;pointer-events:none;z-index:50;font-size:1.6rem;animation:fall 3s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.6}}
+input[type=text]{width:90%;padding:12px;border-radius:50px;border:2px solid var(--p1);font-size:1rem;text-align:center}
 </style>
 </head>
 <body>
 
-<!-- 1. Intro animation -->
 <div id="splash">
   <h1>
     <span class="w" style="animation-delay:.1s">Happy</span>
@@ -84,169 +96,177 @@ body.party{animation:disco 1s infinite}
   <small>👆 Tap karun ughda</small>
 </div>
 
-<main id="page">
+<div id="bar" style="width:0"></div>
 
-  <!-- 2. Title + 3. Date -->
-  <section>
-    <div class="title">Happy Birthday Rohit! 🎂</div>
-    <p class="date" id="dateText">📅 24 November 2026, Tuesday</p>
-  </section>
+<div id="app">
 
-  <!-- 4. Live countdown -->
-  <section>
+  <!-- 1 Welcome -->
+  <div class="page">
+    <div class="big">Happy Birthday Rohit! 🎂</div>
+    <p class="date" id="dateText">📅</p>
+    <p class="hint">Pude jaaun sarv surprises bagh 👉</p>
+  </div>
+
+  <!-- 2 Timer -->
+  <div class="page">
     <h2>⏳ Birthday sampayla baki wel</h2>
     <div id="timer">--:--:--</div>
-    <p style="margin-top:6px">Ajcha dis poorna enjoy kar! 🥳</p>
-  </section>
+    <p class="hint">Ajcha dis poorna enjoy kar! 🥳</p>
+  </div>
 
-  <!-- 5. Candles 6. Cake cutting -->
-  <section>
-    <h2>🎂 Tuzha Birthday Cake</h2>
-    <div class="cakebox">
-      <div id="knife">🔪</div>
-      <svg viewBox="0 0 240 220">
-        <ellipse cx="120" cy="198" rx="112" ry="14" fill="#fff" stroke="#ffb3cd"/>
-        <!-- main cake -->
-        <g id="main">
-          <rect x="30" y="130" width="140" height="62" rx="8" fill="#ff8fb1"/>
-          <rect x="45" y="85" width="125" height="50" rx="8" fill="#ffb3cd"/>
-          <path d="M45 95 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 v-10 h-120z" fill="#fff"/>
-          <path d="M30 140 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 v-10 h-120z" fill="#fff"/>
-          <circle cx="70" cy="168" r="5" fill="#fff"/><circle cx="110" cy="172" r="5" fill="#fff"/><circle cx="150" cy="166" r="5" fill="#fff"/>
-          <!-- candles -->
-          <rect x="70" y="58" width="8" height="28" fill="#ffe082"/>
-          <rect x="102" y="58" width="8" height="28" fill="#80deea"/>
-          <rect x="134" y="58" width="8" height="28" fill="#ce93d8"/>
-          <ellipse class="flame" cx="74" cy="50" rx="5" ry="9" fill="#ff9800"/>
-          <ellipse class="flame" cx="106" cy="50" rx="5" ry="9" fill="#ff9800"/>
-          <ellipse class="flame" cx="138" cy="50" rx="5" ry="9" fill="#ff9800"/>
-        </g>
-        <!-- slice -->
-        <g id="slice">
-          <rect x="170" y="130" width="40" height="62" rx="6" fill="#ff8fb1"/>
-          <rect x="170" y="85" width="40" height="50" rx="6" fill="#ffb3cd"/>
-          <rect x="170" y="85" width="40" height="8" fill="#fff"/>
-          <rect x="170" y="130" width="40" height="8" fill="#fff"/>
-          <text x="190" y="118" font-size="16" text-anchor="middle">🍓</text>
-        </g>
-      </svg>
-    </div>
-    <div>
-      <button id="blowBtn">🌬️ Candles vijhav</button>
-      <button id="cutBtn" disabled>🔪 Cake kap</button>
-    </div>
-    <p id="cakeMsg" style="min-height:1.6em"></p>
-  </section>
+  <!-- 3 Candles -->
+  <div class="page">
+    <h2>🕯️ Candles vijhav</h2>
+    <div id="cake1"></div>
+    <p class="hint" id="blowMsg">Wish maag aani candles vijhav</p>
+    <button id="blowBtn">🌬️ Phoonk mar</button>
+  </div>
 
-  <!-- 7. Gifts -->
-  <section>
-    <h2>🎁 Tuze Gifts (ughda!)</h2>
+  <!-- 4 Cake cutting -->
+  <div class="page">
+    <h2>🔪 Cake kap</h2>
+    <div class="cakebox"><div id="knife">🔪</div><div id="cake2"></div></div>
+    <p class="hint" id="cutMsg"></p>
+    <button id="cutBtn">🍰 Cake kap</button>
+  </div>
+
+  <!-- 5 Gifts -->
+  <div class="page">
+    <h2>🎁 Tuze Gifts ughda</h2>
     <div class="gifts">
-      <span class="gift" data-i="0">🎁</span>
-      <span class="gift" data-i="1">🎁</span>
-      <span class="gift" data-i="2">🎁</span>
-      <span class="gift" data-i="3">🎁</span>
+      <span class="gift" data-i="0">🎁</span><span class="gift" data-i="1">🎁</span>
+      <span class="gift" data-i="2">🎁</span><span class="gift" data-i="3">🎁</span>
     </div>
-    <p id="giftmsg">Kontahi gift var tap kar 👆</p>
-  </section>
+    <p class="hint" id="giftmsg" style="font-size:1.15rem">Kontahi gift var tap kar 👆</p>
+  </div>
 
-  <!-- 8. Confetti -->
-  <section>
+  <!-- 6 Confetti -->
+  <div class="page">
     <h2>🎊 Party Time!</h2>
     <button id="confettiBtn">🎉 Confetti udav</button>
     <button id="heartBtn">💖 Hearts pasav</button>
-  </section>
+  </div>
 
-  <!-- 9. Random wishes -->
-  <section>
+  <!-- 7 Wish card -->
+  <div class="page">
     <h2>💌 Shubhechha Card</h2>
     <div class="card"><p id="wish">Khali button dabva 👇</p></div>
     <button id="wishBtn">✨ Navin wish</button>
-  </section>
+  </div>
 
-  <!-- 10. Music -->
-  <section>
+  <!-- 8 Music -->
+  <div class="page">
     <h2>🎵 Birthday Music</h2>
+    <p style="font-size:4rem">🎶</p>
     <button id="musicBtn">▶️ Happy Birthday vaja</button>
-  </section>
+  </div>
 
-  <!-- 11. Photo frame -->
-  <section>
+  <!-- 9 Photo -->
+  <div class="page">
     <h2>📸 Rohit cha Photo</h2>
     <div id="frame"><span style="font-size:3rem">🖼️</span></div>
-    <label><button type="button" onclick="document.getElementById('photoIn').click()">📷 Photo nivad</button></label>
+    <button onclick="document.getElementById('photoIn').click()">📷 Photo nivad</button>
     <input type="file" id="photoIn" accept="image/*" hidden>
-  </section>
+  </div>
 
-  <!-- 12. Lucky spin -->
-  <section>
+  <!-- 10 Spin -->
+  <div class="page">
     <h2>🎰 Lucky Birthday Treat</h2>
-    <div id="spinBox" style="font-size:3.5rem;min-height:1.3em">🍰</div>
-    <p id="spinMsg" style="min-height:1.6em">Button dabav, aaj kay milnar bagh!</p>
+    <div id="spinBox">🍰</div>
+    <p class="hint" id="spinMsg">Aaj kay milnar bagh!</p>
     <button id="spinBtn">🎲 Spin kar</button>
-  </section>
+  </div>
 
-  <!-- 13. Fireworks -->
-  <section>
+  <!-- 11 Fireworks -->
+  <div class="page">
     <h2>🎆 Fireworks</h2>
-    <button id="fwBtn">🎇 Fireworks fod</button>
-  </section>
+    <p style="font-size:4rem">🎇</p>
+    <button id="fwBtn">🎆 Fireworks fod</button>
+  </div>
 
-  <!-- 14. Wish jar -->
-  <section>
+  <!-- 12 Wish jar -->
+  <div class="page">
     <h2>🌠 Tuzi Wish Lihi</h2>
-    <input id="wishIn" maxlength="60" placeholder="Tuzi wish ithe lihi..." style="width:80%;padding:12px;border-radius:50px;border:2px solid var(--p1);font-size:1rem;text-align:center">
+    <input type="text" id="wishIn" maxlength="60" placeholder="Tuzi wish ithe lihi...">
     <br><button id="wishSend">🚀 Aakashat sod</button>
-  </section>
+  </div>
 
-  <!-- 15. Memory game -->
-  <section>
+  <!-- 13 Memory game -->
+  <div class="page">
     <h2>🧠 Memory Game</h2>
-    <p id="memInfo" style="margin-bottom:10px">Jodya shodha! Chaluya: 0</p>
+    <p class="hint" id="memInfo">Jodya shodha! Chaluya: 0</p>
     <div id="grid"></div>
     <button id="memReset">🔄 Navin game</button>
-  </section>
+  </div>
 
-  <!-- 16. Party mode -->
-  <section>
+  <!-- 14 Party mode -->
+  <div class="page">
     <h2>🪩 Party Mode</h2>
+    <p style="font-size:4rem">🕺</p>
     <button id="partyBtn">🕺 Party mode chalu</button>
-  </section>
+  </div>
 
-  <footer>Made with 💖 for Rohit • 24 Nov 2026</footer>
-  <canvas id="fw" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60"></canvas>
-</main>
+  <!-- 15 Final -->
+  <div class="page">
+    <div class="big">Khup khup shubhechha Rohit! 💖</div>
+    <p style="font-size:3.5rem">🎂🎉🎁</p>
+    <p class="hint">Tuza dis ekdam mast jao! 🥳</p>
+    <button id="againBtn">🔁 Punha suru kar</button>
+  </div>
+
+</div>
+
+<div id="nav">
+  <button id="backBtn">⬅️ Mage</button>
+  <span id="count"></span>
+  <button id="nextBtn">Pude ➡️</button>
+</div>
+
+<canvas id="fw" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60"></canvas>
 
 <script>
+/* ---------- Navigation ---------- */
+const pages=[...document.querySelectorAll('.page')];let cur=0;
+function show(i){
+  cur=Math.max(0,Math.min(pages.length-1,i));
+  pages.forEach((p,k)=>p.classList.toggle('active',k===cur));
+  document.getElementById('count').textContent=(cur+1)+' / '+pages.length;
+  document.getElementById('bar').style.width=((cur+1)/pages.length*100)+'%';
+  document.getElementById('backBtn').style.visibility=cur===0?'hidden':'visible';
+  document.getElementById('nextBtn').style.visibility=cur===pages.length-1?'hidden':'visible';
+}
+document.getElementById('nextBtn').onclick=()=>show(cur+1);
+document.getElementById('backBtn').onclick=()=>show(cur-1);
+document.getElementById('againBtn').onclick=()=>{show(0);confetti(60);};
+show(0);
+
 /* ---------- Splash ---------- */
 const splash=document.getElementById('splash');
 function enter(){splash.classList.add('hide');confetti(80);}
 splash.addEventListener('click',enter);
-setTimeout(()=>{ if(!splash.classList.contains('hide')) enter(); },9000);
+setTimeout(()=>{if(!splash.classList.contains('hide'))enter();},9000);
 
 /* ---------- Balloons ---------- */
 const colors=['#ff8fb1','#ff5d8f','#ffb3cd','#f48fb1','#ec407a','#f8bbd0'];
-for(let i=0;i<14;i++){
+for(let i=0;i<12;i++){
   const b=document.createElement('div');b.className='balloon';
-  b.style.left=Math.random()*95+'%';
-  b.style.background=colors[i%colors.length];
-  b.style.animationDuration=(8+Math.random()*8)+'s';
-  b.style.animationDelay=(-Math.random()*12)+'s';
+  b.style.left=Math.random()*95+'%';b.style.background=colors[i%colors.length];
+  b.style.animationDuration=(8+Math.random()*8)+'s';b.style.animationDelay=(-Math.random()*12)+'s';
   document.body.appendChild(b);
 }
 
-/* ---------- Date (aajchi tarik) ---------- */
+/* ---------- Date ---------- */
 const d=new Date();
 const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 document.getElementById('dateText').textContent='📅 '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+', '+days[d.getDay()];
 
-/* ---------- Timer: aajcha dis sampayla ---------- */
+/* ---------- Timer ---------- */
 function tick(){
   const n=new Date(),end=new Date(n);end.setHours(24,0,0,0);
-  let s=Math.floor((end-n)/1000);
-  const h=String(Math.floor(s/3600)).padStart(2,'0'),m=String(Math.floor(s%3600/60)).padStart(2,'0'),c=String(s%60).padStart(2,'0');
-  document.getElementById('timer').textContent=h+':'+m+':'+c;
+  const s=Math.floor((end-n)/1000);
+  const p=x=>String(x).padStart(2,'0');
+  document.getElementById('timer').textContent=p(Math.floor(s/3600))+':'+p(Math.floor(s%3600/60))+':'+p(s%60);
 }
 tick();setInterval(tick,1000);
 
@@ -262,21 +282,39 @@ function fx(list,n){
   }
 }
 function confetti(n=60){fx(['🎉','🎊','✨','🎈','💖','⭐'],n);}
-document.getElementById('confettiBtn').onclick=()=>confetti(80);
+document.getElementById('confettiBtn').onclick=()=>confetti(90);
 document.getElementById('heartBtn').onclick=()=>fx(['💖','💗','💕','🌸','💓'],60);
 
-/* ---------- Candles + cake cutting ---------- */
-const blowBtn=document.getElementById('blowBtn'),cutBtn=document.getElementById('cutBtn'),cakeMsg=document.getElementById('cakeMsg');
-blowBtn.onclick=()=>{
-  document.querySelectorAll('.flame').forEach(f=>f.classList.add('off'));
-  blowBtn.disabled=true;cutBtn.disabled=false;
-  cakeMsg.textContent='Wish maag! 🤫 Ata cake kap 🎂';confetti(40);
+/* ---------- Cake ---------- */
+function cakeSVG(candles){
+  return `<svg viewBox="0 0 240 220">
+  <ellipse cx="120" cy="198" rx="112" ry="14" fill="#fff" stroke="#ffb3cd"/>
+  <g>
+    <rect x="30" y="130" width="140" height="62" rx="8" fill="#ff8fb1"/>
+    <rect x="45" y="85" width="125" height="50" rx="8" fill="#ffb3cd"/>
+    <path d="M45 95 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 v-10 h-120z" fill="#fff"/>
+    <path d="M30 140 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 q10 16 20 0 v-10 h-120z" fill="#fff"/>
+    <circle cx="70" cy="168" r="5" fill="#fff"/><circle cx="110" cy="172" r="5" fill="#fff"/><circle cx="150" cy="166" r="5" fill="#fff"/>
+    ${candles?`<rect x="70" y="58" width="8" height="28" fill="#ffe082"/><rect x="102" y="58" width="8" height="28" fill="#80deea"/><rect x="134" y="58" width="8" height="28" fill="#ce93d8"/>
+    <ellipse class="flame" cx="74" cy="50" rx="5" ry="9" fill="#ff9800"/><ellipse class="flame" cx="106" cy="50" rx="5" ry="9" fill="#ff9800"/><ellipse class="flame" cx="138" cy="50" rx="5" ry="9" fill="#ff9800"/>`:''}
+  </g>
+  <g class="slice">
+    <rect x="170" y="130" width="40" height="62" rx="6" fill="#ff8fb1"/>
+    <rect x="170" y="85" width="40" height="50" rx="6" fill="#ffb3cd"/>
+    <rect x="170" y="85" width="40" height="8" fill="#fff"/><rect x="170" y="130" width="40" height="8" fill="#fff"/>
+    <text x="190" y="118" font-size="16" text-anchor="middle">🍓</text>
+  </g></svg>`;
+}
+document.getElementById('cake1').innerHTML=cakeSVG(true);
+document.getElementById('cake2').innerHTML=cakeSVG(false);
+document.getElementById('blowBtn').onclick=function(){
+  document.querySelectorAll('#cake1 .flame').forEach(f=>f.classList.add('off'));
+  this.disabled=true;document.getElementById('blowMsg').textContent='Wah! Wish purn hou det 🤫✨ Pude jaa 👉';confetti(50);
 };
-cutBtn.onclick=()=>{
-  const k=document.getElementById('knife');k.classList.add('go');
-  setTimeout(()=>{document.getElementById('slice').classList.add('out');
-    cakeMsg.textContent='Yummy! 😋 Happy Birthday Rohit! 🥳';confetti(100);},700);
-  cutBtn.disabled=true;
+document.getElementById('cutBtn').onclick=function(){
+  document.getElementById('knife').classList.add('go');this.disabled=true;
+  setTimeout(()=>{document.querySelector('#cake2 .slice').classList.add('out');
+    document.getElementById('cutMsg').textContent='Yummy! 😋 Happy Birthday Rohit! 🥳';confetti(100);},700);
 };
 
 /* ---------- Gifts ---------- */
@@ -285,8 +323,7 @@ document.querySelectorAll('.gift').forEach(g=>{
   g.onclick=()=>{
     if(g.classList.contains('open'))return;
     g.classList.add('open');g.textContent=['🧸','🍫','🎧','💌'][g.dataset.i];
-    document.getElementById('giftmsg').textContent=gifts[g.dataset.i];
-    confetti(30);
+    document.getElementById('giftmsg').textContent=gifts[g.dataset.i];confetti(30);
   };
 });
 
@@ -300,11 +337,29 @@ const wishes=[
  'Tuzya mule aamcha dis nehmi special hoto. Thank you! 🎁'
 ];
 let wi=0;
-document.getElementById('wishBtn').onclick=()=>{
-  document.getElementById('wish').textContent=wishes[wi++%wishes.length];
+document.getElementById('wishBtn').onclick=()=>{document.getElementById('wish').textContent=wishes[wi++%wishes.length];};
+
+/* ---------- Music ---------- */
+let playing=false;
+document.getElementById('musicBtn').onclick=function(){
+  if(playing)return;playing=true;this.textContent='🎶 Vajtay...';
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const N={C:261.6,D:293.7,E:329.6,F:349.2,G:392,A:440,B:493.9,C2:523.3};
+  const song=[['G',.4],['G',.2],['A',.6],['G',.6],['C2',.6],['B',1.2],
+              ['G',.4],['G',.2],['A',.6],['G',.6],['D',.6],['C2',1.2],
+              ['G',.4],['G',.2],['G',.6],['E',.6],['C2',.6],['B',.6],['A',.8],
+              ['F',.4],['F',.2],['E',.6],['C2',.6],['D',.6],['C2',1.2]];
+  let t=ctx.currentTime+.1;
+  song.forEach(([n,dur])=>{
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type='triangle';o.frequency.value=N[n];
+    g.gain.setValueAtTime(.25,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+dur);t+=dur;
+  });
+  setTimeout(()=>{playing=false;document.getElementById('musicBtn').textContent='▶️ Punha vaja';confetti(50);},(t-ctx.currentTime)*1000);
 };
 
-/* ---------- 11. Photo ---------- */
+/* ---------- Photo ---------- */
 document.getElementById('photoIn').onchange=e=>{
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
@@ -312,7 +367,7 @@ document.getElementById('photoIn').onchange=e=>{
   r.readAsDataURL(f);
 };
 
-/* ---------- 12. Lucky spin ---------- */
+/* ---------- Lucky spin ---------- */
 const treats=[['🍕','Pizza party pakki!'],['🍫','Free chocolate!'],['🎬','Movie night mazya kadun!'],['🍦','Ice cream treat!'],['🎮','Gaming session aajchya dis!'],['🤗','Ek motha hug!']];
 document.getElementById('spinBtn').onclick=function(){
   const box=document.getElementById('spinBox'),msg=document.getElementById('spinMsg');
@@ -325,7 +380,7 @@ document.getElementById('spinBtn').onclick=function(){
   },1800);
 };
 
-/* ---------- 13. Fireworks ---------- */
+/* ---------- Fireworks ---------- */
 const cv=document.getElementById('fw'),cx=cv.getContext('2d');let parts=[],fwOn=false;
 function sizeCv(){cv.width=innerWidth;cv.height=innerHeight;}sizeCv();addEventListener('resize',sizeCv);
 function burst(){
@@ -343,14 +398,14 @@ document.getElementById('fwBtn').onclick=()=>{
   const iv=setInterval(()=>{burst();if(++n>8){clearInterval(iv);fwOn=false;}},400);
 };
 
-/* ---------- 14. Wish jar ---------- */
+/* ---------- Wish jar ---------- */
 document.getElementById('wishSend').onclick=()=>{
   const i=document.getElementById('wishIn');if(!i.value.trim())return;
   const e=document.createElement('div');e.className='up';e.textContent='🌠 '+i.value;
   document.body.appendChild(e);setTimeout(()=>e.remove(),4200);i.value='';confetti(25);
 };
 
-/* ---------- 15. Memory game ---------- */
+/* ---------- Memory game ---------- */
 let first=null,lock=false,moves=0,found=0;
 function newGame(){
   const em=['🎂','🎁','🎈','🍰','🎉','💖'],deck=[...em,...em].sort(()=>Math.random()-.5);
@@ -376,31 +431,11 @@ function newGame(){
 }
 newGame();document.getElementById('memReset').onclick=newGame;
 
-/* ---------- 16. Party mode ---------- */
+/* ---------- Party mode ---------- */
 document.getElementById('partyBtn').onclick=function(){
   const on=document.body.classList.toggle('party');
   this.textContent=on?'🛑 Party mode bandh':'🕺 Party mode chalu';
   if(on)confetti(60);
-};
-
-/* ---------- Music (Happy Birthday melody) ---------- */
-let playing=false,ctx;
-document.getElementById('musicBtn').onclick=function(){
-  if(playing)return;playing=true;this.textContent='🎶 Vajtay...';
-  ctx=new (window.AudioContext||window.webkitAudioContext)();
-  const N={C:261.6,D:293.7,E:329.6,F:349.2,G:392,A:440,B:493.9,C2:523.3};
-  const song=[['G',.4],['G',.2],['A',.6],['G',.6],['C2',.6],['B',1.2],
-              ['G',.4],['G',.2],['A',.6],['G',.6],['D',.6],['C2',1.2],
-              ['G',.4],['G',.2],['G',.6],['E',.6],['C2',.6],['B',.6],['A',.8],
-              ['F',.4],['F',.2],['E',.6],['C2',.6],['D',.6],['C2',1.2]];
-  let t=ctx.currentTime+.1;
-  song.forEach(([n,dur])=>{
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.type='triangle';o.frequency.value=N[n];
-    g.gain.setValueAtTime(.25,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
-    o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+dur);t+=dur;
-  });
-  setTimeout(()=>{playing=false;document.getElementById('musicBtn').textContent='▶️ Punha vaja';confetti(50);},(t-ctx.currentTime)*1000);
 };
 </script>
 </body>
