@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Happy Birthday Rohit 🎂</title>
+<title>Happy Birthday Chanchal 🎂</title>
 <style>
 :root{--p1:#ff8fb1;--p2:#ff5d8f;--p3:#ffe0ec;--p4:#c2185b;}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(160deg,#ffe0ec,#ffc1d9 50%,#ff9ec2);color:var(--p4);overflow:hidden}
-/* Splash */
 #splash{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 40%,#ff8fb1,#c2185b);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;transition:opacity 1s,transform 1s;cursor:pointer}
 #splash.hide{opacity:0;transform:scale(1.4);pointer-events:none}
 #splash h1{font-size:clamp(2rem,9vw,4rem);line-height:1.2;text-shadow:0 4px 20px rgba(0,0,0,.3)}
@@ -20,11 +19,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(160d
 @keyframes pop{from{opacity:0;transform:scale(0)}60%{transform:scale(1.3)}to{opacity:1;transform:scale(1)}}
 @keyframes glow{to{text-shadow:0 0 30px #fff,0 0 60px #ffd1e3}}
 @keyframes blink{50%{opacity:.2}}
-/* Balloons */
 .balloon{position:fixed;bottom:-120px;width:46px;height:60px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;z-index:1;opacity:.7;animation:float linear infinite;pointer-events:none}
 .balloon:after{content:'';position:absolute;left:50%;top:100%;width:1px;height:50px;background:#c2185b88}
 @keyframes float{to{transform:translateY(-120vh) rotate(15deg)}}
-/* Pages */
 #app{position:fixed;inset:0 0 76px 0;z-index:2;display:flex;align-items:center;justify-content:center;padding:16px}
 .page{display:none;width:100%;max-width:560px;max-height:100%;overflow:auto;background:rgba(255,255,255,.78);backdrop-filter:blur(6px);border-radius:28px;padding:26px 20px;box-shadow:0 10px 36px rgba(194,24,91,.2);text-align:center}
 .page.active{display:block;animation:in .5s}
@@ -35,15 +32,12 @@ h2{margin-bottom:14px;font-size:1.4rem}
 button{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border:none;border-radius:50px;padding:12px 24px;font-size:1rem;cursor:pointer;margin:6px;box-shadow:0 4px 14px rgba(255,93,143,.5);transition:transform .15s}
 button:active{transform:scale(.93)}
 button:disabled{opacity:.5}
-/* Nav */
 #nav{position:fixed;left:0;right:0;bottom:0;height:76px;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(255,255,255,.6);backdrop-filter:blur(8px)}
 #nav button{margin:0;min-width:96px}
 #count{font-weight:700}
 #bar{position:fixed;top:0;left:0;height:5px;background:var(--p2);z-index:11;transition:width .4s}
-/* Date / timer */
 .date{font-size:1.5rem;font-weight:700}
-#timer{font-size:2.4rem;font-weight:700;font-variant-numeric:tabular-nums}
-/* Cake */
+#timer{font-size:2.2rem;font-weight:700;font-variant-numeric:tabular-nums}
 svg{max-width:300px;width:100%}
 .flame{transform-origin:center bottom;animation:flick .3s infinite alternate;transition:opacity .4s}
 .flame.off{opacity:0}
@@ -54,32 +48,24 @@ svg{max-width:300px;width:100%}
 #knife{position:absolute;font-size:3rem;top:-20px;left:45%;opacity:0}
 #knife.go{animation:cut 1.2s}
 @keyframes cut{0%{opacity:1;transform:translate(-20px,-30px) rotate(-30deg)}60%{opacity:1;transform:translate(20px,70px) rotate(10deg)}100%{opacity:0;transform:translate(20px,70px)}}
-/* Gifts */
 .gifts{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
 .gift{font-size:3.6rem;cursor:pointer;transition:transform .2s;user-select:none}
 .gift:hover{transform:scale(1.15) rotate(-6deg)}
 .gift.open{animation:pop .6s}
-/* Card */
 .card{background:#fff;border:3px dashed var(--p1);border-radius:18px;padding:22px;line-height:1.7;font-size:1.2rem;font-style:italic;min-height:6em;display:flex;align-items:center;justify-content:center}
-/* Photo */
 #frame{width:220px;height:220px;margin:0 auto 12px;border-radius:50%;border:6px solid var(--p1);background:var(--p3);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 0 0 6px #fff,0 8px 24px rgba(194,24,91,.3)}
 #frame img{width:100%;height:100%;object-fit:cover}
-/* Spin */
 #spinBox{font-size:4rem;min-height:1.3em}
 #spinBox.spin{animation:shake .15s infinite}
 @keyframes shake{50%{transform:rotate(12deg) scale(1.15)}}
-/* Wish jar */
 .up{position:fixed;bottom:15vh;left:50%;transform:translateX(-50%);z-index:70;background:#fff;color:var(--p4);padding:8px 16px;border-radius:30px;box-shadow:0 4px 16px rgba(194,24,91,.4);animation:rise 4s ease-out forwards;white-space:nowrap}
 @keyframes rise{to{bottom:90vh;opacity:0}}
-/* Memory */
 #grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
 .mc{aspect-ratio:1;border-radius:14px;background:linear-gradient(135deg,var(--p1),var(--p2));font-size:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .mc.show{background:#fff;font-size:2rem}
 .mc.done{background:var(--p3);font-size:2rem;opacity:.7}
-/* Party */
 body.party{animation:disco 1s infinite}
 @keyframes disco{0%{background:#ff8fb1}25%{background:#f48fb1}50%{background:#ce93d8}75%{background:#ffcc80}100%{background:#ff8fb1}}
-/* FX */
 .fx{position:fixed;pointer-events:none;z-index:50;font-size:1.6rem;animation:fall 3s linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.6}}
 input[type=text]{width:90%;padding:12px;border-radius:50px;border:2px solid var(--p1);font-size:1rem;text-align:center}
@@ -91,7 +77,7 @@ input[type=text]{width:90%;padding:12px;border-radius:50px;border:2px solid var(
   <h1>
     <span class="w" style="animation-delay:.1s">Happy</span>
     <span class="w" style="animation-delay:.4s">Birthday</span>
-    <span class="name">Rohit 🎉</span>
+    <span class="name">Chanchal 🎉</span>
   </h1>
   <small>👆 Tap karun ughda</small>
 </div>
@@ -102,16 +88,16 @@ input[type=text]{width:90%;padding:12px;border-radius:50px;border:2px solid var(
 
   <!-- 1 Welcome -->
   <div class="page">
-    <div class="big">Happy Birthday Rohit! 🎂</div>
-    <p class="date" id="dateText">📅</p>
+    <div class="big">Happy Birthday Chanchal! 🎂</div>
+    <p class="date" id="dateText">📅 8 June</p>
     <p class="hint">Pude jaaun sarv surprises bagh 👉</p>
   </div>
 
   <!-- 2 Timer -->
   <div class="page">
-    <h2>⏳ Birthday sampayla baki wel</h2>
-    <div id="timer">--:--:--</div>
-    <p class="hint">Ajcha dis poorna enjoy kar! 🥳</p>
+    <h2 id="timerTitle">⏳ Birthdayla baki wel</h2>
+    <div id="timer">--</div>
+    <p class="hint" id="timerHint">Birthday kadhi yeto ahe? 🥳</p>
   </div>
 
   <!-- 3 Candles -->
@@ -163,7 +149,7 @@ input[type=text]{width:90%;padding:12px;border-radius:50px;border:2px solid var(
 
   <!-- 9 Photo -->
   <div class="page">
-    <h2>📸 Rohit cha Photo</h2>
+    <h2>📸 Chanchal cha Photo</h2>
     <div id="frame"><span style="font-size:3rem">🖼️</span></div>
     <button onclick="document.getElementById('photoIn').click()">📷 Photo nivad</button>
     <input type="file" id="photoIn" accept="image/*" hidden>
@@ -202,13 +188,13 @@ input[type=text]{width:90%;padding:12px;border-radius:50px;border:2px solid var(
   <!-- 14 Party mode -->
   <div class="page">
     <h2>🪩 Party Mode</h2>
-    <p style="font-size:4rem">🕺</p>
-    <button id="partyBtn">🕺 Party mode chalu</button>
+    <p style="font-size:4rem">💃</p>
+    <button id="partyBtn">💃 Party mode chalu</button>
   </div>
 
   <!-- 15 Final -->
   <div class="page">
-    <div class="big">Khup khup shubhechha Rohit! 💖</div>
+    <div class="big">Khup khup shubhechha Chanchal! 💖</div>
     <p style="font-size:3.5rem">🎂🎉🎁</p>
     <p class="hint">Tuza dis ekdam mast jao! 🥳</p>
     <button id="againBtn">🔁 Punha suru kar</button>
@@ -255,18 +241,25 @@ for(let i=0;i<12;i++){
   document.body.appendChild(b);
 }
 
-/* ---------- Date ---------- */
-const d=new Date();
-const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-document.getElementById('dateText').textContent='📅 '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+', '+days[d.getDay()];
-
-/* ---------- Timer ---------- */
+/* ---------- Birthday countdown (8 June) ---------- */
+const p2=x=>String(x).padStart(2,'0');
 function tick(){
-  const n=new Date(),end=new Date(n);end.setHours(24,0,0,0);
-  const s=Math.floor((end-n)/1000);
-  const p=x=>String(x).padStart(2,'0');
-  document.getElementById('timer').textContent=p(Math.floor(s/3600))+':'+p(Math.floor(s%3600/60))+':'+p(s%60);
+  const n=new Date();
+  const isBday=n.getMonth()===5&&n.getDate()===8;
+  const T=document.getElementById('timer'),TT=document.getElementById('timerTitle'),TH=document.getElementById('timerHint');
+  let end;
+  if(isBday){
+    end=new Date(n);end.setHours(24,0,0,0);
+    TT.textContent='⏳ Birthday sampayla baki wel';
+    TH.textContent='Ajcha dis poorna enjoy kar! 🥳';
+  }else{
+    end=new Date(n.getFullYear(),5,8);
+    if(end<n)end=new Date(n.getFullYear()+1,5,8);
+    TT.textContent='⏳ Pudhchya Birthday la baki wel';
+    TH.textContent='8 June la party pakki! 🎂';
+  }
+  const s=Math.floor((end-n)/1000),dd=Math.floor(s/86400),r=s%86400;
+  T.textContent=(isBday?'':dd+' dis ')+p2(Math.floor(r/3600))+':'+p2(Math.floor(r%3600/60))+':'+p2(r%60);
 }
 tick();setInterval(tick,1000);
 
@@ -314,7 +307,7 @@ document.getElementById('blowBtn').onclick=function(){
 document.getElementById('cutBtn').onclick=function(){
   document.getElementById('knife').classList.add('go');this.disabled=true;
   setTimeout(()=>{document.querySelector('#cake2 .slice').classList.add('out');
-    document.getElementById('cutMsg').textContent='Yummy! 😋 Happy Birthday Rohit! 🥳';confetti(100);},700);
+    document.getElementById('cutMsg').textContent='Yummy! 😋 Happy Birthday Chanchal! 🥳';confetti(100);},700);
 };
 
 /* ---------- Gifts ---------- */
@@ -329,11 +322,11 @@ document.querySelectorAll('.gift').forEach(g=>{
 
 /* ---------- Wishes ---------- */
 const wishes=[
- 'Rohit, tuzya ayushat sarv aanand, yash aani prem yeu det! 🌸',
- 'Tu majha best friend aahes, tula khup khup shubhechha! 💖',
- 'Hya varshi tujhe sarv swapna purn hou det! ✨',
- 'Tu asach hasat raha, aani ya jagat chamakat raha! 😄',
- 'Happy Birthday yaar! Aaj party pakki! 🥳🎂',
+ 'Chanchal, tuzya ayushat sarv aanand, yash aani prem yeu det! 🌸',
+ 'Tu majhi goad bahin aahes, tula khup khup shubhechha! 💖',
+ 'Hya varshi tuze sarv swapna purn hou det! ✨',
+ 'Tu asach hasat rahe, aani ya jagat chamakat rahe! 😄',
+ 'Happy Birthday tai! Aaj party pakki! 🥳🎂',
  'Tuzya mule aamcha dis nehmi special hoto. Thank you! 🎁'
 ];
 let wi=0;
@@ -368,7 +361,7 @@ document.getElementById('photoIn').onchange=e=>{
 };
 
 /* ---------- Lucky spin ---------- */
-const treats=[['🍕','Pizza party pakki!'],['🍫','Free chocolate!'],['🎬','Movie night mazya kadun!'],['🍦','Ice cream treat!'],['🎮','Gaming session aajchya dis!'],['🤗','Ek motha hug!']];
+const treats=[['🍕','Pizza party pakki!'],['🍫','Free chocolate!'],['🎬','Movie night mazya kadun!'],['🍦','Ice cream treat!'],['🛍️','Shopping trip tuzyasathi!'],['🤗','Ek motha hug!']];
 document.getElementById('spinBtn').onclick=function(){
   const box=document.getElementById('spinBox'),msg=document.getElementById('spinMsg');
   this.disabled=true;box.classList.add('spin');
@@ -420,7 +413,7 @@ function newGame(){
       moves++;document.getElementById('memInfo').textContent='Jodya shodha! Chaluya: '+moves;
       if(first.textContent===c.textContent){
         first.classList.replace('show','done');c.classList.replace('show','done');first=null;
-        if(++found===6){document.getElementById('memInfo').textContent='🏆 Jinklas! '+moves+' chaluyat!';confetti(80);}
+        if(++found===6){document.getElementById('memInfo').textContent='🏆 Jinklis! '+moves+' chaluyat!';confetti(80);}
       }else{
         lock=true;const a=first;first=null;
         setTimeout(()=>{a.classList.remove('show');c.classList.remove('show');lock=false;},700);
@@ -434,7 +427,7 @@ newGame();document.getElementById('memReset').onclick=newGame;
 /* ---------- Party mode ---------- */
 document.getElementById('partyBtn').onclick=function(){
   const on=document.body.classList.toggle('party');
-  this.textContent=on?'🛑 Party mode bandh':'🕺 Party mode chalu';
+  this.textContent=on?'🛑 Party mode bandh':'💃 Party mode chalu';
   if(on)confetti(60);
 };
 </script>
