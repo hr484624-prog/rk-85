@@ -516,7 +516,7 @@ function renderDeck(){
     const on=onlineSet.has(p.id)&&p.show_online!==false;
     return`<div class="gc" style="background-image:url(${p.photo||""})" onclick="viewProfile('${p.id}')">
       <div class="shade"></div>
-      <button class="gh ${liked?"on":""}" onclick="event.stopPropagation();${mt?`openChat('${p.id}')`:`likeUser('${p.id}')`}">${mt?"💬":(liked?"❤️":"🤍")}</button>
+      <button class="gh ${liked?"on":""}" onclick="event.stopPropagation();${mt?`openChat('${p.id}')`:(liked?`unlikeUser('${p.id}')`:`likeUser('${p.id}')`)}">${mt?"💬":(liked?"❤️":"🤍")}</button>
       <div class="gi"><div class="gn">${e(p.name)}${a} ${vbadgeU(p)}</div>
         <div class="gs">📍 ${e(p.city||"—")} ${on?"• 🟢":""}</div></div></div>`}).join("")+`</div>`;
 }
@@ -531,6 +531,18 @@ async function likeUser(id){
   else toast("❤️ Like पाठवला");
   renderDeck();renderChats();
   if($("ovProf").classList.contains("show"))closeProf();
+}
+async function unlikeUser(id){
+  if(!myLikes.has(id))return;
+  const wasMatch=likedMe.has(id);
+  if(wasMatch&&!confirm("हा Match आहे. Unlike केल्यास Match संपेल आणि chat/call बंद होईल. खात्री?"))return;
+  const {error}=await sb.from("lg_likes").delete().eq("from_id",me.id).eq("to_id",id);
+  if(error)return toast("Unlike झाले नाही: "+error.message);
+  myLikes.delete(id);
+  if(chatPeer?.id===id)closeChat();
+  toast("💔 Unlike केले");
+  renderDeck();renderChats();
+  if($("ovProf").classList.contains("show"))viewProfile(id);
 }
 
 /* ============================ PROFILE VIEW + FACE SCAN ============================ */
@@ -548,10 +560,11 @@ async function viewProfile(id){
      <div class="chips">${(p.interests||[]).map(i=>`<span class="chip">${e(i)}</span>`).join("")}</div>
      ${isMe?"":`
      <div style="display:flex;gap:10px;margin-top:14px">
-       ${m?`<button class="btn" onclick="closeProf();openChat('${id}')">💬 Message</button>`:(myLikes.has(id)?`<button class="btn ghost">⏳ Like पाठवला</button>`:`<button class="btn" onclick="likeUser('${id}')">❤️ Like</button>`)}
+       ${m?`<button class="btn" onclick="closeProf();openChat('${id}')">💬 Message</button>`:(myLikes.has(id)?`<button class="btn ghost" onclick="unlikeUser('${id}')">💔 Unlike (Like पाठवला)</button>`:`<button class="btn" onclick="likeUser('${id}')">❤️ Like</button>`)}
        <button class="btn ghost" onclick="faceScan('${id}')">🔍 Face Scan</button>
      </div>
      <div style="display:flex;gap:10px;margin-top:6px">
+       ${m?`<button class="link" onclick="unlikeUser('${id}')">💔 Unlike</button>`:""}
        <button class="link" onclick="reportUser('${id}')">🚩 Report</button>
        <button class="link" style="color:var(--bad)" onclick="blockUser('${id}')">🚫 Block</button>
      </div>`}
@@ -697,6 +710,7 @@ function chatMenu(){
   openSheet(`<h3>${e(chatPeer.name)}</h3>
    <div class="srow" onclick="closeSheet();safetyCheck()"><span style="font-size:22px">🛡️</span><div class="t">Guru AI ने chat तपासा<small>फसवणूक/धोका आहे का ते AI सांगेल</small></div></div>
    <div class="srow" onclick="closeSheet();faceScan('${chatPeer.id}')"><span style="font-size:22px">🔍</span><div class="t">Face Scan</div></div>
+   <div class="srow" onclick="closeSheet();unlikeUser('${chatPeer.id}')"><span style="font-size:22px">💔</span><div class="t">Unlike (Match संपवा)</div></div>
    <div class="srow" onclick="closeSheet();reportUser('${chatPeer.id}')"><span style="font-size:22px">🚩</span><div class="t">Report</div></div>
    <div class="srow" onclick="closeSheet();blockUser('${chatPeer.id}')"><span style="font-size:22px">🚫</span><div class="t" style="color:var(--bad)">Block</div></div>`);
 }
@@ -1008,6 +1022,12 @@ function startRealtime(){
       likedMe.add(l.from_id);await fetchProfiles([l.from_id]);ping();
       toast(myLikes.has(l.from_id)?"💘 नवीन Match! "+(pcache[l.from_id]?.name||""):"❤️ कोणीतरी तुम्हाला Like केले");
       renderChats();
+   })
+   .on("postgres_changes",{event:"DELETE",schema:"public",table:"lg_likes"},({old:l})=>{
+      if(!l||l.to_id!==me.id)return;
+      likedMe.delete(l.from_id);
+      if(chatPeer?.id===l.from_id){closeChat();toast("Match संपला")}
+      renderChats();if($("vDisc").classList.contains("on"))renderDeck();
    }).subscribe();
 
   if(myChan)sb.removeChannel(myChan);
