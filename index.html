@@ -560,7 +560,10 @@ async function faceScan(id){
    <div class="cmp"><div style="background-image:url(${p.photo||""})"><small>Profile photo</small></div>
    <div style="background-image:url(${p.selfie||""})">${p.selfie?"":'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;padding:8px">Live selfie नाही</span>'}<small>Live selfie ${p.verified?"✓":""}</small></div></div>
    <p style="font-size:13.5px;line-height:1.6;color:${p.verified?"var(--ok)":"var(--bad)"}">${p.verified?"✅ या व्यक्तीने live camera face-check पूर्ण केला आहे. दोन्ही चेहरे तुम्ही स्वतः जुळवून पहा.":"⚠️ ही व्यक्ती अजून verified नाही. Verify होईपर्यंत personal माहिती/पैसे देऊ नका."}</p>
+   <div id="gcOut" style="font-size:13.5px;line-height:1.6;margin:8px 0;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line)${gcLine(p)?"":";display:none"}">${gcLine(p)}</div>
+   ${p.photo?`<button class="btn ghost" onclick="$('gcOut').style.display='block';aiPhotoCheck('${id}')">🤖 AI ने photo तपासा (मुलगा/मुलगी)</button>`:""}
    ${p.verified?"":`<button class="btn" onclick="reqVerify('${id}')">🛡️ Verification मागा</button>`}
+   <p style="font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5">AI फक्त अंदाज देतो, तो १००% बरोबर नसतो. कोणावर अन्याय करू नका; संशय असल्यास Report करा.</p>
    <button class="btn ghost" onclick="closeSheet()">बंद करा</button>`);
 }
 async function reqVerify(id){
@@ -815,6 +818,36 @@ function cleanupCall(){
   $("callUI").classList.remove("show");call=null;pend=[];
 }
 
+/* ============================ AI GENDER CHECK ============================ */
+const gKey=g=>g==="Male"?"male":g==="Female"?"female":null;
+const gLabel=g=>g==="male"?"मुलगा":g==="female"?"मुलगी":"अस्पष्ट";
+async function aiFace(img){
+  try{
+    const a=await callAI('Look at this photo. Reply ONLY with JSON, no other text: {"faces":<number of human faces>,"real_live_person":<true if a real live person, false if a photo of a screen/printed photo/drawing>,"apparent_gender":"male"|"female"|"unclear","confidence":<0-100>}. apparent_gender is only your visual impression of the person\'s presented gender; answer "unclear" if not sure.',img,"image/jpeg",30000);
+    const m=a.match(/\{[\s\S]*\}/);if(!m)return null;const j=JSON.parse(m[0]);
+    const g=String(j.apparent_gender||"").toLowerCase();
+    return{faces:Number(j.faces)||0,real:j.real_live_person!==false,g:g==="male"||g==="female"?g:"unclear",c:Number(j.confidence)||0};
+  }catch(_){return null}
+}
+function gcLine(p){
+  const g=p.ai_gender;if(!g||g==="unclear"){return p.verified?"🤖 AI ला selfie वरून स्पष्ट अंदाज करता आला नाही.":""}
+  if(p.gender_check==="match")return"🤖 AI ने live selfie बघून अंदाज केला: <b>"+gLabel(g)+"</b> — profile शी जुळते ✅";
+  if(p.gender_check==="mismatch")return"⚠️ AI अंदाज: <b>"+gLabel(g)+"</b>, पण profile वर <b>"+e(p.gender)+"</b> आहे. अंदाज चुकूही शकतो — स्वतः खात्री करा, काळजी घ्या.";
+  return"🤖 AI अंदाज: <b>"+gLabel(g)+"</b>";
+}
+async function aiPhotoCheck(id){
+  const p=pcache[id];if(!p||!p.photo)return;
+  const out=$("gcOut");out.innerHTML="🤖 AI तपासत आहे...";
+  const ai=await aiFace(p.photo);
+  if(!ai){out.textContent="AI उपलब्ध नाही, नंतर प्रयत्न करा.";return}
+  if(ai.faces!==1){out.innerHTML="🤖 Photo मध्ये एक स्पष्ट चेहरा दिसला नाही ("+ai.faces+" चेहरे). सावध रहा.";return}
+  const dec=gKey(p.gender);
+  if(ai.g==="unclear"||ai.c<60)out.innerHTML="🤖 AI ला photo वरून स्पष्ट अंदाज करता आला नाही.";
+  else if(!dec)out.innerHTML="🤖 AI अंदाज: <b>"+gLabel(ai.g)+"</b>";
+  else if(ai.g===dec)out.innerHTML="🤖 AI ने photo बघून अंदाज केला: <b>"+gLabel(ai.g)+"</b> — profile शी जुळते ✅";
+  else out.innerHTML="⚠️ AI अंदाज: <b>"+gLabel(ai.g)+"</b>, पण profile वर <b>"+e(p.gender)+"</b> आहे. अंदाज चुकूही शकतो — स्वतः खात्री करा.";
+}
+
 /* ============================ FACE VERIFY ============================ */
 let verStream=null,verBusy=false,verFromOnb=false;
 async function openVerify(fromOnb){
@@ -844,15 +877,21 @@ async function runVerify(){
   const c=document.createElement("canvas");const s=Math.min(1,360/v.videoWidth);c.width=v.videoWidth*s;c.height=v.videoHeight*s;
   const x=c.getContext("2d");x.translate(c.width,0);x.scale(-1,1);x.drawImage(v,0,0,c.width,c.height);
   const shot=c.toDataURL("image/jpeg",.7);
+  const ai=await aiFace(shot);
   let ok=false,msg="";
   if(fd){ok=seen/tot>=.6&&!multi;msg=multi?"फ्रेममध्ये एकापेक्षा जास्त चेहरे दिसले":"चेहरा नीट दिसला नाही"}
-  else{
-    try{const a=await callAI("Does this selfie photo show exactly one real, live human face clearly visible (not a photo of a screen/printed photo, no mask)? Answer only YES or NO.",shot,"image/jpeg");ok=/^\s*yes/i.test(a);msg="AI ला स्पष्ट चेहरा आढळला नाही"}
-    catch(_){ok=false;msg="AI तपासणी उपलब्ध नाही, पुन्हा प्रयत्न करा"}
-  }
+  else{ok=!!ai&&ai.faces===1&&ai.real;msg=ai?"AI ला स्पष्ट चेहरा आढळला नाही":"AI तपासणी उपलब्ध नाही, पुन्हा प्रयत्न करा"}
+  if(ok&&ai&&ai.real===false){ok=false;msg="Live व्यक्ती आढळली नाही (फोटो/screen नको)"}
   verBusy=false;
   if(!ok){$("verMsg").textContent="❌ "+msg+". पुन्हा प्रयत्न करा.";$("verPrompt").textContent="अयशस्वी";$("verGo").disabled=false;return}
-  const {data,error}=await sb.from("lg_profiles").update({selfie:shot,verified:true}).eq("id",me.id).select().single();
+  const dec=gKey(prof.gender);let gc="unclear";
+  if(!dec)gc="na";
+  else if(ai&&ai.g!=="unclear"&&ai.c>=60)gc=ai.g===dec?"match":"mismatch";
+  if(gc==="mismatch"&&!confirm("🤖 Guru AI ला तुमचा चेहरा '"+gLabel(ai.g)+"' सारखा वाटला, पण तुमचा profile gender '"+prof.gender+"' आहे.\n\nAI चा अंदाज चुकू शकतो. Profile बरोबर असेल तर OK दाबा. नसेल तर Cancel करून Me → Profile बदला मध्ये gender दुरुस्त करा."))
+    {$("verMsg").textContent="Gender दुरुस्त करून पुन्हा प्रयत्न करा";$("verPrompt").textContent="रद्द";$("verGo").disabled=false;return}
+  let up=await sb.from("lg_profiles").update({selfie:shot,verified:true,ai_gender:ai?ai.g:null,gender_check:gc}).eq("id",me.id).select().single();
+  if(up.error&&/ai_gender|gender_check/.test(up.error.message))up=await sb.from("lg_profiles").update({selfie:shot,verified:true}).eq("id",me.id).select().single();
+  const {data,error}=up;
   if(error){$("verMsg").textContent="Save error: "+error.message;$("verGo").disabled=false;return}
   prof=data;pcache[me.id]=prof;
   closeVerify();toast("✅ Face Verified!");
