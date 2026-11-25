@@ -59,7 +59,15 @@ label.l{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-t
 /* discover */
 .filters{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;flex-shrink:0}
 .filters::-webkit-scrollbar{display:none}
-.deck{flex:1;padding:4px 14px 12px;display:flex;flex-direction:column;min-height:0}
+.deck{flex:1;padding:4px 14px 12px;overflow-y:auto;min-height:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gc{aspect-ratio:3/4;border-radius:20px;overflow:hidden;position:relative;background-size:cover;background-position:center;background-color:var(--card);border:1px solid var(--line);display:flex;align-items:flex-end}
+.gc .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 5%,transparent 55%)}
+.gi{position:relative;padding:10px;width:100%}
+.gn{font-size:15px;font-weight:800;line-height:1.25}
+.gs{font-size:11.5px;opacity:.85;margin-top:2px}
+.gh{position:absolute;top:8px;right:8px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);font-size:19px;z-index:2}
+.gh:active{transform:scale(.9)}
 .pcard{flex:1;min-height:0;border-radius:26px;overflow:hidden;position:relative;background:var(--card);border:1px solid var(--line);background-size:cover;background-position:center;display:flex;align-items:flex-end;animation:pop .25s ease}
 @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
 .pcard .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 5%,rgba(0,0,0,.1) 55%,transparent)}
@@ -296,7 +304,7 @@ const ICE=[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:
 let me=null,prof=null,authMode="login";
 let myLikes=new Set(),likedMe=new Set(),blocked=new Set(),passed=new Set();
 let pcache={},lastMsg={},unread={},onlineSet=new Set();
-let deckList=[],filt={verified:false,city:"",age:"all"};
+let deckList=[],filt={verified:false,city:"",age:"all",gender:"all"};
 let chatPeer=null,rendered=new Set(),chatTabSel="m",aiHist=[];
 let rt=null,pres=null,myChan=null,editing=false;
 let settings=JSON.parse(localStorage.getItem("lg_settings")||'{"theme":"rose","sound":true}');
@@ -416,7 +424,9 @@ async function obGo(d){
   ob.step=Math.max(1,Math.min(4,ob.step+d));obShow();
 }
 async function saveProfile(){
-  const row={id:me.id,name:$("oName").value.trim(),gender:ob.gender,interested_in:ob.into,birth_date:$("oDob").value,
+  const lockG=prof&&prof.verified&&(prof.ai_gender==="male"||prof.ai_gender==="female");
+  if(lockG&&ob.gender!==(prof.ai_gender==="male"?"Male":"Female"))toast("🤖 Verified profile चा gender AI नुसार बदलता येत नाही");
+  const row={id:me.id,name:$("oName").value.trim(),gender:lockG?(prof.ai_gender==="male"?"Male":"Female"):ob.gender,interested_in:ob.into,birth_date:$("oDob").value,
     city:$("oCity").value.trim(),bio:$("oBio").value.trim(),interests:ob.interests,photo:ob.photo,status:"Single"};
   $("obNext").disabled=true;
   const {data,error}=await sb.from("lg_profiles").upsert(row).select().single();
@@ -471,22 +481,24 @@ function setTab(t){
 
 /* ============================ DISCOVER ============================ */
 async function loadDeck(){
-  let q=sb.from("lg_profiles").select("*").neq("id",me.id).eq("paused",false).limit(80);
-  if(prof.interested_in!=="Everyone")q=q.eq("gender",prof.interested_in);
-  const {data,error}=await q;
+  const {data,error}=await sb.from("lg_profiles").select("*").neq("id",me.id).eq("paused",false).order("created_at",{ascending:false}).limit(300);
   if(error){$("deck").innerHTML=`<div class="empty"><b>⚠️</b>${e(error.message)}</div>`;return}
   (data||[]).forEach(p=>pcache[p.id]=p);
-  deckList=(data||[]).filter(p=>(p.interested_in==="Everyone"||p.interested_in===prof.gender)&&ageOf(p.birth_date)>=18)
-    .sort(()=>Math.random()-.5);
+  deckList=(data||[]).filter(p=>ageOf(p.birth_date)>=18);
   renderFilters();renderDeck();
 }
 function candidates(){
-  return deckList.filter(p=>!myLikes.has(p.id)&&!blocked.has(p.id)&&!passed.has(p.id)
+  return deckList.filter(p=>!blocked.has(p.id)
+    &&(filt.gender==="all"||p.gender===filt.gender)
     &&(!filt.verified||p.verified)&&(!filt.city||(p.city||"").toLowerCase().includes(filt.city.toLowerCase()))
-    &&(filt.age==="all"||(filt.age==="18"&&ageOf(p.birth_date)<=25)||(filt.age==="26"&&ageOf(p.birth_date)>25&&ageOf(p.birth_date)<=35)||(filt.age==="36"&&ageOf(p.birth_date)>35)));
+    &&(filt.age==="all"||(filt.age==="18"&&ageOf(p.birth_date)<=25)||(filt.age==="26"&&ageOf(p.birth_date)>25&&ageOf(p.birth_date)<=35)||(filt.age==="36"&&ageOf(p.birth_date)>35)))
+    .sort((x,y)=>(onlineSet.has(y.id)&&y.show_online!==false)-(onlineSet.has(x.id)&&x.show_online!==false));
 }
 function renderFilters(){
   $("discFilters").innerHTML=`
+   <button class="chip ${filt.gender==="all"?"on":""}" onclick="filt.gender='all';renderFilters();renderDeck()">सर्व</button>
+   <button class="chip ${filt.gender==="Female"?"on":""}" onclick="filt.gender='Female';renderFilters();renderDeck()">👩 मुली</button>
+   <button class="chip ${filt.gender==="Male"?"on":""}" onclick="filt.gender='Male';renderFilters();renderDeck()">👨 मुलगे</button>
    <button class="chip ${filt.verified?"on":""}" onclick="filt.verified=!filt.verified;renderFilters();renderDeck()">✓ Verified</button>
    <button class="chip ${filt.age==="all"?"on":""}" onclick="filt.age='all';renderFilters();renderDeck()">सर्व वय</button>
    <button class="chip ${filt.age==="18"?"on":""}" onclick="filt.age='18';renderFilters();renderDeck()">18-25</button>
@@ -496,23 +508,17 @@ function renderFilters(){
 }
 function askCity(){const c=prompt("शहर (रिकामे सोडा = सर्व)",filt.city);if(c===null)return;filt.city=c.trim();renderFilters();renderDeck()}
 function renderDeck(){
-  const p=candidates()[0];
-  if(!p){$("deck").innerHTML=`<div class="empty"><b>🌙</b>सध्या नवीन profiles नाहीत.<br>नंतर पुन्हा बघा किंवा filter बदला.<br><button class="btn sm" style="margin-top:14px" onclick="passed.clear();loadDeck()">↻ Refresh</button></div>`;return}
-  const a=p.show_age===false?"":", "+ageOf(p.birth_date);
-  $("deck").innerHTML=`
-   <div class="pcard" style="background-image:url(${p.photo||""})" onclick="viewProfile('${p.id}')">
-     <div class="shade"></div>
-     <div class="info"><h2>${e(p.name)}${a} ${vbadgeU(p)}</h2>
-       <div style="font-size:13px;opacity:.9;margin-top:3px">📍 ${e(p.city||"—")} ${newAcct(p)?"• 🆕 नवीन account":""} ${onlineSet.has(p.id)&&p.show_online!==false?"• 🟢 Online":""}</div>
-       <p>${e(p.bio||"")}</p>
-       <div class="mini">${(p.interests||[]).slice(0,4).map(i=>`<span>${e(i)}</span>`).join("")}</div>
-     </div></div>
-   <div class="acts">
-     <button class="act" onclick="passCard('${p.id}')">✕</button>
-     <button class="act" onclick="faceScan('${p.id}')">🔍</button>
-     <button class="act big" onclick="likeUser('${p.id}')">❤️</button>
-     <button class="act" onclick="viewProfile('${p.id}')">ℹ️</button>
-   </div>`;
+  const list=candidates();
+  if(!list.length){$("deck").innerHTML=`<div class="empty"><b>🌙</b>सध्या कोणतेही profile नाही.<br>Filter बदला किंवा नंतर बघा.<br><button class="btn sm" style="margin-top:14px" onclick="filt={verified:false,city:'',age:'all',gender:'all'};loadDeck()">↻ Refresh</button></div>`;return}
+  $("deck").innerHTML=`<div class="grid">`+list.map(p=>{
+    const a=p.show_age===false?"":", "+ageOf(p.birth_date);
+    const liked=myLikes.has(p.id),mt=liked&&likedMe.has(p.id);
+    const on=onlineSet.has(p.id)&&p.show_online!==false;
+    return`<div class="gc" style="background-image:url(${p.photo||""})" onclick="viewProfile('${p.id}')">
+      <div class="shade"></div>
+      <button class="gh ${liked?"on":""}" onclick="event.stopPropagation();${mt?`openChat('${p.id}')`:`likeUser('${p.id}')`}">${mt?"💬":(liked?"❤️":"🤍")}</button>
+      <div class="gi"><div class="gn">${e(p.name)}${a} ${vbadgeU(p)}</div>
+        <div class="gs">📍 ${e(p.city||"—")} ${on?"• 🟢":""}</div></div></div>`}).join("")+`</div>`;
 }
 const vbadgeU=vb=>vb.verified?'<span class="vb">✓</span>':'<span style="font-size:11px;opacity:.7;font-weight:600">• Unverified</span>';
 function passCard(id){passed.add(id);renderDeck()}
@@ -832,6 +838,7 @@ async function aiFace(img){
 function gcLine(p){
   const g=p.ai_gender;if(!g||g==="unclear"){return p.verified?"🤖 AI ला selfie वरून स्पष्ट अंदाज करता आला नाही.":""}
   if(p.gender_check==="match")return"🤖 AI ने live selfie बघून अंदाज केला: <b>"+gLabel(g)+"</b> — profile शी जुळते ✅";
+  if(p.gender_check==="corrected")return"🤖 AI ने live selfie बघून ठरवले: <b>"+gLabel(g)+"</b> (profile gender AI नुसार ठेवला आहे) ✅";
   if(p.gender_check==="mismatch")return"⚠️ AI अंदाज: <b>"+gLabel(g)+"</b>, पण profile वर <b>"+e(p.gender)+"</b> आहे. अंदाज चुकूही शकतो — स्वतः खात्री करा, काळजी घ्या.";
   return"🤖 AI अंदाज: <b>"+gLabel(g)+"</b>";
 }
@@ -884,17 +891,20 @@ async function runVerify(){
   if(ok&&ai&&ai.real===false){ok=false;msg="Live व्यक्ती आढळली नाही (फोटो/screen नको)"}
   verBusy=false;
   if(!ok){$("verMsg").textContent="❌ "+msg+". पुन्हा प्रयत्न करा.";$("verPrompt").textContent="अयशस्वी";$("verGo").disabled=false;return}
-  const dec=gKey(prof.gender);let gc="unclear";
-  if(!dec)gc="na";
-  else if(ai&&ai.g!=="unclear"&&ai.c>=60)gc=ai.g===dec?"match":"mismatch";
-  if(gc==="mismatch"&&!confirm("🤖 Guru AI ला तुमचा चेहरा '"+gLabel(ai.g)+"' सारखा वाटला, पण तुमचा profile gender '"+prof.gender+"' आहे.\n\nAI चा अंदाज चुकू शकतो. Profile बरोबर असेल तर OK दाबा. नसेल तर Cancel करून Me → Profile बदला मध्ये gender दुरुस्त करा."))
-    {$("verMsg").textContent="Gender दुरुस्त करून पुन्हा प्रयत्न करा";$("verPrompt").textContent="रद्द";$("verGo").disabled=false;return}
-  let up=await sb.from("lg_profiles").update({selfie:shot,verified:true,ai_gender:ai?ai.g:null,gender_check:gc}).eq("id",me.id).select().single();
-  if(up.error&&/ai_gender|gender_check/.test(up.error.message))up=await sb.from("lg_profiles").update({selfie:shot,verified:true}).eq("id",me.id).select().single();
+  const dec=gKey(prof.gender);let gc="unclear",aiG=(ai&&ai.g!=="unclear"&&ai.c>=60)?ai.g:"unclear",newGender=prof.gender;
+  if(aiG!=="unclear"){
+    if(aiG===dec)gc="match";
+    else{gc="corrected";newGender=aiG==="male"?"Male":"Female"}
+  }else if(!dec)gc="na";
+  const patch={selfie:shot,verified:true,ai_gender:aiG,gender_check:gc,gender:newGender};
+  let up=await sb.from("lg_profiles").update(patch).eq("id",me.id).select().single();
+  if(up.error&&/ai_gender|gender_check/.test(up.error.message)){delete patch.ai_gender;delete patch.gender_check;up=await sb.from("lg_profiles").update(patch).eq("id",me.id).select().single()}
   const {data,error}=up;
   if(error){$("verMsg").textContent="Save error: "+error.message;$("verGo").disabled=false;return}
   prof=data;pcache[me.id]=prof;
-  closeVerify();toast("✅ Face Verified!");
+  closeVerify();
+  if(gc==="corrected")alert("🤖 Guru AI ने तुमच्या live selfie नुसार तुमचा profile gender '"+gLabel(aiG)+"' ठेवला आहे. Verified profiles वर AI चा निकाल लागू होतो.");
+  toast("✅ Face Verified!");
   if(verFromOnb)$("obVerMsg").textContent="✅ Verified झाले!";
   renderMe();
 }
