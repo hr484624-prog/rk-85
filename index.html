@@ -8,16 +8,15 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root,[data-theme="rose"]{--bg:#14060f;--bg2:#1d0a17;--card:#26101f;--card2:#33162a;--line:#4a2140;--text:#fff1f6;--muted:#b995a9;--a:#ff3d7f;--b:#ff9a3d;--ok:#2ee59d;--bad:#ff5470}
-[data-theme="violet"]{--bg:#0d0a1f;--bg2:#150f2e;--card:#1d1640;--card2:#291f57;--line:#3b2f78;--text:#f3f0ff;--muted:#a79fd6;--a:#9b5cff;--b:#ff4fd8;--ok:#2ee59d;--bad:#ff5470}
-[data-theme="ocean"]{--bg:#03121c;--bg2:#071d2b;--card:#0c2b3f;--card2:#123a53;--line:#1d5272;--text:#eaf8ff;--muted:#8fb9cf;--a:#00c2ff;--b:#00e0a4;--ok:#2ee59d;--bad:#ff5470}
-[data-theme="sunset"]{--bg:#1a0b05;--bg2:#251109;--card:#32180d;--card2:#432213;--line:#66341c;--text:#fff3ea;--muted:#c9a28b;--a:#ff6a3d;--b:#ffd23d;--ok:#2ee59d;--bad:#ff5470}
+[data-theme="violet"]{--bg:#0d0a1f;--bg2:#150f2e;--card:#1d1640;--card2:#291f57;--line:#3b2f78;--text:#f3f0ff;--muted:#a79fd6;--a:#9b5cff;--b:#ff4fd8}
+[data-theme="ocean"]{--bg:#03121c;--bg2:#071d2b;--card:#0c2b3f;--card2:#123a53;--line:#1d5272;--text:#eaf8ff;--muted:#8fb9cf;--a:#00c2ff;--b:#00e0a4}
+[data-theme="sunset"]{--bg:#1a0b05;--bg2:#251109;--card:#32180d;--card2:#432213;--line:#66341c;--text:#fff3ea;--muted:#c9a28b;--a:#ff6a3d;--b:#ffd23d}
 [data-theme="light"]{--bg:#fff5f8;--bg2:#ffffff;--card:#ffffff;--card2:#ffe8f0;--line:#f3c6d6;--text:#3a1426;--muted:#8a6577;--a:#ff3d7f;--b:#ff9a3d;--ok:#12a36b;--bad:#e0334f}
 [data-theme="light"] .hdr{background:rgba(255,255,255,.75)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:Roboto,Arial,sans-serif;overflow:hidden}
 button{font-family:inherit;cursor:pointer;border:0;color:inherit}
-input,textarea,select{font-family:inherit;color:var(--text)}
-.grad{background:linear-gradient(135deg,var(--a),var(--b))}
+input,textarea{font-family:inherit;color:var(--text)}
 .gtext{background:linear-gradient(135deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .screen{display:none;position:fixed;inset:0;flex-direction:column;background:
  radial-gradient(500px 300px at 0 0,color-mix(in srgb,var(--a) 22%,transparent),transparent 60%),
@@ -37,28 +36,23 @@ label.l{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-t
 .btn.sm{padding:10px 14px;width:auto;font-size:13px;border-radius:12px;margin:0}
 .link{background:none;color:var(--a);font-weight:700;padding:10px;width:100%;margin-top:6px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
-.chip{padding:8px 14px;border-radius:22px;background:var(--bg2);border:1.5px solid var(--line);font-size:13px;font-weight:600;color:var(--muted)}
+.chip{padding:8px 14px;border-radius:22px;background:var(--bg2);border:1.5px solid var(--line);font-size:13px;font-weight:600;color:var(--muted);flex-shrink:0}
 .chip.on{background:linear-gradient(135deg,var(--a),var(--b));color:#fff;border-color:transparent}
 .steps{display:flex;gap:6px;padding:14px 16px 0}
 .steps i{flex:1;height:4px;border-radius:4px;background:var(--line)}
 .steps i.on{background:linear-gradient(90deg,var(--a),var(--b))}
-/* header + nav */
 .hdr{height:58px;padding:0 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative;background:rgba(0,0,0,.25);backdrop-filter:blur(10px)}
 .hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--a),var(--b))}
 .hdr h1{font-size:21px;font-weight:900;flex:1}
-.ib{width:40px;height:40px;border-radius:50%;background:var(--card2);font-size:19px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.ib{width:40px;height:40px;border-radius:50%;background:var(--card2);font-size:19px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ib:active{transform:scale(.92)}
 .nav{display:flex;flex-shrink:0;background:var(--bg2);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
 .nav button{flex:1;padding:9px 0 8px;background:none;color:var(--muted);font-size:10.5px;font-weight:700;position:relative}
 .nav button span{display:block;font-size:22px}
 .nav button.on{color:var(--a)}
 .nbadge{position:absolute;top:3px;left:calc(50% + 8px);min-width:17px;height:17px;border-radius:9px;background:var(--a);color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;padding:0 4px}
-.view{display:none;flex:1;min-height:0;flex-direction:column}
-.view.on{display:flex}
-/* avatar */
-.av{border-radius:50%;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;flex-shrink:0;position:relative}
-.vb{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--blue,#2d8cff);font-size:10px;color:#fff;margin-left:4px;vertical-align:middle}
-.dot{position:absolute;right:0;bottom:0;width:13px;height:13px;border-radius:50%;background:var(--ok);border:2.5px solid var(--card)}
+.av{border-radius:50%;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;flex-shrink:0}
+.vb{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:#2d8cff;font-size:10px;color:#fff;margin-left:4px;vertical-align:middle}
 /* discover */
 .filters{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;flex-shrink:0}
 .filters::-webkit-scrollbar{display:none}
@@ -66,116 +60,33 @@ label.l{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-t
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .gc{aspect-ratio:3/4;border-radius:20px;overflow:hidden;position:relative;background-size:cover;background-position:center;background-color:var(--card);border:1px solid var(--line);display:flex;align-items:flex-end}
 .gc .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 5%,transparent 55%)}
-.gi{position:relative;padding:10px;width:100%}
+.gi{position:relative;padding:10px;width:100%;color:#fff}
 .gn{font-size:15px;font-weight:800;line-height:1.25}
-.gs{font-size:11.5px;opacity:.85;margin-top:2px}
+.gs{font-size:11.5px;opacity:.9;margin-top:2px}
+.gs b{color:var(--b)}
 .gh{position:absolute;top:8px;right:8px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);font-size:19px;z-index:2}
+.gh.hide{right:auto;left:8px}
 .gh:active{transform:scale(.9)}
-.pcard{flex:1;min-height:0;border-radius:26px;overflow:hidden;position:relative;background:var(--card);border:1px solid var(--line);background-size:cover;background-position:center;display:flex;align-items:flex-end;animation:pop .25s ease}
-@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
-.pcard .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 5%,rgba(0,0,0,.1) 55%,transparent)}
-.pcard .info{position:relative;padding:18px;width:100%}
-.pcard h2{font-size:26px;font-weight:900}
-.pcard p{font-size:13.5px;line-height:1.5;opacity:.92;margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.mini{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.mini span{font-size:11px;padding:4px 9px;border-radius:12px;background:rgba(255,255,255,.18);backdrop-filter:blur(6px)}
-.acts{display:flex;justify-content:center;gap:16px;padding-top:12px}
-.act{width:60px;height:60px;border-radius:50%;font-size:26px;background:var(--card2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
-.act.big{width:72px;height:72px;font-size:32px;background:linear-gradient(135deg,var(--a),var(--b));border:0;box-shadow:0 10px 28px color-mix(in srgb,var(--a) 45%,transparent)}
-.act:active{transform:scale(.9)}
-/* lists */
-.tabs{display:flex;gap:8px;padding:10px 14px 4px}
-.list{padding:8px 14px 20px}
-.row{display:flex;align-items:center;gap:13px;padding:12px;margin-bottom:9px;background:var(--card);border:1px solid var(--line);border-radius:18px;cursor:pointer}
-.row:active{border-color:var(--a)}
-.row .mid{flex:1;min-width:0}
-.row .nm{font-weight:800;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row .sb{font-size:13px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row .sb.u{color:var(--text);font-weight:700}
-.row .rt{text-align:right;font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-.bdg{min-width:21px;height:21px;border-radius:11px;background:linear-gradient(135deg,var(--a),var(--b));color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.tipc{margin:0 0 10px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--a) 25%,transparent),color-mix(in srgb,var(--b) 18%,transparent));border:1px solid var(--line);font-size:13.5px;line-height:1.5}
 .empty{text-align:center;color:var(--muted);padding:50px 24px;line-height:1.7}
 .empty b{display:block;font-size:44px;margin-bottom:8px}
 /* overlays */
-.ov{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;flex-direction:column}
+.ov{position:fixed;inset:0;z-index:250;background:var(--bg);display:none;flex-direction:column}
 .ov.show{display:flex}
-.sheetbg{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);display:none;align-items:flex-end;justify-content:center}
-.sheetbg.show{display:flex}
-.sheet{width:100%;max-width:520px;max-height:92vh;overflow-y:auto;background:var(--bg2);border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;padding:20px 18px 26px;animation:up .25s ease}
-@keyframes up{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
-.sheet h3{font-size:19px;font-weight:800;margin-bottom:10px}
-.srow{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line);font-size:15px}
-.srow .t{flex:1}
-.srow small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
-.sw{width:46px;height:26px;border-radius:13px;background:var(--line);position:relative;flex-shrink:0;transition:.2s}
-.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
-.sw.on{background:linear-gradient(90deg,var(--a),var(--b))}
-.sw.on::after{left:23px}
-/* chat */
-.msgs{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:6px}
-.bub{max-width:80%;padding:8px 12px 5px;border-radius:17px;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
-.bub.me{align-self:flex-end;background:linear-gradient(135deg,var(--a),var(--b));color:#fff;border-bottom-right-radius:5px}
-.bub.ot{align-self:flex-start;background:var(--card2);border:1px solid var(--line);border-bottom-left-radius:5px}
-.bub .t{font-size:10px;opacity:.65;text-align:right;margin-top:2px}
-.bub.call{align-self:center;background:var(--card);border:1px dashed var(--line);font-size:13px;color:var(--muted);border-radius:14px}
-.warn{margin-top:6px;padding:6px 8px;border-radius:10px;background:rgba(255,84,112,.18);border:1px solid var(--bad);font-size:12px;color:#ffc3cd}
-.comp{display:flex;gap:8px;padding:10px;background:var(--bg2);border-top:1px solid var(--line);align-items:flex-end}
-.comp textarea{flex:1;resize:none;max-height:110px;padding:12px 15px;background:var(--card);border:1.5px solid var(--line);border-radius:22px;font-size:15px;outline:none}
-.comp textarea:focus{border-color:var(--a)}
-.sendb{width:46px;height:46px;border-radius:50%;font-size:19px;color:#fff;flex-shrink:0}
-.safebar{padding:7px 12px;font-size:12px;background:rgba(46,229,157,.1);color:var(--ok);text-align:center;flex-shrink:0}
-/* call */
-#callUI{background:#000;z-index:500}
-#remoteV{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
-#localV{position:absolute;right:14px;top:80px;width:104px;height:146px;object-fit:cover;border-radius:16px;border:2px solid rgba(255,255,255,.4);background:#111;transform:scaleX(-1);z-index:2}
-.callTop{position:relative;z-index:2;padding:26px 20px;text-align:center;text-shadow:0 2px 10px #000}
-.callTop h2{font-size:24px}
-.callMid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;pointer-events:none}
-.callBar{position:absolute;left:0;right:0;bottom:0;z-index:3;display:flex;justify-content:center;gap:16px;padding:22px 10px calc(28px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(0,0,0,.8),transparent)}
-.cb{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.22);font-size:24px;backdrop-filter:blur(8px)}
-.cb.off{background:#fff;color:#000}
-.cb.end{background:var(--bad)}
-.cb.acc{background:var(--ok)}
-.ring{width:130px;height:130px;font-size:52px;animation:pulse 1.4s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,61,127,.55)}100%{box-shadow:0 0 0 40px rgba(255,61,127,0)}}
-/* verify */
-.vidwrap{position:relative;width:100%;aspect-ratio:3/4;max-height:56vh;border-radius:22px;overflow:hidden;background:#000;margin:10px 0;border:2px solid var(--line)}
-.vidwrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
-.vprompt{position:absolute;left:0;right:0;bottom:0;padding:14px;text-align:center;font-weight:800;font-size:18px;background:linear-gradient(to top,rgba(0,0,0,.8),transparent)}
-.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
-.cmp div{aspect-ratio:3/4;border-radius:16px;background-size:cover;background-position:center;background-color:var(--card);position:relative;border:1px solid var(--line)}
-.cmp small{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:11px;padding:5px;background:rgba(0,0,0,.6);border-radius:0 0 16px 16px}
 .pdet{position:relative;height:46vh;background-size:cover;background-position:center;background-color:var(--card);flex-shrink:0}
 .pdet .shade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 2%,transparent 60%)}
-/* AI */
-.aiw{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:9px}
-.ai-b{max-width:88%;padding:10px 13px;border-radius:16px;font-size:14.5px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
-.ai-b.u{align-self:flex-end;background:linear-gradient(135deg,var(--a),var(--b));color:#fff;border-bottom-right-radius:5px}
-.ai-b.b{align-self:flex-start;background:var(--card2);border:1px solid var(--line);border-bottom-left-radius:5px}
-.qs{display:flex;gap:8px;padding:8px 12px;overflow-x:auto;flex-shrink:0}
-.qs::-webkit-scrollbar{display:none}
+.sheetbg{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);display:none;align-items:flex-end;justify-content:center}
+.sheetbg.show{display:flex}
+.sheet{width:100%;max-width:520px;max-height:92vh;overflow-y:auto;background:var(--bg2);border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;padding:20px 18px 26px}
+.sheet h3{font-size:19px;font-weight:800;margin-bottom:10px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.cmp div{aspect-ratio:3/4;border-radius:16px;background-size:cover;background-position:center;background-color:var(--card);position:relative;border:1px solid var(--line)}
+.cmp small{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:11px;padding:5px;background:rgba(0,0,0,.6);border-radius:0 0 16px 16px;color:#fff}
+.photoPick{width:150px;height:190px;margin:10px auto;border-radius:22px;border:2px dashed var(--line);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;cursor:pointer;background-color:var(--bg2)}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:900;background:var(--card2);border:1px solid var(--a);padding:11px 18px;border-radius:14px;font-size:14px;max-width:90%;text-align:center;display:none}
 .toast.show{display:block}
 .loader{width:34px;height:34px;margin:30px auto;border-radius:50%;border:3px solid var(--line);border-top-color:var(--a);animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.photoPick{width:150px;height:190px;margin:10px auto;border-radius:22px;border:2px dashed var(--line);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;cursor:pointer;background-color:var(--bg2)}
-/* ===== PLUS features ===== */
-.bub.media{padding:4px 4px 5px}
-.mimg{display:block;max-width:100%;width:230px;max-height:300px;border-radius:13px;object-fit:cover;background:#000}
-.bub.media .t{padding:0 6px}
-.tk{letter-spacing:-2px}.tk.rd{color:#7df;opacity:1}
-#emBar{display:none;gap:4px;overflow-x:auto;padding:6px 10px;background:var(--bg2);border-top:1px solid var(--line);font-size:25px;flex-shrink:0}
-#emBar.show{display:flex}#emBar span{padding:2px 6px;cursor:pointer}
-.comp .ib{width:38px;height:38px;font-size:18px}
-#micB.recing{background:var(--bad);color:#fff;font-size:12px;width:auto;min-width:38px;padding:0 10px;border-radius:19px}
-#lb{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center}
-#lb.show{display:flex}#lb img,#lb video{max-width:100%;max-height:100%}
-#lbx{position:absolute;top:calc(14px + env(safe-area-inset-top));right:14px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:20px;z-index:2}
-.tipc{margin:0 0 10px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--a) 25%,transparent),color-mix(in srgb,var(--b) 18%,transparent));border:1px solid var(--line);font-size:13.5px;line-height:1.5}
-.pbar{height:8px;border-radius:6px;background:var(--line);margin:8px 0}
-.pbar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--a),var(--b))}
-.gh.hide{right:auto;left:8px}
-.gs b{color:var(--b)}
 </style>
 </head>
 <body>
@@ -195,7 +106,7 @@ label.l{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-t
 
 <!-- ================= ONBOARDING ================= -->
 <div class="screen" id="sOnb">
-  <div class="steps center" id="obSteps"><i></i><i></i><i></i><i></i></div>
+  <div class="steps center" id="obSteps"><i></i><i></i><i></i></div>
   <div class="scroll"><div class="center" style="padding:14px 0 30px">
     <div id="ob1">
       <div class="box"><h3 style="margin-bottom:6px">👋 तुमची ओळख</h3>
@@ -218,98 +129,33 @@ label.l{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-t
         <label class="l">माझ्याबद्दल (फोन नंबर/link टाकू नका)</label>
         <textarea class="inp" id="oBio" rows="3" maxlength="200" placeholder="थोडक्यात स्वतःबद्दल..."></textarea>
         <label class="l">आवड (3+ निवडा)</label><div class="chips" id="oInt"></div>
-      </div>
-    </div>
-    <div id="ob4" style="display:none">
-      <div class="box"><h3 style="margin-bottom:6px">🛡️ Face Verify (शिफारस)</h3>
-        <p style="font-size:13.5px;color:var(--muted);line-height:1.6">Live camera ने एक छोटा face check करा. Verified profile ला ✔ badge मिळते आणि fraud होण्याची शक्यता कमी होते. नंतरही करता येईल.</p>
-        <button class="btn" onclick="openVerify(true)">📷 आता Verify करा</button>
-        <div id="obVerMsg" style="text-align:center;margin-top:10px;color:var(--ok);font-weight:700"></div>
+        <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:8px">🛡️ Profile तयार झाल्यावर <b>Me</b> मध्ये Face Verify करा — ✔ badge मिळते.</p>
       </div>
     </div>
     <div style="padding:0 16px;display:flex;gap:10px">
       <button class="btn ghost" id="obBack" onclick="obGo(-1)" style="display:none">मागे</button>
       <button class="btn" id="obNext" onclick="obGo(1)">पुढे</button>
     </div>
-    <button class="link" id="obCancel" style="display:none" onclick="show('sApp')">रद्द करा</button>
   </div></div>
 </div>
 
-<!-- ================= APP ================= -->
+<!-- ================= APP (Discover) ================= -->
 <div class="screen" id="sApp">
-  <div class="hdr"><h1><span class="gtext">Love Guru</span> 💘</h1><button class="ib" onclick="openSettings()">⚙️</button></div>
-
-  <div class="view on" id="vDisc">
-    <div class="filters" id="discFilters"></div>
-    <div class="deck" id="deck"></div>
-  </div>
-
-  <div class="view" id="vChats">
-    <div class="tabs"><button class="chip on" id="tMatch" onclick="chatTab('m')">💬 Matches</button><button class="chip" id="tLikes" onclick="chatTab('l')">❤️ तुम्हाला Like <span id="likeCnt"></span></button></div>
-    <div class="scroll"><div class="list" id="chatList"></div></div>
-  </div>
-
-  <div class="view" id="vAI">
-    <div class="qs" id="aiQs"></div>
-    <div class="aiw" id="aiBox"></div>
-    <div class="comp"><textarea id="aiIn" rows="1" placeholder="Guru AI ला विचारा..."></textarea><button class="sendb grad" onclick="askGuru()">➤</button></div>
-  </div>
-
-  <div class="view" id="vMe"><div class="scroll"><div id="meBox" style="padding:16px"></div></div></div>
-
+  <div class="hdr"><h1><span class="gtext">Love Guru</span> 💘</h1><button class="ib" onclick="location.href='me.html'">⚙️</button></div>
+  <div class="filters" id="discFilters"></div>
+  <div class="deck" id="deck"></div>
   <nav class="nav">
-    <button class="on" data-t="Disc" onclick="setTab('Disc')"><span>🔥</span>Discover</button>
-    <button data-t="Chats" onclick="setTab('Chats')"><span>💬</span>Chats<b class="nbadge" id="nbChats"></b></button>
-    <button data-t="AI" onclick="setTab('AI')"><span>🤖</span>Guru AI</button>
-    <button data-t="Me" onclick="setTab('Me')"><span>👤</span>Me</button>
+    <button class="on"><span>🔥</span>Discover</button>
+    <button onclick="location.href='chats.html'"><span>💬</span>Chats<b class="nbadge" id="nbChats"></b></button>
+    <button onclick="location.href='guru.html'"><span>🤖</span>Guru AI</button>
+    <button onclick="location.href='me.html'"><span>👤</span>Me</button>
   </nav>
 </div>
 
-<!-- ================= CHAT ================= -->
-<div class="ov" id="ovChat">
-  <div class="hdr">
-    <button class="ib" onclick="closeChat()">‹</button>
-    <div class="av" id="cAv" style="width:40px;height:40px" onclick="viewProfile(chatPeer.id)"></div>
-    <div style="flex:1;min-width:0" onclick="viewProfile(chatPeer.id)"><div id="cName" style="font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div><div id="cSub" style="font-size:11px;color:var(--muted)"></div></div>
-    <button class="ib" onclick="startCall('audio')">📞</button>
-    <button class="ib" onclick="startCall('video')">🎥</button>
-    <button class="ib" onclick="chatMenu()">⋮</button>
-  </div>
-  <div class="safebar">🛡️ Guru AI हे chat सुरक्षेसाठी तपासतो • पैसे/OTP कधीही देऊ नका</div>
-  <div class="msgs" id="cMsgs"></div>
-  <div class="comp">
-    <button class="ib" onclick="suggestReply()" title="AI reply">💡</button>
-    <textarea id="cIn" rows="1" placeholder="Message लिहा..."></textarea>
-    <button class="sendb grad" onclick="sendMsg()">➤</button>
-  </div>
-</div>
-
 <!-- ================= PROFILE VIEW ================= -->
-<div class="ov" id="ovProf" style="z-index:250">
-  <div class="scroll" id="pvBody"></div>
-</div>
+<div class="ov" id="ovProf"><div class="scroll" id="pvBody"></div></div>
 
-<!-- ================= SHEET ================= -->
 <div class="sheetbg" id="sheetBg" onclick="if(event.target.id==='sheetBg')closeSheet()"><div class="sheet" id="sheet"></div></div>
-
-<!-- ================= VERIFY ================= -->
-<div class="sheetbg" id="verBg" style="z-index:600"><div class="sheet">
-  <h3>🛡️ Face Verification</h3>
-  <div class="vidwrap"><video id="verV" autoplay playsinline muted></video><div class="vprompt" id="verPrompt">Camera सुरू होत आहे...</div></div>
-  <div id="verMsg" style="text-align:center;font-size:13px;color:var(--muted);min-height:20px"></div>
-  <button class="btn" id="verGo" onclick="runVerify()">सुरू करा</button>
-  <button class="btn ghost" onclick="closeVerify()">रद्द करा</button>
-</div></div>
-
-<!-- ================= CALL ================= -->
-<div class="ov" id="callUI">
-  <video id="remoteV" autoplay playsinline></video>
-  <video id="localV" autoplay playsinline muted></video>
-  <div class="callTop"><h2 id="callName"></h2><div id="callStat" style="opacity:.85;margin-top:4px">Calling...</div></div>
-  <div class="callMid" id="callMid"><div class="av grad ring" id="callAv"></div></div>
-  <div class="callBar" id="callBar"></div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -318,17 +164,14 @@ const SB_URL="https://eqglttfffhvoyvrclzse.supabase.co";
 const SB_KEY="sb_publishable_rR4xxl0dW5DJrhhjqiFHLw_uJ-HakAb";
 const AI_URL="https://gyan-setu-self.vercel.app/api/chat";
 const sb=supabase.createClient(SB_URL,SB_KEY);
-const ICE=[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}];
 
 /* ============================ STATE ============================ */
 let me=null,prof=null,authMode="login";
 let myLikes=new Set(),likedMe=new Set(),blocked=new Set(),passed=new Set();
-let pcache={},lastMsg={},unread={},onlineSet=new Set();
-let deckList=[],filt={verified:false,city:"",age:"all",gender:"all"};
-let chatPeer=null,rendered=new Set(),chatTabSel="m",aiHist=[];
-let rt=null,pres=null,myChan=null,editing=false;
+let pcache={},onlineSet=new Set();
+let deckList=[],filt={verified:false,city:"",age:"all",gender:"all",online:false};
 let settings=JSON.parse(localStorage.getItem("lg_settings")||'{"theme":"rose","sound":true}');
-document.documentElement.dataset.theme=settings.theme;
+document.documentElement.dataset.theme=settings.theme||"rose";
 
 /* ============================ HELPERS ============================ */
 const $=id=>document.getElementById(id);
@@ -336,18 +179,23 @@ const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt
 const ageOf=d=>{if(!d)return"";const b=new Date(d),n=new Date();let a=n.getFullYear()-b.getFullYear();const m=n.getMonth()-b.getMonth();if(m<0||(m===0&&n.getDate()<b.getDate()))a--;return a};
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),3000)}
 function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id))}
-function clock(i){return new Date(i).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",hour12:true})}
-function ago(i){if(!i)return"";const d=new Date(i),n=new Date();if(d.toDateString()===n.toDateString())return clock(i);const y=new Date();y.setDate(n.getDate()-1);if(d.toDateString()===y.toDateString())return"काल";return d.toLocaleDateString("en-IN",{day:"2-digit",month:"2-digit"})}
-const PAL=[["#ff3d7f","#ff9a3d"],["#9b5cff","#ff4fd8"],["#00c2ff","#00e0a4"],["#ff6b6b","#feca57"],["#5f27cd","#ff6b81"]];
-function avHTML(p,size,extra){
-  const s=size||50;
-  if(p&&p.photo)return`<div class="av" style="width:${s}px;height:${s}px;background-image:url(${p.photo});${extra||""}">${onlineDot(p)}</div>`;
-  let h=0;const k=String(p?.id||"x");for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))>>>0;const c=PAL[h%PAL.length];
-  return`<div class="av" style="width:${s}px;height:${s}px;font-size:${s*.42}px;background:linear-gradient(135deg,${c[0]},${c[1]});${extra||""}">${e((p?.name||"?")[0].toUpperCase())}${onlineDot(p)}</div>`;
+function openSheet(h){$("sheet").innerHTML=h;$("sheetBg").classList.add("show")}
+function closeSheet(){$("sheetBg").classList.remove("show")}
+const prevTxt=c=>{c=String(c||"");const m=c.match(/^::(img|vid|aud)::/);return m?({img:"📷 Photo",vid:"🎥 Video",aud:"🎤 Voice message"})[m[1]]:c};
+const newAcct=p=>(Date.now()-new Date(p.created_at))<7*864e5;
+const vbadgeU=p=>p.verified?'<span class="vb">✓</span>':'<span style="font-size:11px;opacity:.7;font-weight:600">• Unverified</span>';
+function ping(){if(!settings.sound)return;try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.08;o.start();setTimeout(()=>{o.stop();c.close()},120)}catch(_){}}
+const matches=()=>[...myLikes].filter(i=>likedMe.has(i)&&!blocked.has(i)&&pcache[i]);
+
+/* ============================ SAFETY GUARD ============================ */
+const SEVERE=[/\botp\b/i,/\bcvv\b/i,/password|पासवर्ड/i,/\bupi\b|gpay|phonepe|paytm|google ?pay/i,/gift ?card/i,/bitcoin|crypto|invest(ment)?|गुंतवणूक/i,/western union/i,/(account|खाते)\s*(no|number|क्रमांक)/i,/\bifsc\b/i,/पैसे\s*(पाठव|दे|हवे)|paise\s*(pathav|de|have)|send (me )?money|रक्कम\s*पाठव|money transfer/i,/loan|कर्ज/i,/aadhaar|आधार\s*(क्रमांक|नंबर|number)|pan card/i];
+const MEDIUM=[/https?:\/\/|www\.|bit\.ly|t\.me\//i,/(?:\+?91[\s-]?)?[6-9]\d{9}/,/whatsapp|telegram|insta(gram)?\s*(id|handle)|snap(chat)?/i,/nude|न्यूड|naked|sex\b|सेक्स/i,/private (video|show)|paid (video|call)/i];
+function guard(t){
+  t=String(t||"");if(/^::(img|vid|aud)::/.test(t))return{lvl:0};
+  for(const r of SEVERE)if(r.test(t))return{lvl:2,why:"पैसे/OTP/बँक/ओळखपत्र संबंधित मजकूर"};
+  for(const r of MEDIUM)if(r.test(t))return{lvl:1,why:"phone/link/बाहेर जाण्याचा प्रयत्न किंवा अश्लील मजकूर"};
+  return{lvl:0};
 }
-function onlineDot(p){return p&&p.show_online!==false&&onlineSet.has(p.id)?'<span class="dot"></span>':""}
-const vbadge=p=>p?.verified?'<span class="vb" title="Face verified">✓</span>':"";
-function newAcct(p){return (Date.now()-new Date(p.created_at))<7*864e5}
 
 /* ============================ AUTH ============================ */
 function switchAuth(){
@@ -372,45 +220,36 @@ async function doAuth(){
   }catch(err){toast(err.message||"Error")}
   finally{$("aBtn").disabled=false}
 }
-async function logout(){await sb.auth.signOut();location.reload()}
-
 async function boot(){
   const {data:{session}}=await sb.auth.getSession();
   if(!session){show("sAuth");return}
   me=session.user;
   const {data,error}=await sb.from("lg_profiles").select("*").eq("id",me.id).maybeSingle();
-  if(error){toast("DB error: "+error.message+" (SQL run केले का?)");}
-  if(!data){editing=false;startOnb();return}
+  if(error)toast("DB error: "+error.message+" (SQL run केले का?)");
+  if(!data){startOnb();return}
   prof=data;pcache[me.id]=prof;
   await enterApp();
 }
 
 /* ============================ ONBOARDING ============================ */
-let ob={gender:"",into:"",interests:[],photo:"",step:1,selfie:null};
+let ob={gender:"",into:"",interests:[],photo:"",step:1};
 const INTERESTS=["🎵 संगीत","✈️ प्रवास","🍕 खाणे","📚 वाचन","🎬 सिनेमा","🏏 क्रिकेट","💪 Fitness","🎮 Gaming","🎨 Art","🍳 स्वयंपाक","🐶 Pets","📷 Photography","💻 Tech","🌿 Nature","💃 Dance"];
 function chipsInit(id,opts,multi,sel,cb){
-  const box=$(id);
-  const draw=()=>{box.innerHTML=opts.map(o=>`<span class="chip ${(multi?sel().includes(o):sel()===o)?"on":""}" data-v="${e(o)}">${e(o)}</span>`).join("")};
-  box.onclick=ev=>{const c=ev.target.closest(".chip");if(!c)return;cb(c.dataset.v);draw()};
-  draw();
+  const box=$(id),draw=()=>{box.innerHTML=opts.map(o=>`<span class="chip ${(multi?sel().includes(o):sel()===o)?"on":""}" data-v="${e(o)}">${e(o)}</span>`).join("")};
+  box.onclick=ev=>{const c=ev.target.closest(".chip");if(!c)return;cb(c.dataset.v);draw()};draw();
 }
 function startOnb(){
-  ob={gender:prof?.gender||"",into:prof?.interested_in||"",interests:prof?.interests||[],photo:prof?.photo||"",step:1,selfie:null};
-  $("oName").value=prof?.name||"";$("oDob").value=prof?.birth_date||"";$("oCity").value=prof?.city||"";$("oBio").value=prof?.bio||"";
-  $("oSingle").checked=!!prof;
-  $("oPhoto").style.backgroundImage=ob.photo?`url(${ob.photo})`:"";$("oPhoto").innerHTML=ob.photo?"":"📷<br>Photo निवडा";
+  ob={gender:"",into:"",interests:[],photo:"",step:1};
   chipsInit("oGender",["Male","Female","Other"],false,()=>ob.gender,v=>ob.gender=v);
   chipsInit("oInto",["Male","Female","Everyone"],false,()=>ob.into,v=>ob.into=v);
   chipsInit("oInt",INTERESTS,true,()=>ob.interests,v=>{ob.interests=ob.interests.includes(v)?ob.interests.filter(x=>x!==v):[...ob.interests,v].slice(0,8)});
-  $("obCancel").style.display=editing?"block":"none";
-  $("obVerMsg").textContent="";
   obShow();show("sOnb");
 }
 function obShow(){
-  for(let i=1;i<=4;i++)$("ob"+i).style.display=i===ob.step?"block":"none";
+  for(let i=1;i<=3;i++)$("ob"+i).style.display=i===ob.step?"block":"none";
   document.querySelectorAll("#obSteps i").forEach((x,i)=>x.classList.toggle("on",i<ob.step));
   $("obBack").style.display=ob.step>1?"block":"none";
-  $("obNext").textContent=ob.step===4?(editing?"Save करा ✅":"सुरू करा 🚀"):"पुढे";
+  $("obNext").textContent=ob.step===3?"सुरू करा 🚀":"पुढे";
 }
 function pickPhoto(ev){
   const f=ev.target.files[0];if(!f)return;
@@ -436,35 +275,30 @@ async function obGo(d){
     if(ob.step===3){
       if(!ob.photo)return toast("Profile photo आवश्यक आहे");
       if(ob.interests.length<3)return toast("किमान 3 आवड निवडा");
-      const g=guard($("oBio").value);
-      if(g.lvl>=1){return toast("🛡️ Bio मध्ये phone/link/पैसे संबंधित मजकूर चालणार नाही")}
+      if(guard($("oBio").value).lvl>=1)return toast("🛡️ Bio मध्ये phone/link/पैसे संबंधित मजकूर चालणार नाही");
+      await saveProfile();return;
     }
-    if(ob.step===4){await saveProfile();return}
   }
-  ob.step=Math.max(1,Math.min(4,ob.step+d));obShow();
+  ob.step=Math.max(1,Math.min(3,ob.step+d));obShow();
 }
 async function saveProfile(){
-  const lockG=prof&&prof.verified&&(prof.ai_gender==="male"||prof.ai_gender==="female");
-  if(lockG&&ob.gender!==(prof.ai_gender==="male"?"Male":"Female"))toast("🤖 Verified profile चा gender AI नुसार बदलता येत नाही");
-  const row={id:me.id,name:$("oName").value.trim(),gender:lockG?(prof.ai_gender==="male"?"Male":"Female"):ob.gender,interested_in:ob.into,birth_date:$("oDob").value,
+  const row={id:me.id,name:$("oName").value.trim(),gender:ob.gender,interested_in:ob.into,birth_date:$("oDob").value,
     city:$("oCity").value.trim(),bio:$("oBio").value.trim(),interests:ob.interests,photo:ob.photo,status:"Single"};
   $("obNext").disabled=true;
   const {data,error}=await sb.from("lg_profiles").upsert(row).select().single();
   $("obNext").disabled=false;
   if(error)return toast("Save झाले नाही: "+error.message);
   prof=data;pcache[me.id]=prof;
-  if(editing){editing=false;show("sApp");renderMe();toast("✅ Profile update झाली")}
-  else await enterApp();
+  await enterApp();
 }
 
 /* ============================ APP ENTRY ============================ */
 async function enterApp(){
-  show("sApp");setTab("Disc");
+  show("sApp");
   $("deck").innerHTML='<div class="loader"></div>';
   await loadSocial();
-  await loadMessages();
+  refreshBadge();
   await loadDeck();
-  renderChats();renderMe();renderAIIntro();
   startRealtime();
 }
 async function loadSocial(){
@@ -478,26 +312,16 @@ async function loadSocial(){
   await fetchProfiles([...myLikes,...likedMe]);
 }
 async function fetchProfiles(ids){
-  const need=[...new Set(ids)].filter(i=>!pcache[i]);
-  if(!need.length)return;
+  const need=[...new Set(ids)].filter(i=>!pcache[i]);if(!need.length)return;
   const {data}=await sb.from("lg_profiles").select("*").in("id",need);
   (data||[]).forEach(p=>pcache[p.id]=p);
 }
-const matches=()=>[...myLikes].filter(i=>likedMe.has(i)&&!blocked.has(i)&&pcache[i]);
-async function loadMessages(){
-  lastMsg={};unread={};
-  const {data}=await sb.from("lg_messages").select("*").or(`sender_id.eq.${me.id},receiver_id.eq.${me.id}`).order("created_at",{ascending:false}).limit(500);
-  (data||[]).forEach(m=>{
-    const o=m.sender_id===me.id?m.receiver_id:m.sender_id;
-    if(!lastMsg[o])lastMsg[o]=m;
-    if(m.receiver_id===me.id&&!m.is_read)unread[o]=(unread[o]||0)+1;
-  });
+async function refreshBadge(){
+  const {count}=await sb.from("lg_messages").select("id",{count:"exact",head:true}).eq("receiver_id",me.id).eq("is_read",false).or("kind.is.null,kind.neq.call");
+  setBadge(count||0);
 }
-function setTab(t){
-  ["Disc","Chats","AI","Me"].forEach(x=>$("v"+x).classList.toggle("on",x===t));
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
-  if(t==="Chats")renderChats();if(t==="Me")renderMe();
-}
+let unreadN=0;
+function setBadge(n){unreadN=n;const b=$("nbChats");b.textContent=n>99?"99+":n;b.style.display=n?"flex":"none"}
 
 /* ============================ DISCOVER ============================ */
 async function loadDeck(){
@@ -508,93 +332,122 @@ async function loadDeck(){
   renderFilters();renderDeck();
 }
 function candidates(){
-  return deckList.filter(p=>!blocked.has(p.id)
+  const on=p=>onlineSet.has(p.id)&&p.show_online!==false;
+  return deckList.filter(p=>!blocked.has(p.id)&&!passed.has(p.id)
     &&(filt.gender==="all"||p.gender===filt.gender)
-    &&(!filt.verified||p.verified)&&(!filt.city||(p.city||"").toLowerCase().includes(filt.city.toLowerCase()))
+    &&(!filt.verified||p.verified)&&(!filt.online||on(p))
+    &&(!filt.city||(p.city||"").toLowerCase().includes(filt.city.toLowerCase()))
     &&(filt.age==="all"||(filt.age==="18"&&ageOf(p.birth_date)<=25)||(filt.age==="26"&&ageOf(p.birth_date)>25&&ageOf(p.birth_date)<=35)||(filt.age==="36"&&ageOf(p.birth_date)>35)))
-    .sort((x,y)=>(onlineSet.has(y.id)&&y.show_online!==false)-(onlineSet.has(x.id)&&x.show_online!==false));
+    .sort((x,y)=>on(y)-on(x));
 }
+function setF(k,v){filt[k]=v;renderFilters();renderDeck()}
 function renderFilters(){
   $("discFilters").innerHTML=`
-   <button class="chip ${filt.gender==="all"?"on":""}" onclick="filt.gender='all';renderFilters();renderDeck()">सर्व</button>
-   <button class="chip ${filt.gender==="Female"?"on":""}" onclick="filt.gender='Female';renderFilters();renderDeck()">👩 मुली</button>
-   <button class="chip ${filt.gender==="Male"?"on":""}" onclick="filt.gender='Male';renderFilters();renderDeck()">👨 मुलगे</button>
-   <button class="chip ${filt.verified?"on":""}" onclick="filt.verified=!filt.verified;renderFilters();renderDeck()">✓ Verified</button>
-   <button class="chip ${filt.age==="all"?"on":""}" onclick="filt.age='all';renderFilters();renderDeck()">सर्व वय</button>
-   <button class="chip ${filt.age==="18"?"on":""}" onclick="filt.age='18';renderFilters();renderDeck()">18-25</button>
-   <button class="chip ${filt.age==="26"?"on":""}" onclick="filt.age='26';renderFilters();renderDeck()">26-35</button>
-   <button class="chip ${filt.age==="36"?"on":""}" onclick="filt.age='36';renderFilters();renderDeck()">36+</button>
+   <button class="chip ${filt.online?"on":""}" onclick="setF('online',!filt.online)">🟢 Online</button>
+   <button class="chip ${filt.gender==="all"?"on":""}" onclick="setF('gender','all')">सर्व</button>
+   <button class="chip ${filt.gender==="Female"?"on":""}" onclick="setF('gender','Female')">👩 मुली</button>
+   <button class="chip ${filt.gender==="Male"?"on":""}" onclick="setF('gender','Male')">👨 मुलगे</button>
+   <button class="chip ${filt.verified?"on":""}" onclick="setF('verified',!filt.verified)">✓ Verified</button>
+   <button class="chip ${filt.age==="all"?"on":""}" onclick="setF('age','all')">सर्व वय</button>
+   <button class="chip ${filt.age==="18"?"on":""}" onclick="setF('age','18')">18-25</button>
+   <button class="chip ${filt.age==="26"?"on":""}" onclick="setF('age','26')">26-35</button>
+   <button class="chip ${filt.age==="36"?"on":""}" onclick="setF('age','36')">36+</button>
    <button class="chip ${filt.city?"on":""}" onclick="askCity()">📍 ${e(filt.city||"शहर")}</button>`;
 }
-function askCity(){const c=prompt("शहर (रिकामे सोडा = सर्व)",filt.city);if(c===null)return;filt.city=c.trim();renderFilters();renderDeck()}
+function askCity(){const c=prompt("शहर (रिकामे सोडा = सर्व)",filt.city);if(c===null)return;setF("city",c.trim())}
+function compat(p){
+  const a=prof?.interests||[],b=p.interests||[];if(!a.length||!b.length)return 0;
+  const c=b.filter(x=>a.includes(x)).length;
+  return Math.min(99,Math.round(45+55*c/Math.max(3,Math.min(a.length,b.length))));
+}
+const TIPS=["पहिल्या message मध्ये तिच्या/त्याच्या आवडीबद्दल विचारा — 'Hi' पेक्षा खूप चांगले चालते. 😊","Photo मध्ये स्पष्ट चेहरा आणि हसरा लूक ठेवा; group photo नको.","पैसे, OTP, UPI कधीही कोणाला देऊ नका — खरे लोक हे मागत नाहीत. 🛡️","Video call करून आधी खात्री करा, मगच भेटा.","पहिली भेट कॅफे/मॉल अशा public ठिकाणी घ्या आणि मित्राला कळवा.","Bio मध्ये थोडा विनोद आणि तुमची आवड लिहा.","संशय आला तर लगेच 🚩 Report किंवा 🚫 Block करा.","आदराने बोला — नकार मिळाला तरी हसून स्वीकारा. 💐"];
 function renderDeck(){
-  const list=candidates();
-  if(!list.length){$("deck").innerHTML=`<div class="empty"><b>🌙</b>सध्या कोणतेही profile नाही.<br>Filter बदला किंवा नंतर बघा.<br><button class="btn sm" style="margin-top:14px" onclick="filt={verified:false,city:'',age:'all',gender:'all'};loadDeck()">↻ Refresh</button></div>`;return}
-  $("deck").innerHTML=`<div class="grid">`+list.map(p=>{
+  const list=candidates(),tip=`<div class="tipc"><b>💡 आजची Guru Tip</b><br>${TIPS[Math.floor(Date.now()/864e5)%TIPS.length]}</div>`;
+  if(!list.length){$("deck").innerHTML=tip+`<div class="empty"><b>🌙</b>सध्या कोणतेही profile नाही.<br>Filter बदला किंवा नंतर बघा.<br><button class="btn sm" style="margin-top:14px" onclick="filt={verified:false,city:'',age:'all',gender:'all',online:false};passed.clear();loadDeck()">↻ Refresh</button></div>`;return}
+  $("deck").innerHTML=tip+`<div class="grid">`+list.map(p=>{
     const a=p.show_age===false?"":", "+ageOf(p.birth_date);
     const liked=myLikes.has(p.id),mt=liked&&likedMe.has(p.id);
-    const on=onlineSet.has(p.id)&&p.show_online!==false;
+    const on=onlineSet.has(p.id)&&p.show_online!==false,c=compat(p);
     return`<div class="gc" style="background-image:url(${p.photo||""})" onclick="viewProfile('${p.id}')">
       <div class="shade"></div>
-      <button class="gh ${liked?"on":""}" onclick="event.stopPropagation();${mt?`openChat('${p.id}')`:(liked?`unlikeUser('${p.id}')`:`likeUser('${p.id}')`)}">${mt?"💬":(liked?"❤️":"🤍")}</button>
+      <button class="gh" onclick="event.stopPropagation();${mt?`location.href='chats.html?chat=${p.id}'`:(liked?`unlikeUser('${p.id}')`:`likeUser('${p.id}')`)}">${mt?"💬":(liked?"❤️":"🤍")}</button>
+      <button class="gh hide" onclick="event.stopPropagation();passed.add('${p.id}');renderDeck()">✕</button>
       <div class="gi"><div class="gn">${e(p.name)}${a} ${vbadgeU(p)}</div>
-        <div class="gs">📍 ${e(p.city||"—")} ${on?"• 🟢":""}</div></div></div>`}).join("")+`</div>`;
+        <div class="gs">📍 ${e(p.city||"—")} ${on?"• 🟢":""}${c?` • 💞<b>${c}%</b>`:""}</div></div></div>`}).join("")+`</div>`;
 }
-const vbadgeU=vb=>vb.verified?'<span class="vb">✓</span>':'<span style="font-size:11px;opacity:.7;font-weight:600">• Unverified</span>';
-function passCard(id){passed.add(id);renderDeck()}
 async function likeUser(id){
   if(myLikes.has(id))return;
   const {error}=await sb.from("lg_likes").insert({from_id:me.id,to_id:id});
   if(error&&!/duplicate/i.test(error.message))return toast("Like झाले नाही: "+error.message);
   myLikes.add(id);
-  if(likedMe.has(id)){toast("💘 It's a Match! "+(pcache[id]?.name||""));openChat(id)}
-  else toast("❤️ Like पाठवला");
-  renderDeck();renderChats();
   if($("ovProf").classList.contains("show"))closeProf();
+  renderDeck();
+  if(likedMe.has(id)){toast("💘 It's a Match! "+(pcache[id]?.name||""));setTimeout(()=>location.href="chats.html?chat="+id,900)}
+  else toast("❤️ Like पाठवला");
 }
 async function unlikeUser(id){
   if(!myLikes.has(id))return;
-  const wasMatch=likedMe.has(id);
-  if(wasMatch&&!confirm("हा Match आहे. Unlike केल्यास Match संपेल आणि chat/call बंद होईल. खात्री?"))return;
+  if(likedMe.has(id)&&!confirm("हा Match आहे. Unlike केल्यास Match संपेल आणि chat/call बंद होईल. खात्री?"))return;
   const {error}=await sb.from("lg_likes").delete().eq("from_id",me.id).eq("to_id",id);
   if(error)return toast("Unlike झाले नाही: "+error.message);
-  myLikes.delete(id);
-  if(chatPeer?.id===id)closeChat();
-  toast("💔 Unlike केले");
-  renderDeck();renderChats();
+  myLikes.delete(id);toast("💔 Unlike केले");renderDeck();
   if($("ovProf").classList.contains("show"))viewProfile(id);
 }
 
-/* ============================ PROFILE VIEW + FACE SCAN ============================ */
+/* ============================ PROFILE VIEW ============================ */
 async function viewProfile(id){
   await fetchProfiles([id]);const p=pcache[id];if(!p)return;
-  const isMe=id===me.id,m=matches().includes(id);
-  const a=p.show_age===false?"":", "+ageOf(p.birth_date);
+  const m=matches().includes(id),a=p.show_age===false?"":", "+ageOf(p.birth_date),c=compat(p);
   $("pvBody").innerHTML=`
    <div class="pdet" style="background-image:url(${p.photo||""})"><div class="shade"></div>
-     <button class="ib" style="position:absolute;left:12px;top:12px;background:rgba(0,0,0,.5)" onclick="closeProf()">‹</button></div>
+     <button class="ib" style="position:absolute;left:12px;top:12px;background:rgba(0,0,0,.5);color:#fff" onclick="closeProf()">‹</button></div>
    <div style="padding:0 18px 30px;margin-top:-30px;position:relative">
      <h2 style="font-size:28px;font-weight:900">${e(p.name)}${a} ${vbadgeU(p)}</h2>
-     <div style="color:var(--muted);margin-top:4px">📍 ${e(p.city||"—")} • Single ${newAcct(p)?"• 🆕 नवीन":""}${(!isMe&&typeof compat==="function"&&compat(p))?" • 💞 "+compat(p)+"% match":""}</div>
+     <div style="color:var(--muted);margin-top:4px">📍 ${e(p.city||"—")} • Single ${newAcct(p)?"• 🆕 नवीन":""}${c?" • 💞 "+c+"% match":""}</div>
      <p style="margin:14px 0;line-height:1.6">${e(p.bio||"")}</p>
      <div class="chips">${(p.interests||[]).map(i=>`<span class="chip">${e(i)}</span>`).join("")}</div>
-     ${isMe?"":`
      <div style="display:flex;gap:10px;margin-top:14px">
-       ${m?`<button class="btn" onclick="closeProf();openChat('${id}')">💬 Message</button>`:(myLikes.has(id)?`<button class="btn ghost" onclick="unlikeUser('${id}')">💔 Unlike (Like पाठवला)</button>`:`<button class="btn" onclick="likeUser('${id}')">❤️ Like</button>`)}
+       ${m?`<button class="btn" onclick="location.href='chats.html?chat=${id}'">💬 Message</button>`:(myLikes.has(id)?`<button class="btn ghost" onclick="unlikeUser('${id}')">💔 Unlike (Like पाठवला)</button>`:`<button class="btn" onclick="likeUser('${id}')">❤️ Like</button>`)}
        <button class="btn ghost" onclick="faceScan('${id}')">🔍 Face Scan</button>
      </div>
      <div style="display:flex;gap:10px;margin-top:6px">
        ${m?`<button class="link" onclick="unlikeUser('${id}')">💔 Unlike</button>`:""}
        <button class="link" onclick="reportUser('${id}')">🚩 Report</button>
        <button class="link" style="color:var(--bad)" onclick="blockUser('${id}')">🚫 Block</button>
-     </div>`}
+     </div>
    </div>`;
   $("ovProf").classList.add("show");
 }
 function closeProf(){$("ovProf").classList.remove("show")}
+
+/* ---- Face scan + AI photo check ---- */
+const gKey=g=>g==="Male"?"male":g==="Female"?"female":null;
+const gLabel=g=>g==="male"?"मुलगा":g==="female"?"मुलगी":"अस्पष्ट";
+async function callAI(question,image,ms){
+  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),ms||30000);
+  try{
+    const r=await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctl.signal,body:JSON.stringify({question,image:image||null,imageType:image?"image/jpeg":null})});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    const d=await r.json();return d.answer||d.message||d.response||d.text||"";
+  }finally{clearTimeout(tm)}
+}
+async function aiFace(img){
+  try{
+    const a=await callAI('Look at this photo. Reply ONLY with JSON, no other text: {"faces":<number of human faces>,"real_live_person":<true if a real live person, false if a photo of a screen/printed photo/drawing>,"apparent_gender":"male"|"female"|"unclear","confidence":<0-100>}. apparent_gender is only your visual impression of the person\'s presented gender; answer "unclear" if not sure.',img);
+    const m=a.match(/\{[\s\S]*\}/);if(!m)return null;const j=JSON.parse(m[0]);
+    const g=String(j.apparent_gender||"").toLowerCase();
+    return{faces:Number(j.faces)||0,real:j.real_live_person!==false,g:g==="male"||g==="female"?g:"unclear",c:Number(j.confidence)||0};
+  }catch(_){return null}
+}
+function gcLine(p){
+  const g=p.ai_gender;if(!g||g==="unclear")return p.verified?"🤖 AI ला selfie वरून स्पष्ट अंदाज करता आला नाही.":"";
+  if(p.gender_check==="match")return"🤖 AI ने live selfie बघून अंदाज केला: <b>"+gLabel(g)+"</b> — profile शी जुळते ✅";
+  if(p.gender_check==="corrected")return"🤖 AI ने live selfie बघून ठरवले: <b>"+gLabel(g)+"</b> (profile gender AI नुसार ठेवला आहे) ✅";
+  if(p.gender_check==="mismatch")return"⚠️ AI अंदाज: <b>"+gLabel(g)+"</b>, पण profile वर <b>"+e(p.gender)+"</b> आहे. अंदाज चुकूही शकतो — स्वतः खात्री करा, काळजी घ्या.";
+  return"🤖 AI अंदाज: <b>"+gLabel(g)+"</b>";
+}
 async function faceScan(id){
   await fetchProfiles([id]);const p=pcache[id];if(!p)return;
-  const m=matches().includes(id);
   openSheet(`<h3>🔍 Face Scan: ${e(p.name)}</h3>
    <div class="cmp"><div style="background-image:url(${p.photo||""})"><small>Profile photo</small></div>
    <div style="background-image:url(${p.selfie||""})">${p.selfie?"":'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;padding:8px">Live selfie नाही</span>'}<small>Live selfie ${p.verified?"✓":""}</small></div></div>
@@ -604,6 +457,18 @@ async function faceScan(id){
    ${p.verified?"":`<button class="btn" onclick="reqVerify('${id}')">🛡️ Verification मागा</button>`}
    <p style="font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5">AI फक्त अंदाज देतो, तो १००% बरोबर नसतो. कोणावर अन्याय करू नका; संशय असल्यास Report करा.</p>
    <button class="btn ghost" onclick="closeSheet()">बंद करा</button>`);
+}
+async function aiPhotoCheck(id){
+  const p=pcache[id];if(!p||!p.photo)return;
+  const out=$("gcOut");out.innerHTML="🤖 AI तपासत आहे...";
+  const ai=await aiFace(p.photo);
+  if(!ai){out.textContent="AI उपलब्ध नाही, नंतर प्रयत्न करा.";return}
+  if(ai.faces!==1){out.innerHTML="🤖 Photo मध्ये एक स्पष्ट चेहरा दिसला नाही ("+ai.faces+" चेहरे). सावध रहा.";return}
+  const dec=gKey(p.gender);
+  if(ai.g==="unclear"||ai.c<60)out.innerHTML="🤖 AI ला photo वरून स्पष्ट अंदाज करता आला नाही.";
+  else if(!dec)out.innerHTML="🤖 AI अंदाज: <b>"+gLabel(ai.g)+"</b>";
+  else if(ai.g===dec)out.innerHTML="🤖 AI ने photo बघून अंदाज केला: <b>"+gLabel(ai.g)+"</b> — profile शी जुळते ✅";
+  else out.innerHTML="⚠️ AI अंदाज: <b>"+gLabel(ai.g)+"</b>, पण profile वर <b>"+e(p.gender)+"</b> आहे. अंदाज चुकूही शकतो — स्वतः खात्री करा.";
 }
 async function reqVerify(id){
   if(!matches().includes(id))return toast("Match झाल्यावरच request पाठवता येते");
@@ -618,648 +483,43 @@ async function reportUser(id,reason,auto){
 async function blockUser(id){
   if(!confirm("या व्यक्तीला block करायचे?"))return;
   await sb.from("lg_blocks").insert({blocker:me.id,blocked:id});
-  blocked.add(id);closeProf();if(chatPeer?.id===id)closeChat();
-  renderChats();renderDeck();toast("🚫 Block केले");
+  blocked.add(id);closeProf();renderDeck();toast("🚫 Block केले");
 }
-
-/* ============================ CHATS LIST ============================ */
-function chatTab(t){chatTabSel=t;$("tMatch").classList.toggle("on",t==="m");$("tLikes").classList.toggle("on",t==="l");renderChats()}
-function renderChats(){
-  const likes=[...likedMe].filter(i=>!myLikes.has(i)&&!blocked.has(i)&&pcache[i]);
-  $("likeCnt").textContent=likes.length?`(${likes.length})`:"";
-  const tot=Object.values(unread).reduce((a,b)=>a+b,0);
-  const nb=$("nbChats");nb.textContent=tot>99?"99+":tot;nb.style.display=tot?"flex":"none";
-  let h="";
-  if(chatTabSel==="m"){
-    const ms=matches().sort((a,b)=>(lastMsg[b]?.created_at||"")>(lastMsg[a]?.created_at||"")?1:-1);
-    if(!ms.length)h=`<div class="empty"><b>💞</b>अजून Match नाही.<br>Discover मध्ये ❤️ द्या — दोघांनी Like केल्यावर chat सुरू होईल.</div>`;
-    h=ms.map(id=>{const p=pcache[id],lm=lastMsg[id],u=unread[id]||0;
-      const sub=lm?((lm.sender_id===me.id?"✓ ":"")+lm.content):"👋 Hi म्हणा!";
-      return`<div class="row" onclick="openChat('${id}')">${avHTML(p,54)}<div class="mid"><div class="nm">${e(p.name)}${vbadge(p).replace("• Unverified","")}</div><div class="sb ${u?"u":""}">${e(sub)}</div></div><div class="rt"><span>${lm?ago(lm.created_at):""}</span>${u?`<span class="bdg">${u}</span>`:""}</div></div>`}).join("")||h;
-  }else{
-    h=likes.map(id=>{const p=pcache[id];return`<div class="row" onclick="viewProfile('${id}')">${avHTML(p,54)}<div class="mid"><div class="nm">${e(p.name)}, ${ageOf(p.birth_date)}</div><div class="sb">❤️ ने तुम्हाला Like केले</div></div><button class="btn sm" onclick="event.stopPropagation();likeUser('${id}')">Like back</button></div>`}).join("")
-     ||`<div class="empty"><b>✨</b>सध्या नवीन Likes नाहीत.</div>`;
-  }
-  $("chatList").innerHTML=h;
-}
-
-/* ============================ GUARDIAN (AI SAFETY) ============================ */
-const SEVERE=[/\botp\b/i,/\bcvv\b/i,/password|पासवर्ड/i,/\bupi\b|gpay|phonepe|paytm|google ?pay/i,/gift ?card/i,/bitcoin|crypto|invest(ment)?|गुंतवणूक/i,/western union/i,/(account|खाते)\s*(no|number|क्रमांक)/i,/\bifsc\b/i,/पैसे\s*(पाठव|दे|हवे)|paise\s*(pathav|de|have)|send (me )?money|रक्कम\s*पाठव|money transfer/i,/loan|कर्ज/i,/aadhaar|आधार\s*(क्रमांक|नंबर|number)|pan card/i];
-const MEDIUM=[/https?:\/\/|www\.|bit\.ly|t\.me\//i,/(?:\+?91[\s-]?)?[6-9]\d{9}/,/whatsapp|telegram|insta(gram)?\s*(id|handle)|snap(chat)?/i,/nude|न्यूड|naked|sex\b|सेक्स/i,/private (video|show)|paid (video|call)/i];
-function guard(t){
-  t=String(t||"");
-  for(const r of SEVERE)if(r.test(t))return{lvl:2,why:"पैसे/OTP/बँक/ओळखपत्र संबंधित मजकूर"};
-  for(const r of MEDIUM)if(r.test(t))return{lvl:1,why:"phone/link/बाहेर जाण्याचा प्रयत्न किंवा अश्लील मजकूर"};
-  return{lvl:0};
-}
-async function callAI(question,image,imageType,ms){
-  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),ms||25000);
-  try{
-    const r=await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctl.signal,body:JSON.stringify({question,image:image||null,imageType:imageType||null})});
-    if(!r.ok)throw new Error("HTTP "+r.status);
-    const d=await r.json();return d.answer||d.message||d.response||d.text||"";
-  }finally{clearTimeout(tm)}
-}
-async function aiClassify(text){
-  try{
-    const a=await callAI(`You are a fraud/safety detector for a dating app. Classify this chat message. Reply ONLY with JSON like {"risk":"safe|suspicious|scam","reason":"short Marathi reason"}.\nMessage: """${text.slice(0,500)}"""`,null,null,9000);
-    const m=a.match(/\{[\s\S]*?\}/);if(!m)return null;return JSON.parse(m[0]);
-  }catch(_){return null}
-}
-
-/* ============================ CHAT ============================ */
-async function openChat(id){
-  await fetchProfiles([id]);const p=pcache[id];if(!p)return;
-  if(!matches().includes(id))return toast("आधी Match व्हा 💘");
-  chatPeer=p;rendered=new Set();
-  $("cAv").outerHTML=avHTML(p,40).replace('class="av"','class="av" id="cAv" onclick="viewProfile(chatPeer.id)"');
-  $("cName").innerHTML=e(p.name)+vbadge(p).replace("• Unverified","");
-  updChatSub();
-  $("cMsgs").innerHTML='<div class="loader"></div>';
-  $("ovChat").classList.add("show");
-  const {data}=await sb.from("lg_messages").select("*")
-    .or(`and(sender_id.eq.${me.id},receiver_id.eq.${id}),and(sender_id.eq.${id},receiver_id.eq.${me.id})`)
-    .order("created_at",{ascending:true}).limit(300);
-  $("cMsgs").innerHTML="";
-  if(!data?.length)$("cMsgs").innerHTML=`<div class="empty"><b>👋</b>Match झाला! पहिला message पाठवा.<br><small>AI icebreaker साठी 💡 दाबा</small></div>`;
-  (data||[]).forEach(m=>addBub(m,true));
-  scrollMsgs();
-  if(unread[id]){unread[id]=0;renderChats();sb.from("lg_messages").update({is_read:true}).eq("sender_id",id).eq("receiver_id",me.id).eq("is_read",false).then(()=>{})}
-}
-function updChatSub(){if(!chatPeer)return;$("cSub").textContent=chatPeer.show_online!==false&&onlineSet.has(chatPeer.id)?"🟢 Online":"Offline"}
-function closeChat(){$("ovChat").classList.remove("show");chatPeer=null;renderChats()}
-function addBub(m,silent){
-  if(rendered.has(m.id))return;rendered.add(m.id);
-  const box=$("cMsgs");box.querySelector(".empty")?.remove();
-  const d=document.createElement("div");const mine=m.sender_id===me.id;
-  if(m.kind==="call"||m.kind==="system"){d.className="bub call";d.textContent=m.content+" • "+clock(m.created_at)}
-  else{
-    d.className="bub "+(mine?"me":"ot");
-    d.innerHTML=`<div>${e(m.content).replace(/\n/g,"<br>")}</div><div class="t">${clock(m.created_at)}</div>`;
-    if(!mine){
-      const g=guard(m.content);
-      if(g.lvl>=1){
-        const w=document.createElement("div");w.className="warn";
-        w.textContent=g.lvl===2?"⚠️ Guru AI: संभाव्य फसवणूक! पैसे/OTP/माहिती देऊ नका.":"🛡️ Guru AI: हा मजकूर तपासला जात आहे...";
-        d.appendChild(w);
-        if(g.lvl===2&&!silent)reportUser(m.sender_id,"AI auto-flag: "+g.why,true);
-        if(g.lvl===1)aiClassify(m.content).then(r=>{
-          if(!r)return w.remove();
-          if(r.risk==="safe")w.remove();
-          else{w.textContent="⚠️ Guru AI: "+(r.reason||"संशयास्पद मजकूर")+" — सावध रहा.";if(!silent||r.risk==="scam")reportUser(m.sender_id,"AI auto-flag: "+r.risk,true)}
-        });
-      }
-    }
-  }
-  box.appendChild(d);if(!silent)scrollMsgs();
-}
-function scrollMsgs(){const b=$("cMsgs");b.scrollTop=b.scrollHeight}
-async function sendMsg(){
-  const inp=$("cIn"),text=inp.value.trim();if(!text||!chatPeer)return;
-  const g=guard(text);
-  if(g.lvl===2&&!confirm("🛡️ Guru AI इशारा: तुमच्या message मध्ये "+g.why+" आहे. फसवणूक टाळण्यासाठी हे शेअर करू नका. तरीही पाठवायचे?"))return;
-  if(g.lvl===1&&/https?:|www\./i.test(text)&&!confirm("Link पाठवताना काळजी घ्या. पाठवायचे?"))return;
-  inp.value="";inp.style.height="auto";
-  const {data,error}=await sb.from("lg_messages").insert({sender_id:me.id,receiver_id:chatPeer.id,content:text,flagged:g.lvl===2}).select().single();
-  if(error){toast("Send झाले नाही: "+error.message);inp.value=text;return}
-  addBub(data);lastMsg[chatPeer.id]=data;
-}
-$("cIn").addEventListener("input",function(){this.style.height="auto";this.style.height=Math.min(this.scrollHeight,110)+"px"});
-$("cIn").addEventListener("keydown",ev=>{if(ev.key==="Enter"&&!ev.shiftKey&&innerWidth>700){ev.preventDefault();sendMsg()}});
-function chatMenu(){
-  openSheet(`<h3>${e(chatPeer.name)}</h3>
-   <div class="srow" onclick="closeSheet();safetyCheck()"><span style="font-size:22px">🛡️</span><div class="t">Guru AI ने chat तपासा<small>फसवणूक/धोका आहे का ते AI सांगेल</small></div></div>
-   <div class="srow" onclick="closeSheet();faceScan('${chatPeer.id}')"><span style="font-size:22px">🔍</span><div class="t">Face Scan</div></div>
-   <div class="srow" onclick="closeSheet();unlikeUser('${chatPeer.id}')"><span style="font-size:22px">💔</span><div class="t">Unlike (Match संपवा)</div></div>
-   <div class="srow" onclick="closeSheet();reportUser('${chatPeer.id}')"><span style="font-size:22px">🚩</span><div class="t">Report</div></div>
-   <div class="srow" onclick="closeSheet();blockUser('${chatPeer.id}')"><span style="font-size:22px">🚫</span><div class="t" style="color:var(--bad)">Block</div></div>`);
-}
-async function lastText(n){
-  const r=[...$("cMsgs").querySelectorAll(".bub.me,.bub.ot")].filter(b=>!b.classList.contains("media")).slice(-n).map(b=>(b.classList.contains("me")?"Me: ":"Other: ")+b.firstChild.textContent);
-  return r.join("\n");
-}
-async function safetyCheck(){
-  const t=await lastText(15);if(!t)return toast("तपासायला message नाहीत");
-  openSheet(`<h3>🛡️ Guru AI तपासत आहे...</h3><div class="loader"></div>`);
-  try{
-    const a=await callAI(`तू dating app चा safety guardian आहेस. खालील chat मध्ये fraud, पैसे मागणे, blackmail, fake profile किंवा धोक्याची लक्षणे आहेत का ते साध्या मराठीत 4-5 ओळींत सांग. शेवटी "धोका: कमी/मध्यम/जास्त" लिही.\n\n${t}`);
-    openSheet(`<h3>🛡️ Guru AI अहवाल</h3><p style="white-space:pre-wrap;line-height:1.6;font-size:14.5px">${e(a)}</p><button class="btn" onclick="closeSheet()">ठीक आहे</button>`);
-  }catch(_){openSheet(`<h3>⚠️</h3><p>AI शी connect होता आले नाही.</p><button class="btn" onclick="closeSheet()">बंद</button>`)}
-}
-async function suggestReply(){
-  if(!chatPeer)return;const t=await lastText(8);
-  toast("💡 Guru AI विचार करत आहे...");
-  try{
-    const a=await callAI(`तू Love Guru AI आहेस. ${chatPeer.name} सोबत chat साठी 3 छोटे, आदरपूर्ण, मजेदार reply/icebreaker सुचव (मराठीत, प्रत्येक वेगळ्या ओळीवर, नंबरिंग नको). ${chatPeer.name} ची आवड: ${(chatPeer.interests||[]).join(", ")}.\nचालू chat:\n${t||"(अजून सुरुवात नाही)"}`);
-    const lines=a.split("\n").map(x=>x.replace(/^[\s\-•*\d.)]+/,"").trim()).filter(Boolean).slice(0,3);
-    openSheet(`<h3>💡 सुचवलेले messages</h3>`+lines.map(l=>`<div class="srow" onclick="$('cIn').value=this.dataset.t;closeSheet();$('cIn').focus()" data-t="${e(l)}"><div class="t">${e(l)}</div></div>`).join(""));
-  }catch(_){toast("AI उपलब्ध नाही")}
-}
-
-/* ============================ CALLS (WebRTC) ============================ */
-let call=null,callTimer=null,pend=[],userCh={};
-function subCh(ch){return new Promise(res=>{if(ch.state==="joined")return res();ch.subscribe(s=>{if(s==="SUBSCRIBED")res()})})}
-function uChan(id){if(!userCh[id])userCh[id]=sb.channel("lg-user-"+id);return userCh[id]}
-async function media(kind){
-  return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:kind==="video"?{facingMode:"user",width:640,height:480}:false});
-}
-async function startCall(kind){
-  if(call||!chatPeer)return;
-  if(!navigator.mediaDevices)return toast("Browser मध्ये call support नाही (https आवश्यक)");
-  const peer=chatPeer;
-  try{
-    call={id:Date.now()+"-"+Math.random().toString(36).slice(2,8),peer,kind,role:"caller",connected:false};
-    call.local=await media(kind);
-  }catch(_){call=null;return toast("Mic/Camera ची परवानगी द्या")}
-  showCall("Calling...");
-  await joinCallChan();
-  const uc=uChan(peer.id);await subCh(uc);
-  uc.send({type:"broadcast",event:"invite",payload:{callId:call.id,from:me.id,name:prof.name,kind}});
-  call.to=setTimeout(()=>{if(call&&!call.connected)endCall("no-answer")},45000);
-}
-async function joinCallChan(){
-  const ch=sb.channel("lg-call-"+call.id);call.ch=ch;
-  ch.on("broadcast",{event:"ready"},async()=>{if(call.role==="caller")await makePC(true)})
-    .on("broadcast",{event:"offer"},async({payload})=>{await makePC(false);await call.pc.setRemoteDescription(payload.sdp);await flushPend();const a=await call.pc.createAnswer();await call.pc.setLocalDescription(a);ch.send({type:"broadcast",event:"answer",payload:{sdp:call.pc.localDescription}})})
-    .on("broadcast",{event:"answer"},async({payload})=>{await call.pc.setRemoteDescription(payload.sdp);await flushPend()})
-    .on("broadcast",{event:"ice"},async({payload})=>{if(call?.pc?.remoteDescription)try{await call.pc.addIceCandidate(payload.c)}catch(_){}else pend.push(payload.c)})
-    .on("broadcast",{event:"end"},()=>endCall("remote",true));
-  await subCh(ch);
-}
-async function flushPend(){for(const c of pend){try{await call.pc.addIceCandidate(c)}catch(_){}}pend=[]}
-async function makePC(offer){
-  if(call.pc)return;
-  const pc=new RTCPeerConnection({iceServers:ICE});call.pc=pc;
-  call.local.getTracks().forEach(t=>pc.addTrack(t,call.local));
-  pc.onicecandidate=ev=>{if(ev.candidate)call.ch.send({type:"broadcast",event:"ice",payload:{c:ev.candidate}})};
-  pc.ontrack=ev=>{$("remoteV").srcObject=ev.streams[0];$("remoteV").play().catch(()=>{})};
-  pc.onconnectionstatechange=()=>{
-    if(pc.connectionState==="connected"&&!call.connected){call.connected=true;call.t0=Date.now();clearTimeout(call.to);
-      if(call.kind==="audio")$("callMid").style.display="flex";else $("callMid").style.display="none";
-      callTimer=setInterval(()=>{const s=Math.floor((Date.now()-call.t0)/1000);$("callStat").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")},1000)}
-    if(["failed","closed"].includes(pc.connectionState))endCall("failed");
-  };
-  if(offer){const o=await pc.createOffer();await pc.setLocalDescription(o);call.ch.send({type:"broadcast",event:"offer",payload:{sdp:pc.localDescription}})}
-}
-function showCall(stat,incoming){
-  const p=call.peer;
-  $("callName").textContent=p.name;$("callStat").textContent=stat;
-  $("callAv").style.backgroundImage=p.photo?`url(${p.photo})`:"";$("callAv").style.backgroundSize="cover";$("callAv").textContent=p.photo?"":p.name[0];
-  $("callMid").style.display="flex";
-  $("localV").style.display=call.kind==="video"&&call.local?"block":"none";
-  if(call.local)$("localV").srcObject=call.local;
-  $("callBar").innerHTML=incoming
-   ?`<button class="cb end" onclick="rejectCall()">✕</button><button class="cb acc" onclick="acceptCall()">📞</button>`
-   :`<button class="cb" id="bMute" onclick="togMute()">🎙️</button>${call.kind==="video"?'<button class="cb" id="bCam" onclick="togCam()">📷</button>':""}<button class="cb" onclick="callReport()">🚩</button><button class="cb end" onclick="endCall('me')">✕</button>`;
-  $("callUI").classList.add("show");
-}
-function togMute(){const t=call.local.getAudioTracks()[0];if(!t)return;t.enabled=!t.enabled;$("bMute").classList.toggle("off",!t.enabled);$("bMute").textContent=t.enabled?"🎙️":"🔇"}
-function togCam(){const t=call.local.getVideoTracks()[0];if(!t)return;t.enabled=!t.enabled;$("bCam").classList.toggle("off",!t.enabled)}
-function callReport(){if(call)reportUser(call.peer.id)}
-async function onInvite(p){
-  if(call||!matches().includes(p.from)||blocked.has(p.from)){uChan(p.from).send({type:"broadcast",event:"reject",payload:{callId:p.callId}});return}
-  await fetchProfiles([p.from]);
-  call={id:p.callId,peer:pcache[p.from]||{id:p.from,name:p.name},kind:p.kind,role:"callee",connected:false};
-  showCall((p.kind==="video"?"🎥 Video":"📞 Voice")+" call येत आहे...",true);
-  navigator.vibrate&&navigator.vibrate([400,200,400,200,400]);
-  call.to=setTimeout(()=>{if(call&&!call.connected)rejectCall()},40000);
-}
-async function acceptCall(){
-  clearTimeout(call.to);
-  try{call.local=await media(call.kind)}catch(_){toast("Mic/Camera ची परवानगी द्या");return rejectCall()}
-  showCall("Connecting...");
-  await joinCallChan();
-  call.ch.send({type:"broadcast",event:"ready",payload:{}});
-}
-function rejectCall(){
-  if(!call)return;
-  uChan(call.peer.id).send({type:"broadcast",event:"reject",payload:{callId:call.id}});
-  cleanupCall();
-}
-async function endCall(why,remote){
-  if(!call)return;const c=call;
-  if(!remote&&c.ch)c.ch.send({type:"broadcast",event:"end",payload:{}});
-  if(c.role==="caller"){
-    const secs=c.t0?Math.floor((Date.now()-c.t0)/1000):0;
-    const label=(c.kind==="video"?"🎥 Video call":"📞 Voice call")+(secs?" • "+Math.floor(secs/60)+"m "+secs%60+"s":(why==="no-answer"||why==="rejected"?" • अनुत्तरित":""));
-    const {data}=await sb.from("lg_messages").insert({sender_id:me.id,receiver_id:c.peer.id,content:label,kind:"call"}).select().single();
-    if(data){lastMsg[c.peer.id]=data;if(chatPeer?.id===c.peer.id)addBub(data)}
-  }
-  if(why==="no-answer")toast("उत्तर मिळाले नाही");
-  cleanupCall();
-}
-function cleanupCall(){
-  if(!call)return;
-  clearTimeout(call.to);clearInterval(callTimer);
-  call.local?.getTracks().forEach(t=>t.stop());
-  try{call.pc?.close()}catch(_){}
-  try{call.ch&&sb.removeChannel(call.ch)}catch(_){}
-  $("remoteV").srcObject=null;$("localV").srcObject=null;
-  $("callUI").classList.remove("show");call=null;pend=[];
-}
-
-/* ============================ AI GENDER CHECK ============================ */
-const gKey=g=>g==="Male"?"male":g==="Female"?"female":null;
-const gLabel=g=>g==="male"?"मुलगा":g==="female"?"मुलगी":"अस्पष्ट";
-async function aiFace(img){
-  try{
-    const a=await callAI('Look at this photo. Reply ONLY with JSON, no other text: {"faces":<number of human faces>,"real_live_person":<true if a real live person, false if a photo of a screen/printed photo/drawing>,"apparent_gender":"male"|"female"|"unclear","confidence":<0-100>}. apparent_gender is only your visual impression of the person\'s presented gender; answer "unclear" if not sure.',img,"image/jpeg",30000);
-    const m=a.match(/\{[\s\S]*\}/);if(!m)return null;const j=JSON.parse(m[0]);
-    const g=String(j.apparent_gender||"").toLowerCase();
-    return{faces:Number(j.faces)||0,real:j.real_live_person!==false,g:g==="male"||g==="female"?g:"unclear",c:Number(j.confidence)||0};
-  }catch(_){return null}
-}
-function gcLine(p){
-  const g=p.ai_gender;if(!g||g==="unclear"){return p.verified?"🤖 AI ला selfie वरून स्पष्ट अंदाज करता आला नाही.":""}
-  if(p.gender_check==="match")return"🤖 AI ने live selfie बघून अंदाज केला: <b>"+gLabel(g)+"</b> — profile शी जुळते ✅";
-  if(p.gender_check==="corrected")return"🤖 AI ने live selfie बघून ठरवले: <b>"+gLabel(g)+"</b> (profile gender AI नुसार ठेवला आहे) ✅";
-  if(p.gender_check==="mismatch")return"⚠️ AI अंदाज: <b>"+gLabel(g)+"</b>, पण profile वर <b>"+e(p.gender)+"</b> आहे. अंदाज चुकूही शकतो — स्वतः खात्री करा, काळजी घ्या.";
-  return"🤖 AI अंदाज: <b>"+gLabel(g)+"</b>";
-}
-async function aiPhotoCheck(id){
-  const p=pcache[id];if(!p||!p.photo)return;
-  const out=$("gcOut");out.innerHTML="🤖 AI तपासत आहे...";
-  const ai=await aiFace(p.photo);
-  if(!ai){out.textContent="AI उपलब्ध नाही, नंतर प्रयत्न करा.";return}
-  if(ai.faces!==1){out.innerHTML="🤖 Photo मध्ये एक स्पष्ट चेहरा दिसला नाही ("+ai.faces+" चेहरे). सावध रहा.";return}
-  const dec=gKey(p.gender);
-  if(ai.g==="unclear"||ai.c<60)out.innerHTML="🤖 AI ला photo वरून स्पष्ट अंदाज करता आला नाही.";
-  else if(!dec)out.innerHTML="🤖 AI अंदाज: <b>"+gLabel(ai.g)+"</b>";
-  else if(ai.g===dec)out.innerHTML="🤖 AI ने photo बघून अंदाज केला: <b>"+gLabel(ai.g)+"</b> — profile शी जुळते ✅";
-  else out.innerHTML="⚠️ AI अंदाज: <b>"+gLabel(ai.g)+"</b>, पण profile वर <b>"+e(p.gender)+"</b> आहे. अंदाज चुकूही शकतो — स्वतः खात्री करा.";
-}
-
-/* ============================ FACE VERIFY ============================ */
-let verStream=null,verBusy=false,verFromOnb=false;
-async function openVerify(fromOnb){
-  verFromOnb=!!fromOnb;
-  if(!navigator.mediaDevices)return toast("Camera उपलब्ध नाही (https आवश्यक)");
-  try{verStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:640,height:480},audio:false})}
-  catch(_){return toast("Camera ची परवानगी द्या")}
-  $("verV").srcObject=verStream;$("verBg").classList.add("show");
-  $("verPrompt").textContent="तयार असाल तेव्हा 'सुरू करा' दाबा";$("verMsg").textContent="चेहरा स्पष्ट दिसेल असे ठेवा, प्रकाश असू द्या.";$("verGo").disabled=false;
-}
-function closeVerify(){verBusy=false;verStream?.getTracks().forEach(t=>t.stop());verStream=null;$("verBg").classList.remove("show")}
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-async function runVerify(){
-  if(verBusy)return;verBusy=true;$("verGo").disabled=true;
-  const v=$("verV"),fd=("FaceDetector"in window)?new FaceDetector({fastMode:true,maxDetectedFaces:2}):null;
-  const prompts=["सरळ कॅमेऱ्याकडे बघा","डोळे दोनदा मिचकवा","हळू डावीकडे बघा","हळू उजवीकडे बघा","हसा 😊"].sort(()=>Math.random()-.5).slice(0,3);
-  let seen=0,tot=0,multi=false;
-  for(const p of prompts){
-    $("verPrompt").textContent=p;
-    for(let i=0;i<8&&verBusy;i++){
-      await sleep(350);tot++;
-      if(fd){try{const f=await fd.detect(v);if(f.length>=1)seen++;if(f.length>1)multi=true}catch(_){seen++}}
-    }
-  }
-  if(!verBusy)return;
-  $("verPrompt").textContent="तपासत आहे...";
-  const c=document.createElement("canvas");const s=Math.min(1,360/v.videoWidth);c.width=v.videoWidth*s;c.height=v.videoHeight*s;
-  const x=c.getContext("2d");x.translate(c.width,0);x.scale(-1,1);x.drawImage(v,0,0,c.width,c.height);
-  const shot=c.toDataURL("image/jpeg",.7);
-  const ai=await aiFace(shot);
-  let ok=false,msg="";
-  if(fd){ok=seen/tot>=.6&&!multi;msg=multi?"फ्रेममध्ये एकापेक्षा जास्त चेहरे दिसले":"चेहरा नीट दिसला नाही"}
-  else{ok=!!ai&&ai.faces===1&&ai.real;msg=ai?"AI ला स्पष्ट चेहरा आढळला नाही":"AI तपासणी उपलब्ध नाही, पुन्हा प्रयत्न करा"}
-  if(ok&&ai&&ai.real===false){ok=false;msg="Live व्यक्ती आढळली नाही (फोटो/screen नको)"}
-  verBusy=false;
-  if(!ok){$("verMsg").textContent="❌ "+msg+". पुन्हा प्रयत्न करा.";$("verPrompt").textContent="अयशस्वी";$("verGo").disabled=false;return}
-  const dec=gKey(prof.gender);let gc="unclear",aiG=(ai&&ai.g!=="unclear"&&ai.c>=60)?ai.g:"unclear",newGender=prof.gender;
-  if(aiG!=="unclear"){
-    if(aiG===dec)gc="match";
-    else{gc="corrected";newGender=aiG==="male"?"Male":"Female"}
-  }else if(!dec)gc="na";
-  const patch={selfie:shot,verified:true,ai_gender:aiG,gender_check:gc,gender:newGender};
-  let up=await sb.from("lg_profiles").update(patch).eq("id",me.id).select().single();
-  if(up.error&&/ai_gender|gender_check/.test(up.error.message)){delete patch.ai_gender;delete patch.gender_check;up=await sb.from("lg_profiles").update(patch).eq("id",me.id).select().single()}
-  const {data,error}=up;
-  if(error){$("verMsg").textContent="Save error: "+error.message;$("verGo").disabled=false;return}
-  prof=data;pcache[me.id]=prof;
-  closeVerify();
-  if(gc==="corrected")alert("🤖 Guru AI ने तुमच्या live selfie नुसार तुमचा profile gender '"+gLabel(aiG)+"' ठेवला आहे. Verified profiles वर AI चा निकाल लागू होतो.");
-  toast("✅ Face Verified!");
-  if(verFromOnb)$("obVerMsg").textContent="✅ Verified झाले!";
-  renderMe();
-}
-
-/* ============================ GURU AI ============================ */
-const QUICK=["💬 Icebreaker सुचव","✍️ माझा Bio सुधार","🛡️ Safe dating tips","❤️ पहिल्या date ची आयडिया","🚩 Red flags कोणते?"];
-function renderAIIntro(){
-  $("aiQs").innerHTML=QUICK.map(q=>`<button class="chip" onclick="$('aiIn').value=this.textContent;askGuru()">${q}</button>`).join("");
-  if(!aiHist.length)$("aiBox").innerHTML=`<div class="ai-b b">नमस्कार ${e(prof.name)}! 💘 मी <b>Love Guru AI</b>. मी तुम्हाला dating tips, bio, icebreakers देतो आणि फसवणुकीपासून वाचवतो. काय विचारायचे?</div>`;
-}
-async function askGuru(){
-  const inp=$("aiIn"),q=inp.value.trim();if(!q)return;inp.value="";
-  aiHist.push({r:"u",t:q});
-  const box=$("aiBox");box.insertAdjacentHTML("beforeend",`<div class="ai-b u">${e(q)}</div><div class="ai-b b" id="aiTmp">… विचार करत आहे</div>`);box.scrollTop=box.scrollHeight;
-  const ctx=aiHist.slice(-7,-1).map(m=>(m.r==="u"?"User: ":"Guru: ")+m.t).join("\n");
-  try{
-    const a=await callAI(`तू "Love Guru AI" आहेस — Single लोकांसाठी असलेल्या dating app चा मैत्रीपूर्ण मार्गदर्शक आणि safety guardian. उत्तर मराठीत, थोडक्यात (जास्तीत जास्त 8 ओळी), आदरपूर्वक द्यायचे. असभ्य किंवा फसवणुकीसाठी मदत करू नकोस. User चे नाव ${prof.name}.\n${ctx}\nUser: ${q}`);
-    aiHist.push({r:"b",t:a});$("aiTmp").removeAttribute("id");box.lastElementChild.textContent=a;
-  }catch(_){$("aiTmp").textContent="⚠️ AI शी connect होता आले नाही."}
-  box.scrollTop=box.scrollHeight;
-}
-$("aiIn").addEventListener("keydown",ev=>{if(ev.key==="Enter"&&!ev.shiftKey&&innerWidth>700){ev.preventDefault();askGuru()}});
-
-/* ============================ ME + SETTINGS ============================ */
-function renderMe(){
-  if(!prof)return;
-  $("meBox").innerHTML=`
-   <div style="text-align:center">${avHTML(prof,110,"margin:0 auto")}
-     <h2 style="margin-top:12px;font-size:24px">${e(prof.name)}, ${ageOf(prof.birth_date)} ${prof.verified?'<span class="vb">✓</span>':""}</h2>
-     <div style="color:var(--muted);margin-top:4px">📍 ${e(prof.city||"—")} • Single</div></div>
-   <p style="margin:14px 0;text-align:center;line-height:1.6">${e(prof.bio||"")}</p>
-   <div class="chips" style="justify-content:center">${(prof.interests||[]).map(i=>`<span class="chip">${e(i)}</span>`).join("")}</div>
-   ${prof.verified?`<div class="box" style="margin:14px 0;text-align:center;color:var(--ok)">✅ तुमची Face Verification पूर्ण आहे</div>`:`<button class="btn" onclick="openVerify()">🛡️ Face Verify करा</button>`}
-   <button class="btn ghost" onclick="editing=true;startOnb()">✏️ Profile बदला</button>
-   <button class="btn ghost" onclick="openSettings()">⚙️ Settings</button>`;
-}
-function sw(key,on){return`<div class="sw ${on?"on":""}" data-k="${key}"></div>`}
-function openSettings(){
-  openSheet(`<h3>⚙️ Settings</h3>
-   <div class="srow"><div class="t">🎨 Theme<small>तुमचा रंग निवडा</small></div></div>
-   <div class="chips" id="thm">${[["rose","🌹 Rose Flame"],["violet","💜 Midnight Violet"],["ocean","🌊 Ocean Neon"],["sunset","🌅 Sunset"],["light","☀️ Light Rose"]].map(t=>`<span class="chip ${settings.theme===t[0]?"on":""}" data-t="${t[0]}">${t[1]}</span>`).join("")}</div>
-   <div class="srow" data-s="show_online"><div class="t">🟢 Online status दाखवा<small>इतरांना तुम्ही online दिसाल</small></div>${sw("show_online",prof.show_online!==false)}</div>
-   <div class="srow" data-s="show_age"><div class="t">🎂 वय दाखवा</div>${sw("show_age",prof.show_age!==false)}</div>
-   <div class="srow" data-s="paused"><div class="t">⏸️ Profile Pause करा<small>Discover मध्ये दिसणार नाही</small></div>${sw("paused",!!prof.paused)}</div>
-   <div class="srow" data-s="sound"><div class="t">🔔 Notification sound</div>${sw("sound",settings.sound)}</div>
-   <div class="srow" onclick="closeSheet();openBlocked()"><div class="t">🚫 Blocked लोक<small>${blocked.size} blocked</small></div>›</div>
-   <div class="srow" onclick="closeSheet();openSafety()"><div class="t">🛡️ Safety Center<small>सुरक्षा नियम आणि Guru AI</small></div>›</div>
-   <div class="srow" onclick="logout()"><div class="t">🚪 Logout</div></div>
-   <div class="srow" onclick="delAcct()"><div class="t" style="color:var(--bad)">🗑️ Account delete करा</div></div>`);
-  $("thm").onclick=ev=>{const c=ev.target.closest(".chip");if(!c)return;settings.theme=c.dataset.t;document.documentElement.dataset.theme=settings.theme;saveSet();openSettings()};
-  $("sheet").querySelectorAll("[data-s]").forEach(r=>r.onclick=async()=>{
-    const k=r.dataset.s;
-    if(k==="sound"){settings.sound=!settings.sound;saveSet();r.querySelector(".sw").classList.toggle("on",settings.sound);return}
-    const nv=k==="paused"?!prof.paused:prof[k]===false;
-    const {data,error}=await sb.from("lg_profiles").update({[k]:nv}).eq("id",me.id).select().single();
-    if(error)return toast(error.message);prof=data;pcache[me.id]=prof;r.querySelector(".sw").classList.toggle("on",k==="paused"?prof.paused:prof[k]!==false);
-  });
-}
-function saveSet(){localStorage.setItem("lg_settings",JSON.stringify(settings));document.querySelector('meta[name=theme-color]').content=getComputedStyle(document.documentElement).getPropertyValue("--bg").trim()}
-function openBlocked(){
-  const ids=[...blocked];
-  openSheet(`<h3>🚫 Blocked लोक</h3>`+(ids.length?`<div id="blL"></div>`:`<p style="color:var(--muted)">कोणी blocked नाही.</p>`));
-  if(ids.length)fetchProfiles(ids).then(()=>{$("blL").innerHTML=ids.map(i=>`<div class="srow">${avHTML(pcache[i],38)}<div class="t">${e(pcache[i]?.name||"User")}</div><button class="btn sm" onclick="unblock('${i}')">Unblock</button></div>`).join("")});
-}
-async function unblock(id){await sb.from("lg_blocks").delete().eq("blocker",me.id).eq("blocked",id);blocked.delete(id);openBlocked();renderChats()}
-function openSafety(){
-  openSheet(`<h3>🛡️ Safety Center</h3>
-   <p style="line-height:1.7;font-size:14px">
-   • <b>Guru AI</b> प्रत्येक message, bio आणि call वर लक्ष ठेवतो.<br>
-   • पैसे, OTP, बँक/UPI, आधार, link मागणारा मजकूर आपोआप flag होतो आणि report नोंदवला जातो.<br>
-   • फक्त <b>Match</b> झालेल्या लोकांनाच chat/call करता येतो.<br>
-   • ✓ Verified लोकांचा live selfie तुम्ही 🔍 Face Scan मध्ये बघू शकता.<br>
-   • Photo/video/voice आलेल्या messages वर long-press करून 🚩 Report करता येते.<br>
-   • कधीही पैसे पाठवू नका. पहिली भेट public ठिकाणी घ्या.<br>
-   • संशय आल्यास 🚩 Report किंवा 🚫 Block करा.</p>
-   <button class="btn" onclick="closeSheet()">समजले</button>`);
-}
-async function delAcct(){
-  if(!confirm("तुमचा profile, likes आणि messages कायमचे delete होतील. खात्री?"))return;
-  const {error}=await sb.from("lg_profiles").delete().eq("id",me.id);
-  if(error)return toast(error.message);
-  toast("Profile delete झाली");setTimeout(logout,800);
-}
-function openSheet(h){$("sheet").innerHTML=h;$("sheetBg").classList.add("show")}
-function closeSheet(){$("sheetBg").classList.remove("show")}
 
 /* ============================ REALTIME ============================ */
-function ping(){if(!settings.sound)return;try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.08;o.start();setTimeout(()=>{o.stop();c.close()},120)}catch(_){}}
 function startRealtime(){
-  if(rt)sb.removeChannel(rt);
-  rt=sb.channel("lg-rt-"+me.id)
+  sb.channel("lg-rt-"+me.id)
    .on("postgres_changes",{event:"INSERT",schema:"public",table:"lg_messages",filter:"receiver_id=eq."+me.id},async({new:m})=>{
       if(blocked.has(m.sender_id))return;
-      lastMsg[m.sender_id]=m;
-      if(chatPeer?.id===m.sender_id){addBub(m);sb.from("lg_messages").update({is_read:true}).eq("id",m.id).then(()=>{})}
-      else{unread[m.sender_id]=(unread[m.sender_id]||0)+1;await fetchProfiles([m.sender_id]);ping();
-        toast("💬 "+(pcache[m.sender_id]?.name||"")+": "+m.content.slice(0,40));
-        const g=guard(m.content);if(g.lvl===2)reportUser(m.sender_id,"AI auto-flag: "+g.why,true)}
-      renderChats();
+      if(m.kind!=="call")setBadge(unreadN+1);
+      await fetchProfiles([m.sender_id]);ping();
+      toast("💬 "+(pcache[m.sender_id]?.name||"")+": "+prevTxt(m.content).slice(0,40));
+      const g=guard(m.content);if(g.lvl===2)reportUser(m.sender_id,"AI auto-flag: "+g.why,true);
    })
    .on("postgres_changes",{event:"INSERT",schema:"public",table:"lg_likes",filter:"to_id=eq."+me.id},async({new:l})=>{
       likedMe.add(l.from_id);await fetchProfiles([l.from_id]);ping();
       toast(myLikes.has(l.from_id)?"💘 नवीन Match! "+(pcache[l.from_id]?.name||""):"❤️ कोणीतरी तुम्हाला Like केले");
-      renderChats();
+      renderDeck();
    })
    .on("postgres_changes",{event:"DELETE",schema:"public",table:"lg_likes"},({old:l})=>{
       if(!l||l.to_id!==me.id)return;
-      likedMe.delete(l.from_id);
-      if(chatPeer?.id===l.from_id){closeChat();toast("Match संपला")}
-      renderChats();if($("vDisc").classList.contains("on"))renderDeck();
+      likedMe.delete(l.from_id);renderDeck();
    }).subscribe();
 
-  if(myChan)sb.removeChannel(myChan);
-  myChan=sb.channel("lg-user-"+me.id)
-   .on("broadcast",{event:"invite"},({payload})=>onInvite(payload))
-   .on("broadcast",{event:"reject"},({payload})=>{if(call&&call.id===payload.callId){toast("Call नाकारली");endCall("rejected",true)}})
+  sb.channel("lg-user-"+me.id)
+   .on("broadcast",{event:"invite"},({payload})=>{toast("📞 "+(payload.name||"कोणीतरी")+" call करत आहे — Chats उघडा");ping()})
    .subscribe();
 
-  if(pres)sb.removeChannel(pres);
-  pres=sb.channel("lg-presence",{config:{presence:{key:me.id}}});
+  const pres=sb.channel("lg-presence",{config:{presence:{key:me.id}}});
   pres.on("presence",{event:"sync"},()=>{
     onlineSet=new Set(Object.keys(pres.presenceState()));onlineSet.delete(me.id);
-    updChatSub();if($("vDisc").classList.contains("on"))renderDeck();
+    if(!$("ovProf").classList.contains("show"))renderDeck();
   }).subscribe(async s=>{if(s==="SUBSCRIBED")await pres.track({at:Date.now()})});
 }
 
 /* ============================ START ============================ */
 $("aPass").addEventListener("keydown",ev=>{if(ev.key==="Enter")doAuth()});
 boot();
-</script>
-
-<!-- ===================================================================
-     LOVE GURU PLUS — नवीन features (media, typing, ticks, compat %, ...)
-     =================================================================== -->
-<script>
-/* ===== 1) Media: Photo / Video / Voice ===== */
-const BUCKET="lgmedia",MP=/^::(img|vid|aud)::/;
-function prevTxt(c){c=String(c||"");const m=c.match(MP);return m?({img:"📷 Photo",vid:"🎥 Video",aud:"🎤 Voice message"})[m[1]]:c}
-const _g0=guard;guard=function(t){return MP.test(String(t||""))?{lvl:0}:_g0(t)};
-const _toast=toast;toast=function(m){_toast(String(m).replace(/::(img|vid|aud)::\S*/g,x=>prevTxt(x)))};
-
-async function upMedia(blob,ext,type){
-  const path=`${me.id}/${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
-  const {error}=await sb.storage.from(BUCKET).upload(path,blob,{contentType:type,cacheControl:"3600"});
-  if(error)throw error;
-  return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-}
-function shrink(file,max){max=max||1280;return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{
-  const s=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;
-  c.getContext("2d").drawImage(i,0,0,c.width,c.height);c.toBlob(b=>b?res(b):rej(new Error("img")),"image/jpeg",.8)};i.onerror=rej;i.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
-async function sendMedia(kind,blob,ext,type){
-  if(!chatPeer)return;const peer=chatPeer;toast("⏫ पाठवत आहे...");
-  try{
-    const url=await upMedia(blob,ext,type);
-    const {data,error}=await sb.from("lg_messages").insert({sender_id:me.id,receiver_id:peer.id,content:`::${kind}::${url}`}).select().single();
-    if(error)throw error;
-    lastMsg[peer.id]=data;if(chatPeer&&chatPeer.id===peer.id)addBub(data);
-  }catch(err){toast("Send झाले नाही: "+(err.message||err))}
-}
-function mkInp(acc,cap,fn){const i=document.createElement("input");i.type="file";i.accept=acc;if(cap)i.setAttribute("capture","environment");i.hidden=true;
-  i.onchange=()=>{const f=i.files[0];i.value="";if(f)fn(f)};document.body.appendChild(i);return i}
-let pendBlob=null,pendVid=null;
-async function previewImg(f){
-  if(!f.type.startsWith("image/"))return toast("फक्त photo निवडा");
-  try{pendBlob=await shrink(f)}catch(_){return toast("Photo उघडता आली नाही")}
-  openSheet(`<h3>📷 Photo पाठवायचा?</h3><img src="${URL.createObjectURL(pendBlob)}" style="width:100%;max-height:55vh;object-fit:contain;border-radius:16px"><button class="btn" onclick="closeSheet();sendMedia('img',pendBlob,'jpg','image/jpeg')">पाठवा ➤</button><button class="btn ghost" onclick="closeSheet()">रद्द करा</button>`);
-}
-function previewVid(f){
-  if(!f.type.startsWith("video/"))return toast("फक्त video निवडा");
-  if(f.size>25*1048576)return toast("Video 25MB पेक्षा लहान हवा");
-  pendVid=f;
-  openSheet(`<h3>🎥 Video पाठवायचा?</h3><video src="${URL.createObjectURL(f)}" controls playsinline style="width:100%;max-height:50vh;border-radius:16px;background:#000"></video><button class="btn" onclick="closeSheet();sendMedia('vid',pendVid,(pendVid.name.split('.').pop()||'mp4').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,4)||'mp4',pendVid.type||'video/mp4')">पाठवा ➤</button><button class="btn ghost" onclick="closeSheet()">रद्द करा</button>`);
-}
-const fGal=mkInp("image/*",0,previewImg),fCam=mkInp("image/*",1,previewImg),fVid=mkInp("video/*",0,previewVid);
-function attachMenu(){
-  openSheet(`<h3>📎 पाठवा</h3>
-  <div class="srow" onclick="closeSheet();fCam.click()"><span style="font-size:22px">📷</span><div class="t">Camera ने photo काढा</div></div>
-  <div class="srow" onclick="closeSheet();fGal.click()"><span style="font-size:22px">🖼️</span><div class="t">Gallery मधून photo</div></div>
-  <div class="srow" onclick="closeSheet();fVid.click()"><span style="font-size:22px">🎥</span><div class="t">Video<small>कमाल 25MB</small></div></div>
-  <div class="srow" onclick="closeSheet();$('emBar').classList.toggle('show')"><span style="font-size:22px">😊</span><div class="t">Emoji</div></div>`);
-}
-let rec=null;
-async function togRec(){
-  const b=$("micB");if(rec){rec.mr.stop();return}
-  if(!navigator.mediaDevices||!window.MediaRecorder)return toast("Voice record support नाही");
-  let st;try{st=await navigator.mediaDevices.getUserMedia({audio:true})}catch(_){return toast("Mic ची परवानगी द्या")}
-  const mt=["audio/webm;codecs=opus","audio/webm","audio/mp4"].find(t=>MediaRecorder.isTypeSupported(t))||"";
-  const mr=new MediaRecorder(st,mt?{mimeType:mt}:{}),ch=[],t0=Date.now();rec={mr};
-  mr.ondataavailable=x=>{if(x.data.size)ch.push(x.data)};
-  mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());clearInterval(rec.iv);rec=null;b.classList.remove("recing");b.textContent="🎤";
-    if(Date.now()-t0<800)return toast("Voice खूप लहान आहे");
-    const type=(mr.mimeType||"audio/webm").split(";")[0];sendMedia("aud",new Blob(ch,{type}),type.includes("mp4")?"m4a":"webm",type)};
-  mr.start();b.classList.add("recing");rec.iv=setInterval(()=>{b.textContent="⏹ "+Math.floor((Date.now()-t0)/1000)+"s"},500);
-  setTimeout(()=>{if(rec&&rec.mr===mr)mr.stop()},120000);
-}
-
-/* ===== 2) Lightbox ===== */
-function openMedia(u,k){
-  let l=$("lb");if(!l){l=document.createElement("div");l.id="lb";l.onclick=ev=>{if(ev.target===l||ev.target.id==="lbx")closeMedia()};document.body.appendChild(l)}
-  l.innerHTML=`<button id="lbx">✕</button>`+(k==="vid"?`<video src="${e(u)}" controls autoplay playsinline></video>`:`<img src="${e(u)}">`);l.classList.add("show");
-}
-function closeMedia(){const l=$("lb");if(l){l.classList.remove("show");l.innerHTML=""}}
-
-/* ===== 3) Chat bubbles: media + date separators + read ticks ===== */
-let lastDay="";
-function dayLbl(i){const d=new Date(i),n=new Date(),y=new Date();y.setDate(n.getDate()-1);
-  return d.toDateString()===n.toDateString()?"आज":d.toDateString()===y.toDateString()?"काल":d.toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})}
-function addBub(m,silent){
-  if(rendered.has(m.id))return;rendered.add(m.id);
-  const box=$("cMsgs");box.querySelector(".empty")?.remove();
-  const dl=dayLbl(m.created_at);
-  if(dl!==lastDay){lastDay=dl;const s=document.createElement("div");s.className="bub call";s.style.padding="3px 12px";s.textContent=dl;box.appendChild(s)}
-  const d=document.createElement("div"),mine=m.sender_id===me.id;d.dataset.id=m.id;d.dataset.mine=mine?1:0;d.dataset.txt=m.content;
-  if(m.kind==="call"||m.kind==="system"){d.className="bub call";d.textContent=m.content+" • "+clock(m.created_at)}
-  else{
-    d.className="bub "+(mine?"me":"ot");
-    const mm=String(m.content).match(/^::(img|vid|aud)::(.+)$/);let body;
-    if(mm){const u=e(mm[2]);d.classList.add("media");
-      body=mm[1]==="img"?`<img class="mimg" src="${u}" loading="lazy" onclick="openMedia('${u}','img')">`
-        :mm[1]==="vid"?`<video class="mimg" src="${u}#t=0.1" controls playsinline preload="metadata"></video>`
-        :`<audio src="${u}" controls preload="none" style="width:210px;max-width:100%"></audio>`}
-    else body=`<div>${e(m.content).replace(/\n/g,"<br>")}</div>`;
-    d.innerHTML=body+`<div class="t">${clock(m.created_at)}${mine?` <span class="tk ${m.is_read?"rd":""}">${m.is_read?"✓✓":"✓"}</span>`:""}</div>`;
-    if(!mine&&!mm){
-      const g=guard(m.content);
-      if(g.lvl>=1){
-        const w=document.createElement("div");w.className="warn";
-        w.textContent=g.lvl===2?"⚠️ Guru AI: संभाव्य फसवणूक! पैसे/OTP/माहिती देऊ नका.":"🛡️ Guru AI: हा मजकूर तपासला जात आहे...";
-        d.appendChild(w);
-        if(g.lvl===2&&!silent)reportUser(m.sender_id,"AI auto-flag: "+g.why,true);
-        if(g.lvl===1)aiClassify(m.content).then(r=>{
-          if(!r)return w.remove();
-          if(r.risk==="safe")w.remove();
-          else{w.textContent="⚠️ Guru AI: "+(r.reason||"संशयास्पद मजकूर")+" — सावध रहा.";if(!silent||r.risk==="scam")reportUser(m.sender_id,"AI auto-flag: "+r.risk,true)}
-        });
-      }
-    }
-  }
-  box.appendChild(d);if(!silent)scrollMsgs();
-}
-const _oc=openChat;openChat=async function(id){lastDay="";$("emBar").classList.remove("show");return _oc(id)};
-
-/* ===== 4) Long-press menu: Copy / Unsend / Report ===== */
-let lpT=null;
-function msgMenu(b){
-  const mine=b.dataset.mine==="1",id=b.dataset.id,t=b.dataset.txt;
-  openSheet(`<h3>Message</h3>`+(MP.test(t)?"":`<div class="srow" data-t="${e(t)}" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.dataset.t);closeSheet();toast('📋 Copy झाले')"><span>📋</span><div class="t">Copy</div></div>`)
-   +(mine?`<div class="srow" onclick="unsend('${id}')"><span>🗑️</span><div class="t" style="color:var(--bad)">Unsend (दोघांकडून delete)</div></div>`
-          :`<div class="srow" onclick="closeSheet();reportUser(chatPeer.id,'Message/media report')"><span>🚩</span><div class="t">Report</div></div>`));
-}
-async function unsend(id){
-  closeSheet();
-  const {data,error}=await sb.from("lg_messages").delete().eq("id",id).eq("sender_id",me.id).select();
-  if(error||!data||!data.length)return toast("Unsend झाले नाही (SQL policy run केली का?)");
-  document.querySelector(`.bub[data-id="${id}"]`)?.remove();toast("🗑️ Message delete झाला");
-}
-$("cMsgs").addEventListener("pointerdown",ev=>{const b=ev.target.closest(".bub[data-id]");if(!b||b.classList.contains("call"))return;clearTimeout(lpT);lpT=setTimeout(()=>msgMenu(b),480)});
-["pointerup","pointerleave","pointercancel"].forEach(t=>$("cMsgs").addEventListener(t,()=>clearTimeout(lpT)));
-$("cMsgs").addEventListener("contextmenu",ev=>{const b=ev.target.closest(".bub[data-id]");if(b&&!b.classList.contains("call")){ev.preventDefault();msgMenu(b)}});
-
-/* ===== 5) Composer buttons + emoji bar ===== */
-(function(){
-  const comp=$("cIn").parentElement,ov=$("ovChat");
-  const bar=document.createElement("div");bar.id="emBar";
-  bar.innerHTML=["😊","😂","😍","🥰","😘","😉","🙈","👍","🔥","💘","❤️","🌹","🥺","😎"].map(x=>`<span>${x}</span>`).join("");
-  bar.onclick=ev=>{if(ev.target.tagName==="SPAN"){const i=$("cIn");i.value+=ev.target.textContent;i.focus()}};
-  ov.insertBefore(bar,comp);
-  const mk=(t,fn,before)=>{const b=document.createElement("button");b.className="ib";b.textContent=t;b.onclick=fn;comp.insertBefore(b,before);return b};
-  mk("📎",attachMenu,$("cIn"));
-  mk("🎤",togRec,comp.querySelector(".sendb")).id="micB";
-})();
-
-/* ===== 6) Typing indicator + live ticks/unsend (realtime) ===== */
-const tch={};let lastTy=0,tyT=null,xch=null,tin=null;
-function tChan(id){if(!tch[id]){const c=sb.channel("lg-typing-"+id);c._p=new Promise(r=>c.subscribe(s=>{if(s==="SUBSCRIBED")r()}));tch[id]=c}return tch[id]}
-$("cIn").addEventListener("input",async()=>{
-  if(!chatPeer||Date.now()-lastTy<2000)return;lastTy=Date.now();
-  try{const c=tChan(chatPeer.id);await c._p;c.send({type:"broadcast",event:"ty",payload:{from:me.id}})}catch(_){}
-});
-function startExtra(){
-  if(xch)sb.removeChannel(xch);if(tin)sb.removeChannel(tin);
-  xch=sb.channel("lg-x-"+me.id)
-   .on("postgres_changes",{event:"UPDATE",schema:"public",table:"lg_messages",filter:"sender_id=eq."+me.id},({new:m})=>{
-      const t=document.querySelector(`.bub[data-id="${m.id}"] .tk`);if(t&&m.is_read){t.textContent="✓✓";t.classList.add("rd")}})
-   .on("postgres_changes",{event:"DELETE",schema:"public",table:"lg_messages"},({old:m})=>{document.querySelector(`.bub[data-id="${m.id}"]`)?.remove()})
-   .subscribe();
-  tin=sb.channel("lg-typing-"+me.id).on("broadcast",{event:"ty"},({payload})=>{
-    if(chatPeer&&chatPeer.id===payload.from){$("cSub").textContent="✍️ typing...";clearTimeout(tyT);tyT=setTimeout(updChatSub,2500)}}).subscribe();
-}
-const _ea=enterApp;enterApp=async function(){await _ea();startExtra()};
-
-/* ===== 7) Discover: compatibility %, hide card, online filter, daily tip ===== */
-function compat(p){const a=prof?.interests||[],b=p.interests||[];if(!a.length||!b.length)return 0;
-  const c=b.filter(x=>a.includes(x)).length;return Math.min(99,Math.round(45+55*c/Math.max(3,Math.min(a.length,b.length))))}
-function compatTag(p){const c=compat(p);return c?` • 💞<b>${c}%</b>`:""}
-const _cd=candidates;candidates=function(){return _cd().filter(p=>!passed.has(p.id)&&(!filt.online||onlineSet.has(p.id)))};
-const _rf=renderFilters;renderFilters=function(){_rf();$("discFilters").insertAdjacentHTML("afterbegin",`<button class="chip ${filt.online?"on":""}" onclick="filt.online=!filt.online;renderFilters();renderDeck()">🟢 Online</button>`)};
-const TIPS=["पहिल्या message मध्ये तिच्या/त्याच्या आवडीबद्दल विचारा — 'Hi' पेक्षा खूप चांगले चालते. 😊","Photo मध्ये स्पष्ट चेहरा आणि हसरा लूक ठेवा; group photo नको.","पैसे, OTP, UPI कधीही कोणाला देऊ नका — खरे लोक हे मागत नाहीत. 🛡️","Video call करून आधी खात्री करा, मगच भेटा.","पहिली भेट कॅफे/मॉल अशा public ठिकाणी घ्या आणि मित्राला कळवा.","Bio मध्ये थोडा विनोद आणि तुमची आवड लिहा.","संशय आला तर लगेच 🚩 Report किंवा 🚫 Block करा.","आदराने बोला — नकार मिळाला तरी हसून स्वीकारा. 💐"];
-const _rd=renderDeck;renderDeck=function(){
-  _rd();const d=$("deck");if(!d.querySelector(".grid"))return;
-  d.querySelectorAll(".gc").forEach(c=>{
-    const m=(c.getAttribute("onclick")||"").match(/'([^']+)'/);if(!m)return;const p=pcache[m[1]];if(!p)return;
-    const gs=c.querySelector(".gs");if(gs)gs.insertAdjacentHTML("beforeend",compatTag(p));
-    const h=document.createElement("button");h.className="gh hide";h.textContent="✕";h.onclick=ev=>{ev.stopPropagation();passCard(m[1])};c.appendChild(h);
-  });
-  d.insertAdjacentHTML("afterbegin",`<div class="tipc"><b>💡 आजची Guru Tip</b><br>${TIPS[Math.floor(Date.now()/864e5)%TIPS.length]}</div>`);
-};
-
-/* ===== 8) Chat list: search + media preview ===== */
-(function(){const s=document.createElement("input");s.className="inp";s.id="chSearch";s.placeholder="🔍 Match शोधा...";
-  s.style.cssText="margin:6px 14px 0;width:calc(100% - 28px)";$("vChats").insertBefore(s,$("vChats").querySelector(".scroll"));s.oninput=filterChats})();
-function filterChats(){const q=$("chSearch").value.trim().toLowerCase();
-  document.querySelectorAll("#chatList .row").forEach(r=>r.style.display=!q||r.textContent.toLowerCase().includes(q)?"":"none")}
-const _rc=renderChats;renderChats=function(){_rc();
-  document.querySelectorAll("#chatList .sb").forEach(s=>{s.textContent=s.textContent.replace(/::(img|vid|aud)::\S*/,m=>prevTxt(m))});filterChats()};
-
-/* ===== 9) Me: profile completeness bar ===== */
-const _rm=renderMe;renderMe=function(){_rm();if(!prof)return;
-  const chk=[["नाव",prof.name],["Photo",prof.photo],["Bio (20+ अक्षरे)",(prof.bio||"").length>=20],["शहर",prof.city],["3+ आवड",(prof.interests||[]).length>=3],["Face Verify",prof.verified]];
-  const pct=Math.round(chk.filter(x=>x[1]).length/chk.length*100),miss=chk.filter(x=>!x[1]).map(x=>x[0]);
-  $("meBox").insertAdjacentHTML("afterbegin",`<div class="box" style="margin:0 0 14px"><b>Profile ${pct}% पूर्ण</b><div class="pbar"><i style="width:${pct}%"></i></div>${miss.length?`<small style="color:var(--muted)">बाकी: ${miss.join(", ")}</small>`:`<small style="color:var(--ok)">🎉 सर्व पूर्ण!</small>`}</div>`)};
 </script>
 </body>
 </html>
