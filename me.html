@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="mr" data-theme="rose">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#14060f">
+<title>Me • Love Guru 💘</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root,[data-theme="rose"]{--bg:#14060f;--bg2:#1d0a17;--card:#26101f;--card2:#33162a;--line:#4a2140;--text:#fff1f6;--muted:#b995a9;--a:#ff3d7f;--b:#ff9a3d;--ok:#2ee59d;--bad:#ff5470}
+[data-theme="violet"]{--bg:#0d0a1f;--bg2:#150f2e;--card:#1d1640;--card2:#291f57;--line:#3b2f78;--text:#f3f0ff;--muted:#a79fd6;--a:#9b5cff;--b:#ff4fd8}
+[data-theme="ocean"]{--bg:#03121c;--bg2:#071d2b;--card:#0c2b3f;--card2:#123a53;--line:#1d5272;--text:#eaf8ff;--muted:#8fb9cf;--a:#00c2ff;--b:#00e0a4}
+[data-theme="sunset"]{--bg:#1a0b05;--bg2:#251109;--card:#32180d;--card2:#432213;--line:#66341c;--text:#fff3ea;--muted:#c9a28b;--a:#ff6a3d;--b:#ffd23d}
+[data-theme="light"]{--bg:#fff5f8;--bg2:#ffffff;--card:#ffffff;--card2:#ffe8f0;--line:#f3c6d6;--text:#3a1426;--muted:#8a6577;--a:#ff3d7f;--b:#ff9a3d;--ok:#12a36b;--bad:#e0334f}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:Roboto,Arial,sans-serif;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:0;color:inherit}
+input,textarea{font-family:inherit;color:var(--text)}
+.gtext{background:linear-gradient(135deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.page{position:fixed;inset:0;display:flex;flex-direction:column;background:
+ radial-gradient(500px 300px at 0 0,color-mix(in srgb,var(--a) 20%,transparent),transparent 60%),
+ radial-gradient(500px 400px at 100% 100%,color-mix(in srgb,var(--b) 14%,transparent),transparent 60%),var(--bg)}
+.hdr{height:58px;padding:0 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative;background:rgba(0,0,0,.25);backdrop-filter:blur(10px)}
+.hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--a),var(--b))}
+.hdr h1{font-size:21px;font-weight:900;flex:1}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.wrap{max-width:520px;margin:0 auto;padding:16px 16px 24px}
+.av{border-radius:50%;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;margin:0 auto;border:3px solid var(--a)}
+.vb{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2d8cff;font-size:11px;color:#fff;margin-left:4px;vertical-align:middle}
+.box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px}
+.pbar{height:8px;border-radius:6px;background:var(--line);margin:8px 0}
+.pbar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--a),var(--b))}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{padding:8px 14px;border-radius:22px;background:var(--bg2);border:1.5px solid var(--line);font-size:13px;font-weight:600;color:var(--muted)}
+.chip.on{background:linear-gradient(135deg,var(--a),var(--b));color:#fff;border-color:transparent}
+.btn{width:100%;padding:15px;border-radius:16px;font-weight:800;font-size:16px;color:#fff;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 8px 24px color-mix(in srgb,var(--a) 30%,transparent);margin-top:10px}
+.btn.ghost{background:var(--card2);box-shadow:none;border:1px solid var(--line)}
+.btn.sm{width:auto;padding:9px 14px;font-size:13px;border-radius:12px;margin:0}
+.btn:disabled{opacity:.5}
+.menu .srow{display:flex;align-items:center;gap:12px;padding:15px 4px;border-bottom:1px solid var(--line);font-size:15px;cursor:pointer}
+.menu .srow:last-child{border:0}
+.srow .t{flex:1}
+.srow small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.sw{width:46px;height:26px;border-radius:13px;background:var(--line);position:relative;flex-shrink:0;transition:.2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:linear-gradient(90deg,var(--a),var(--b))}
+.sw.on::after{left:23px}
+.l{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-top:10px}
+.inp{width:100%;padding:13px 14px;margin:6px 0;background:var(--bg2);border:1.5px solid var(--line);border-radius:14px;font-size:15px;outline:none}
+.inp:focus{border-color:var(--a)}
+.photoPick{width:130px;height:165px;margin:8px auto;border-radius:20px;border:2px dashed var(--line);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;background-color:var(--bg2)}
+.nav{display:flex;flex-shrink:0;background:var(--bg2);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.nav button{flex:1;padding:9px 0 8px;background:none;color:var(--muted);font-size:10.5px;font-weight:700}
+.nav button span{display:block;font-size:22px}
+.nav button.on{color:var(--a)}
+.sheetbg{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);display:none;align-items:flex-end;justify-content:center}
+.sheetbg.show{display:flex}
+.sheet{width:100%;max-width:520px;max-height:92vh;overflow-y:auto;background:var(--bg2);border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;padding:20px 18px 26px}
+.sheet h3{font-size:19px;font-weight:800;margin-bottom:10px}
+.vidwrap{position:relative;width:100%;aspect-ratio:3/4;max-height:52vh;border-radius:22px;overflow:hidden;background:#000;margin:10px 0;border:2px solid var(--line)}
+.vidwrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.vprompt{position:absolute;left:0;right:0;bottom:0;padding:14px;text-align:center;font-weight:800;font-size:18px;background:linear-gradient(to top,rgba(0,0,0,.8),transparent)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:900;background:var(--card2);border:1px solid var(--a);padding:11px 18px;border-radius:14px;font-size:14px;max-width:90%;text-align:center;display:none}
+.toast.show{display:block}
+.loader{width:34px;height:34px;margin:40px auto;border-radius:50%;border:3px solid var(--line);border-top-color:var(--a);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hdr"><h1><span class="gtext">मी</span> 👤</h1></div>
+  <div class="scroll"><div class="wrap" id="meBox"><div class="loader"></div></div></div>
+  <nav class="nav">
+    <button onclick="location.href='index.html'"><span>🔥</span>Discover</button>
+    <button onclick="location.href='chats.html'"><span>💬</span>Chats</button>
+    <button onclick="location.href='guru.html'"><span>🤖</span>Guru AI</button>
+    <button class="on"><span>👤</span>Me</button>
+  </nav>
+</div>
+
+<div class="sheetbg" id="sheetBg" onclick="if(event.target.id==='sheetBg')closeSheet()"><div class="sheet" id="sheet"></div></div>
+
+<div class="sheetbg" id="verBg" style="z-index:600"><div class="sheet">
+  <h3>🛡️ Face Verification</h3>
+  <div class="vidwrap"><video id="verV" autoplay playsinline muted></video><div class="vprompt" id="verPrompt"></div></div>
+  <div id="verMsg" style="text-align:center;font-size:13px;color:var(--muted);min-height:20px"></div>
+  <button class="btn" id="verGo" onclick="runVerify()">सुरू करा</button>
+  <button class="btn ghost" onclick="closeVerify()">रद्द करा</button>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SB_URL="https://eqglttfffhvoyvrclzse.supabase.co";
+const SB_KEY="sb_publishable_rR4xxl0dW5DJrhhjqiFHLw_uJ-HakAb";
+const AI_URL="https://gyan-setu-self.vercel.app/api/chat";
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const $=id=>document.getElementById(id);
+const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ageOf=d=>{if(!d)return"";const b=new Date(d),n=new Date();let a=n.getFullYear()-b.getFullYear();const m=n.getMonth()-b.getMonth();if(m<0||(m===0&&n.getDate()<b.getDate()))a--;return a};
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),3000)}
+function openSheet(h){$("sheet").innerHTML=h;$("sheetBg").classList.add("show")}
+function closeSheet(){$("sheetBg").classList.remove("show")}
+let settings=JSON.parse(localStorage.getItem("lg_settings")||'{"theme":"rose","sound":true}');
+document.documentElement.dataset.theme=settings.theme||"rose";
+function saveSet(){localStorage.setItem("lg_settings",JSON.stringify(settings));document.querySelector('meta[name=theme-color]').content=getComputedStyle(document.documentElement).getPropertyValue("--bg").trim()}
+
+let me=null,prof=null,blocked=new Set(),pcache={};
+const INTERESTS=["🎵 संगीत","✈️ प्रवास","🍕 खाणे","📚 वाचन","🎬 सिनेमा","🏏 क्रिकेट","💪 Fitness","🎮 Gaming","🎨 Art","🍳 स्वयंपाक","🐶 Pets","📷 Photography","💻 Tech","🌿 Nature","💃 Dance"];
+const PAL=[["#ff3d7f","#ff9a3d"],["#9b5cff","#ff4fd8"],["#00c2ff","#00e0a4"],["#ff6b6b","#feca57"],["#5f27cd","#ff6b81"]];
+function avHTML(p,s){
+  if(p&&p.photo)return`<div class="av" style="width:${s}px;height:${s}px;background-image:url(${p.photo})"></div>`;
+  let h=0;const k=String(p?.id||"x");for(let i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))>>>0;const c=PAL[h%PAL.length];
+  return`<div class="av" style="width:${s}px;height:${s}px;font-size:${s*.42}px;background:linear-gradient(135deg,${c[0]},${c[1]})">${e((p?.name||"?")[0].toUpperCase())}</div>`;
+}
+
+/* ===== boot ===== */
+async function boot(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){location.replace("index.html");return}
+  me=session.user;
+  const {data}=await sb.from("lg_profiles").select("*").eq("id",me.id).maybeSingle();
+  if(!data){location.replace("index.html");return}
+  prof=data;
+  const b=await sb.from("lg_blocks").select("blocked").eq("blocker",me.id);
+  blocked=new Set((b.data||[]).map(x=>x.blocked));
+  render();
+}
+
+/* ===== page ===== */
+function render(){
+  const chk=[["नाव",prof.name],["Photo",prof.photo],["Bio (20+ अक्षरे)",(prof.bio||"").length>=20],["शहर",prof.city],["3+ आवड",(prof.interests||[]).length>=3],["Face Verify",prof.verified]];
+  const pct=Math.round(chk.filter(x=>x[1]).length/chk.length*100),miss=chk.filter(x=>!x[1]).map(x=>x[0]);
+  $("meBox").innerHTML=`
+   <div style="text-align:center">${avHTML(prof,112)}
+     <h2 style="margin-top:12px;font-size:24px">${e(prof.name)}, ${ageOf(prof.birth_date)} ${prof.verified?'<span class="vb">✓</span>':""}</h2>
+     <div style="color:var(--muted);margin-top:4px">📍 ${e(prof.city||"—")} • Single</div>
+     <p style="margin:12px 0;line-height:1.6">${e(prof.bio||"")}</p>
+     <div class="chips" style="justify-content:center">${(prof.interests||[]).map(i=>`<span class="chip">${e(i)}</span>`).join("")}</div>
+   </div>
+   <div class="box" style="margin-top:14px"><b>Profile ${pct}% पूर्ण</b><div class="pbar"><i style="width:${pct}%"></i></div>
+     ${miss.length?`<small style="color:var(--muted)">बाकी: ${miss.join(", ")}</small>`:`<small style="color:var(--ok)">🎉 सर्व पूर्ण!</small>`}</div>
+   ${prof.verified?`<div class="box" style="text-align:center;color:var(--ok)">✅ तुमची Face Verification पूर्ण आहे</div>`:`<button class="btn" onclick="openVerify()">🛡️ Face Verify करा</button>`}
+   <button class="btn ghost" onclick="openEdit()">✏️ Profile बदला</button>
+
+   <div class="box menu" style="margin-top:16px">
+     <div class="srow"><div class="t">🎨 Theme<small>तुमचा रंग निवडा</small></div></div>
+     <div class="chips" id="thm">${[["rose","🌹 Rose Flame"],["violet","💜 Midnight Violet"],["ocean","🌊 Ocean Neon"],["sunset","🌅 Sunset"],["light","☀️ Light Rose"]].map(t=>`<span class="chip ${settings.theme===t[0]?"on":""}" data-t="${t[0]}">${t[1]}</span>`).join("")}</div>
+     <div class="srow" data-s="show_online"><div class="t">🟢 Online status दाखवा<small>इतरांना तुम्ही online दिसाल</small></div><div class="sw ${prof.show_online!==false?"on":""}"></div></div>
+     <div class="srow" data-s="show_age"><div class="t">🎂 वय दाखवा</div><div class="sw ${prof.show_age!==false?"on":""}"></div></div>
+     <div class="srow" data-s="paused"><div class="t">⏸️ Profile Pause करा<small>Discover मध्ये दिसणार नाही</small></div><div class="sw ${prof.paused?"on":""}"></div></div>
+     <div class="srow" data-s="sound"><div class="t">🔔 Notification sound</div><div class="sw ${settings.sound?"on":""}"></div></div>
+   </div>
+   <div class="box menu">
+     <div class="srow" onclick="openBlocked()"><div class="t">🚫 Blocked लोक<small>${blocked.size} blocked</small></div>›</div>
+     <div class="srow" onclick="openSafety()"><div class="t">🛡️ Safety Center<small>सुरक्षा नियम आणि Guru AI</small></div>›</div>
+     <div class="srow" onclick="logout()"><div class="t">🚪 Logout</div></div>
+     <div class="srow" onclick="delAcct()"><div class="t" style="color:var(--bad)">🗑️ Account delete करा</div></div>
+   </div>`;
+  $("thm").onclick=ev=>{const c=ev.target.closest(".chip");if(!c)return;settings.theme=c.dataset.t;document.documentElement.dataset.theme=settings.theme;saveSet();render()};
+  $("meBox").querySelectorAll("[data-s]").forEach(r=>r.onclick=async()=>{
+    const k=r.dataset.s,sw=r.querySelector(".sw");
+    if(k==="sound"){settings.sound=!settings.sound;saveSet();sw.classList.toggle("on",settings.sound);return}
+    const nv=k==="paused"?!prof.paused:prof[k]===false;
+    const {data,error}=await sb.from("lg_profiles").update({[k]:nv}).eq("id",me.id).select().single();
+    if(error)return toast(error.message);
+    prof=data;sw.classList.toggle("on",k==="paused"?prof.paused:prof[k]!==false);
+  });
+}
+
+/* ===== edit profile ===== */
+let ed={};
+function openEdit(){
+  ed={gender:prof.gender||"",into:prof.interested_in||"",interests:[...(prof.interests||[])],photo:prof.photo||""};
+  openSheet(`<h3>✏️ Profile बदला</h3>
+   <div class="photoPick" id="eP" onclick="$('eF').click()" style="${ed.photo?`background-image:url(${ed.photo})`:""}">${ed.photo?"":"📷<br>Photo निवडा"}</div>
+   <input type="file" id="eF" accept="image/*" hidden onchange="pickPhoto(event)">
+   <label class="l">नाव</label><input class="inp" id="eName" maxlength="30" value="${e(prof.name)}">
+   <label class="l">जन्मतारीख (18+)</label><input class="inp" id="eDob" type="date" value="${e(prof.birth_date||"")}">
+   <label class="l">शहर</label><input class="inp" id="eCity" maxlength="40" value="${e(prof.city||"")}">
+   <label class="l">Gender</label><div class="chips" id="eG"></div>
+   <label class="l">मला भेटायचे आहे</label><div class="chips" id="eI"></div>
+   <label class="l">माझ्याबद्दल (फोन नंबर/link टाकू नका)</label><textarea class="inp" id="eBio" rows="3" maxlength="200">${e(prof.bio||"")}</textarea>
+   <label class="l">आवड (3+ निवडा)</label><div class="chips" id="eInt"></div>
+   <button class="btn" id="eSave" onclick="saveEdit()">Save करा ✅</button>
+   <button class="btn ghost" onclick="closeSheet()">रद्द करा</button>`);
+  chips("eG",["Male","Female","Other"],false,()=>ed.gender,v=>ed.gender=v);
+  chips("eI",["Male","Female","Everyone"],false,()=>ed.into,v=>ed.into=v);
+  chips("eInt",INTERESTS,true,()=>ed.interests,v=>{ed.interests=ed.interests.includes(v)?ed.interests.filter(x=>x!==v):[...ed.interests,v].slice(0,8)});
+}
+function chips(id,opts,multi,sel,cb){
+  const box=$(id),draw=()=>{box.innerHTML=opts.map(o=>`<span class="chip ${(multi?sel().includes(o):sel()===o)?"on":""}" data-v="${e(o)}">${e(o)}</span>`).join("")};
+  box.onclick=ev=>{const c=ev.target.closest(".chip");if(!c)return;cb(c.dataset.v);draw()};draw();
+}
+function pickPhoto(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{
+    const s=Math.min(1,520/Math.max(img.width,img.height)),c=document.createElement("canvas");
+    c.width=img.width*s;c.height=img.height*s;c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    ed.photo=c.toDataURL("image/jpeg",.72);$("eP").style.backgroundImage=`url(${ed.photo})`;$("eP").innerHTML="";
+  };img.src=r.result};r.readAsDataURL(f);
+}
+const BAD=/https?:\/\/|www\.|(?:\+?91[\s-]?)?[6-9]\d{9}|whatsapp|telegram|\botp\b|\bupi\b|पैसे|नग्न|sex\b/i;
+async function saveEdit(){
+  const name=$("eName").value.trim(),dob=$("eDob").value,bio=$("eBio").value.trim(),a=ageOf(dob);
+  if(!name)return toast("नाव लिहा");
+  if(!dob||a<18)return toast("18 वर्षांपेक्षा जास्त वय आवश्यक आहे");
+  if(a>80)return toast("जन्मतारीख तपासा");
+  if(!ed.gender||!ed.into)return toast("Gender आणि आवड निवडा");
+  if(!ed.photo)return toast("Profile photo आवश्यक आहे");
+  if(ed.interests.length<3)return toast("किमान 3 आवड निवडा");
+  if(BAD.test(bio))return toast("🛡️ Bio मध्ये phone/link/पैसे संबंधित मजकूर चालणार नाही");
+  const lockG=prof.verified&&(prof.ai_gender==="male"||prof.ai_gender==="female");
+  const gender=lockG?(prof.ai_gender==="male"?"Male":"Female"):ed.gender;
+  if(lockG&&gender!==ed.gender)toast("🤖 Verified profile चा gender AI नुसार ठेवला आहे");
+  $("eSave").disabled=true;
+  const {data,error}=await sb.from("lg_profiles").update({name,gender,interested_in:ed.into,birth_date:dob,city:$("eCity").value.trim(),bio,interests:ed.interests,photo:ed.photo,status:"Single"}).eq("id",me.id).select().single();
+  $("eSave").disabled=false;
+  if(error)return toast("Save झाले नाही: "+error.message);
+  prof=data;closeSheet();render();toast("✅ Profile update झाली");
+}
+
+/* ===== blocked / safety / account ===== */
+async function openBlocked(){
+  const ids=[...blocked];
+  openSheet(`<h3>🚫 Blocked लोक</h3>`+(ids.length?`<div id="blL"><div class="loader"></div></div>`:`<p style="color:var(--muted)">कोणी blocked नाही.</p>`)+`<button class="btn ghost" onclick="closeSheet()">बंद करा</button>`);
+  if(!ids.length)return;
+  const {data}=await sb.from("lg_profiles").select("*").in("id",ids);
+  (data||[]).forEach(p=>pcache[p.id]=p);
+  $("blL").innerHTML=ids.map(i=>`<div class="menu"><div class="srow" style="cursor:default">${avHTML(pcache[i],38).replace("margin:0 auto","")}<div class="t">${e(pcache[i]?.name||"User")}</div><button class="btn sm" onclick="unblock('${i}')">Unblock</button></div></div>`).join("");
+}
+async function unblock(id){await sb.from("lg_blocks").delete().eq("blocker",me.id).eq("blocked",id);blocked.delete(id);render();openBlocked()}
+function openSafety(){
+  openSheet(`<h3>🛡️ Safety Center</h3>
+   <p style="line-height:1.8;font-size:14px">
+   • <b>Guru AI</b> प्रत्येक message, bio आणि call वर लक्ष ठेवतो.<br>
+   • पैसे, OTP, बँक/UPI, आधार, link मागणारा मजकूर आपोआप flag होतो आणि report नोंदवला जातो.<br>
+   • फक्त <b>Match</b> झालेल्या लोकांनाच chat/call करता येतो.<br>
+   • ✓ Verified लोकांचा live selfie तुम्ही 🔍 Face Scan मध्ये बघू शकता.<br>
+   • Photo/video/voice messages वर long-press करून 🚩 Report करता येते.<br>
+   • कधीही पैसे पाठवू नका. पहिली भेट public ठिकाणी घ्या.<br>
+   • संशय आल्यास 🚩 Report किंवा 🚫 Block करा.</p>
+   <button class="btn" onclick="closeSheet()">समजले</button>`);
+}
+async function logout(){await sb.auth.signOut();location.replace("index.html")}
+async function delAcct(){
+  if(!confirm("तुमचा profile, likes आणि messages कायमचे delete होतील. खात्री?"))return;
+  const {error}=await sb.from("lg_profiles").delete().eq("id",me.id);
+  if(error)return toast(error.message);
+  toast("Profile delete झाली");setTimeout(logout,800);
+}
+
+/* ===== face verify ===== */
+let verStream=null,verBusy=false;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const gKey=g=>g==="Male"?"male":g==="Female"?"female":null;
+const gLabel=g=>g==="male"?"मुलगा":g==="female"?"मुलगी":"अस्पष्ट";
+async function callAI(question,image,ms){
+  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),ms||30000);
+  try{
+    const r=await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctl.signal,body:JSON.stringify({question,image:image||null,imageType:image?"image/jpeg":null})});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    const d=await r.json();return d.answer||d.message||d.response||d.text||"";
+  }finally{clearTimeout(tm)}
+}
+async function aiFace(img){
+  try{
+    const a=await callAI('Look at this photo. Reply ONLY with JSON, no other text: {"faces":<number of human faces>,"real_live_person":<true if a real live person, false if a photo of a screen/printed photo/drawing>,"apparent_gender":"male"|"female"|"unclear","confidence":<0-100>}. apparent_gender is only your visual impression of the person\'s presented gender; answer "unclear" if not sure.',img);
+    const m=a.match(/\{[\s\S]*\}/);if(!m)return null;const j=JSON.parse(m[0]);
+    const g=String(j.apparent_gender||"").toLowerCase();
+    return{faces:Number(j.faces)||0,real:j.real_live_person!==false,g:g==="male"||g==="female"?g:"unclear",c:Number(j.confidence)||0};
+  }catch(_){return null}
+}
+async function openVerify(){
+  if(!navigator.mediaDevices)return toast("Camera उपलब्ध नाही (https आवश्यक)");
+  try{verStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:640,height:480},audio:false})}
+  catch(_){return toast("Camera ची परवानगी द्या")}
+  $("verV").srcObject=verStream;$("verBg").classList.add("show");
+  $("verPrompt").textContent="तयार असाल तेव्हा 'सुरू करा' दाबा";$("verMsg").textContent="चेहरा स्पष्ट दिसेल असे ठेवा, प्रकाश असू द्या.";$("verGo").disabled=false;
+}
+function closeVerify(){verBusy=false;verStream?.getTracks().forEach(t=>t.stop());verStream=null;$("verBg").classList.remove("show")}
+async function runVerify(){
+  if(verBusy)return;verBusy=true;$("verGo").disabled=true;
+  const v=$("verV"),fd=("FaceDetector"in window)?new FaceDetector({fastMode:true,maxDetectedFaces:2}):null;
+  const prompts=["सरळ कॅमेऱ्याकडे बघा","डोळे दोनदा मिचकवा","हळू डावीकडे बघा","हळू उजवीकडे बघा","हसा 😊"].sort(()=>Math.random()-.5).slice(0,3);
+  let seen=0,tot=0,multi=false;
+  for(const p of prompts){
+    $("verPrompt").textContent=p;
+    for(let i=0;i<8&&verBusy;i++){
+      await sleep(350);tot++;
+      if(fd){try{const f=await fd.detect(v);if(f.length>=1)seen++;if(f.length>1)multi=true}catch(_){seen++}}
+    }
+  }
+  if(!verBusy)return;
+  $("verPrompt").textContent="तपासत आहे...";
+  const c=document.createElement("canvas"),s=Math.min(1,360/v.videoWidth);c.width=v.videoWidth*s;c.height=v.videoHeight*s;
+  const x=c.getContext("2d");x.translate(c.width,0);x.scale(-1,1);x.drawImage(v,0,0,c.width,c.height);
+  const shot=c.toDataURL("image/jpeg",.7),ai=await aiFace(shot);
+  let ok,msg;
+  if(fd){ok=seen/tot>=.6&&!multi;msg=multi?"फ्रेममध्ये एकापेक्षा जास्त चेहरे दिसले":"चेहरा नीट दिसला नाही"}
+  else{ok=!!ai&&ai.faces===1&&ai.real;msg=ai?"AI ला स्पष्ट चेहरा आढळला नाही":"AI तपासणी उपलब्ध नाही, पुन्हा प्रयत्न करा"}
+  if(ok&&ai&&ai.real===false){ok=false;msg="Live व्यक्ती आढळली नाही (फोटो/screen नको)"}
+  verBusy=false;
+  if(!ok){$("verMsg").textContent="❌ "+msg+". पुन्हा प्रयत्न करा.";$("verPrompt").textContent="अयशस्वी";$("verGo").disabled=false;return}
+  const dec=gKey(prof.gender),aiG=(ai&&ai.g!=="unclear"&&ai.c>=60)?ai.g:"unclear";
+  let gc="unclear",newGender=prof.gender;
+  if(aiG!=="unclear"){if(aiG===dec)gc="match";else{gc="corrected";newGender=aiG==="male"?"Male":"Female"}}
+  else if(!dec)gc="na";
+  const patch={selfie:shot,verified:true,ai_gender:aiG,gender_check:gc,gender:newGender};
+  let up=await sb.from("lg_profiles").update(patch).eq("id",me.id).select().single();
+  if(up.error&&/ai_gender|gender_check/.test(up.error.message)){delete patch.ai_gender;delete patch.gender_check;up=await sb.from("lg_profiles").update(patch).eq("id",me.id).select().single()}
+  if(up.error){$("verMsg").textContent="Save error: "+up.error.message;$("verGo").disabled=false;return}
+  prof=up.data;closeVerify();
+  if(gc==="corrected")alert("🤖 Guru AI ने तुमच्या live selfie नुसार तुमचा profile gender '"+gLabel(aiG)+"' ठेवला आहे.");
+  toast("✅ Face Verified!");render();
+}
+boot();
+</script>
+</body>
+</html>
