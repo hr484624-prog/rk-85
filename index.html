@@ -1,15 +1,612 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Getting keycode and value in javascript</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <div id="insert">
-      <h1>Pres any key to Get the code and value of that Key</h1>
+<html lang="mr" data-theme="rose">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Love Guru 💘</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root,[data-theme="rose"]{--bg:#14060f;--bg2:#1d0a17;--card:#26101f;--card2:#33162a;--line:#4a2140;--text:#fff1f6;--muted:#b995a9;--a:#ff3d7f;--b:#ff9a3d;--ok:#2ee59d;--bad:#ff5470}
+[data-theme="violet"]{--bg:#0d0a1f;--bg2:#150f2e;--card:#1d1640;--card2:#291f57;--line:#3b2f78;--text:#f3f0ff;--muted:#a79fd6;--a:#9b5cff;--b:#ff4fd8}
+[data-theme="ocean"]{--bg:#03121c;--bg2:#071d2b;--card:#0c2b3f;--card2:#123a53;--line:#1d5272;--text:#eaf8ff;--muted:#8fb9cf;--a:#00c2ff;--b:#00e0a4}
+[data-theme="sunset"]{--bg:#1a0b05;--bg2:#251109;--card:#32180d;--card2:#432213;--line:#66341c;--text:#fff3ea;--muted:#c9a28b;--a:#ff6a3d;--b:#ffd23d}
+[data-theme="light"]{--bg:#fff5f8;--bg2:#ffffff;--card:#ffffff;--card2:#ffe8f0;--line:#f3c6d6;--text:#3a1426;--muted:#8a6577;--a:#ff3d7f;--b:#ff9a3d;--ok:#12a36b;--bad:#e0334f}
+[data-theme="light"] .hdr{background:rgba(255,255,255,.75)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:Roboto,Arial,sans-serif;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:0;color:inherit}
+input,textarea{font-family:inherit;color:var(--text)}
+.gtext{background:linear-gradient(135deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.screen{display:none;position:fixed;inset:0;flex-direction:column;background:
+ radial-gradient(500px 300px at 0 0,color-mix(in srgb,var(--a) 22%,transparent),transparent 60%),
+ radial-gradient(500px 400px at 100% 100%,color-mix(in srgb,var(--b) 16%,transparent),transparent 60%),var(--bg)}
+.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.center{max-width:480px;width:100%;margin:0 auto}
+.logo{font-size:38px;font-weight:900;letter-spacing:-1px;text-align:center}
+.tag{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 22px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin:0 16px 14px}
+.inp{width:100%;padding:14px 15px;margin:6px 0;background:var(--bg2);border:1.5px solid var(--line);border-radius:14px;font-size:15px;outline:none}
+.inp:focus{border-color:var(--a)}
+label.l{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-top:10px}
+.btn{width:100%;padding:15px;border-radius:16px;font-weight:800;font-size:16px;color:#fff;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 8px 24px color-mix(in srgb,var(--a) 35%,transparent);margin-top:12px}
+.btn:disabled{opacity:.45}
+.btn.ghost{background:var(--card2);box-shadow:none;border:1px solid var(--line)}
+.btn.sm{padding:10px 14px;width:auto;font-size:13px;border-radius:12px;margin:0}
+.link{background:none;color:var(--a);font-weight:700;padding:10px;width:100%;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{padding:8px 14px;border-radius:22px;background:var(--bg2);border:1.5px solid var(--line);font-size:13px;font-weight:600;color:var(--muted);flex-shrink:0}
+.chip.on{background:linear-gradient(135deg,var(--a),var(--b));color:#fff;border-color:transparent}
+.steps{display:flex;gap:6px;padding:14px 16px 0}
+.steps i{flex:1;height:4px;border-radius:4px;background:var(--line)}
+.steps i.on{background:linear-gradient(90deg,var(--a),var(--b))}
+.hdr{height:58px;padding:0 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative;background:rgba(0,0,0,.25);backdrop-filter:blur(10px)}
+.hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--a),var(--b))}
+.hdr h1{font-size:21px;font-weight:900;flex:1}
+.ib{width:40px;height:40px;border-radius:50%;background:var(--card2);font-size:19px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ib:active{transform:scale(.92)}
+.nav{display:flex;flex-shrink:0;background:var(--bg2);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.nav button{flex:1;padding:9px 0 8px;background:none;color:var(--muted);font-size:10.5px;font-weight:700;position:relative}
+.nav button span{display:block;font-size:22px}
+.nav button.on{color:var(--a)}
+.nbadge{position:absolute;top:3px;left:calc(50% + 8px);min-width:17px;height:17px;border-radius:9px;background:var(--a);color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;padding:0 4px}
+.av{border-radius:50%;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;flex-shrink:0}
+.vb{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:#2d8cff;font-size:10px;color:#fff;margin-left:4px;vertical-align:middle}
+.filters{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;flex-shrink:0}
+.filters::-webkit-scrollbar{display:none}
+.deck{flex:1;padding:4px 14px 12px;overflow-y:auto;min-height:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gc{aspect-ratio:3/4;border-radius:20px;overflow:hidden;position:relative;background-size:cover;background-position:center;background-color:var(--card);border:1px solid var(--line);display:flex;align-items:flex-end}
+.gc .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 5%,transparent 55%)}
+.gi{position:relative;padding:10px;width:100%;color:#fff}
+.gn{font-size:15px;font-weight:800;line-height:1.25}
+.gs{font-size:11.5px;opacity:.9;margin-top:2px}
+.gs b{color:var(--b)}
+.gh{position:absolute;top:8px;right:8px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);font-size:19px;z-index:2}
+.gh.hide{right:auto;left:8px}
+.gh:active{transform:scale(.9)}
+.tipc{margin:0 0 10px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--a) 25%,transparent),color-mix(in srgb,var(--b) 18%,transparent));border:1px solid var(--line);font-size:13.5px;line-height:1.5}
+.empty{text-align:center;color:var(--muted);padding:50px 24px;line-height:1.7}
+.empty b{display:block;font-size:44px;margin-bottom:8px}
+.ov{position:fixed;inset:0;z-index:250;background:var(--bg);display:none;flex-direction:column}
+.ov.show{display:flex}
+.pdet{position:relative;height:46vh;background-size:cover;background-position:center;background-color:var(--card);flex-shrink:0}
+.pdet .shade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 2%,transparent 60%)}
+.sheetbg{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);display:none;align-items:flex-end;justify-content:center}
+.sheetbg.show{display:flex}
+.sheet{width:100%;max-width:520px;max-height:92vh;overflow-y:auto;background:var(--bg2);border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;padding:20px 18px 26px}
+.sheet h3{font-size:19px;font-weight:800;margin-bottom:10px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.cmp div{aspect-ratio:3/4;border-radius:16px;background-size:cover;background-position:center;background-color:var(--card);position:relative;border:1px solid var(--line)}
+.cmp small{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:11px;padding:5px;background:rgba(0,0,0,.6);border-radius:0 0 16px 16px;color:#fff}
+.photoPick{width:150px;height:190px;margin:10px auto;border-radius:22px;border:2px dashed var(--line);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;cursor:pointer;background-color:var(--bg2)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:900;background:var(--card2);border:1px solid var(--a);padding:11px 18px;border-radius:14px;font-size:14px;max-width:90%;text-align:center;display:none}
+.toast.show{display:block}
+.loader{width:34px;height:34px;margin:30px auto;border-radius:50%;border:3px solid var(--line);border-top-color:var(--a);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="screen active" id="sAuth"><div class="scroll"><div class="center" style="padding-top:8vh">
+  <div class="logo"><span class="gtext">Love Guru</span> 💘</div>
+  <div class="tag">Single लोकांसाठी सुरक्षित, AI-संरक्षित Dating</div>
+  <div class="box">
+    <label class="l">Email</label><input class="inp" id="aEmail" type="email" placeholder="you@example.com" autocomplete="email">
+    <label class="l">Password</label><input class="inp" id="aPass" type="password" placeholder="किमान 6 अक्षरे" autocomplete="current-password">
+    <button class="btn" id="aBtn" onclick="doAuth()">Login</button>
+    <button class="link" id="aSwitch" onclick="switchAuth()">नवीन आहात? Join करा</button>
+    <div style="font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.5">Join करून तुम्ही मान्य करता: तुम्ही 18+ आहात, Single आहात आणि खरी माहिती द्याल. 🛡️ Guru AI सर्व activity वर लक्ष ठेवतो.</div>
+  </div>
+</div></div></div>
+
+<div class="screen" id="sOnb">
+  <div class="steps center" id="obSteps"><i></i><i></i><i></i></div>
+  <div class="scroll"><div class="center" style="padding:14px 0 30px">
+    <div id="ob1">
+      <div class="box"><h3 style="margin-bottom:6px">👋 तुमची ओळख</h3>
+        <label class="l">नाव</label><input class="inp" id="oName" maxlength="30" placeholder="तुमचे नाव">
+        <label class="l">Gender</label><div class="chips" id="oGender"></div>
+        <label class="l">जन्मतारीख (18+ आवश्यक)</label><input class="inp" id="oDob" type="date">
+      </div>
     </div>
-    <script src="./app.js"></script>
-  </body>
+    <div id="ob2" style="display:none">
+      <div class="box"><h3 style="margin-bottom:6px">💞 तुम्हाला कोण हवे?</h3>
+        <label class="l">मला भेटायचे आहे</label><div class="chips" id="oInto"></div>
+        <label class="l">शहर</label><input class="inp" id="oCity" maxlength="40" placeholder="उदा. पुणे">
+        <label style="display:flex;gap:10px;align-items:center;margin-top:14px;font-size:14px"><input type="checkbox" id="oSingle" style="width:20px;height:20px"> मी Single आहे आणि 18+ आहे</label>
+      </div>
+    </div>
+    <div id="ob3" style="display:none">
+      <div class="box"><h3 style="margin-bottom:6px">📸 Photo आणि Bio</h3>
+        <div class="photoPick" id="oPhoto" onclick="$('oFile').click()">📷<br>Photo निवडा</div>
+        <input type="file" id="oFile" accept="image/*" hidden onchange="pickPhoto(event)">
+        <label class="l">माझ्याबद्दल (फोन नंबर/link टाकू नका)</label>
+        <textarea class="inp" id="oBio" rows="3" maxlength="200" placeholder="थोडक्यात स्वतःबद्दल..."></textarea>
+        <label class="l">आवड (3+ निवडा)</label><div class="chips" id="oInt"></div>
+        <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:8px">🛡️ Profile तयार झाल्यावर <b>Me</b> मध्ये Face Verify करा — ✔ badge मिळते.</p>
+      </div>
+    </div>
+    <div style="padding:0 16px;display:flex;gap:10px">
+      <button class="btn ghost" id="obBack" onclick="obGo(-1)" style="display:none">मागे</button>
+      <button class="btn" id="obNext" onclick="obGo(1)">पुढे</button>
+    </div>
+  </div></div>
+</div>
+
+<div class="screen" id="sApp">
+  <div class="hdr"><h1><span class="gtext">Love Guru</span> 💘</h1><button class="ib" onclick="location.href='me.html'">⚙️</button></div>
+  <div class="filters" id="discFilters"></div>
+  <div class="deck" id="deck"></div>
+  <nav class="nav">
+    <button class="on"><span>🔥</span>Discover</button>
+    <button onclick="location.href='chats.html'"><span>💬</span>Chats<b class="nbadge" id="nbChats"></b></button>
+    <button onclick="location.href='guru.html'"><span>🤖</span>Guru AI</button>
+    <button onclick="location.href='me.html'"><span>👤</span>Me</button>
+  </nav>
+</div>
+
+<div class="ov" id="ovProf"><div class="scroll" id="pvBody"></div></div>
+
+<div class="sheetbg" id="sheetBg" onclick="if(event.target.id==='sheetBg')closeSheet()"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SB_URL="https://eqglttfffhvoyvrclzse.supabase.co";
+const SB_KEY="sb_publishable_rR4xxl0dW5DJrhhjqiFHLw_uJ-HakAb";
+const AI_URL="https://gyan-setu-self.vercel.app/api/chat";
+const sb=supabase.createClient(SB_URL,SB_KEY);
+
+let me=null,prof=null,authMode="login";
+let myLikes=new Set(),likedMe=new Set(),blocked=new Set(),passed=new Set();
+let pcache={},onlineSet=new Set();
+let deckList=[],filt={verified:false,city:"",age:"all",gender:"all",online:false};
+let settings=JSON.parse(localStorage.getItem("lg_settings")||'{"theme":"rose","sound":true}');
+document.documentElement.dataset.theme=settings.theme||"rose";
+
+const $=id=>document.getElementById(id);
+const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ageOf=d=>{if(!d)return"";const b=new Date(d),n=new Date();let a=n.getFullYear()-b.getFullYear();const m=n.getMonth()-b.getMonth();if(m<0||(m===0&&n.getDate()<b.getDate()))a--;return a};
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),3000)}
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id))}
+function openSheet(h){$("sheet").innerHTML=h;$("sheetBg").classList.add("show")}
+function closeSheet(){$("sheetBg").classList.remove("show")}
+const prevTxt=c=>{c=String(c||"");const m=c.match(/^::(img|vid|aud)::/);return m?({img:"📷 Photo",vid:"🎥 Video",aud:"🎤 Voice message"})[m[1]]:c};
+const newAcct=p=>(Date.now()-new Date(p.created_at))<7*864e5;
+const vbadgeU=p=>p.verified?'<span class="vb">✓</span>':'<span style="font-size:11px;opacity:.7;font-weight:600">• Unverified</span>';
+function ping(){if(!settings.sound)return;try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.08;o.start();setTimeout(()=>{o.stop();c.close()},120)}catch(_){}}
+const matches=()=>[...myLikes].filter(i=>likedMe.has(i)&&!blocked.has(i)&&pcache[i]);
+
+const SEVERE=[/\botp\b/i,/\bcvv\b/i,/password|पासवर्ड/i,/\bupi\b|gpay|phonepe|paytm|google ?pay/i,/gift ?card/i,/bitcoin|crypto|invest(ment)?|गुंतवणूक/i,/western union/i,/(account|खाते)\s*(no|number|क्रमांक)/i,/\bifsc\b/i,/पैसे\s*(पाठव|दे|हवे)|paise\s*(pathav|de|have)|send (me )?money|रक्कम\s*पाठव|money transfer/i,/loan|कर्ज/i,/aadhaar|आधार\s*(क्रमांक|नंबर|number)|pan card/i];
+const MEDIUM=[/https?:\/\/|www\.|bit\.ly|t\.me\//i,/(?:\+?91[\s-]?)?[6-9]\d{9}/,/whatsapp|telegram|insta(gram)?\s*(id|handle)|snap(chat)?/i,/nude|न्यूड|naked|sex\b|सेक्स/i,/private (video|show)|paid (video|call)/i];
+function guard(t){
+  t=String(t||"");if(/^::(img|vid|aud)::/.test(t))return{lvl:0};
+  for(const r of SEVERE)if(r.test(t))return{lvl:2,why:"पैसे/OTP/बँक/ओळखपत्र संबंधित मजकूर"};
+  for(const r of MEDIUM)if(r.test(t))return{lvl:1,why:"phone/link/बाहेर जाण्याचा प्रयत्न किंवा अश्लील मजकूर"};
+  return{lvl:0};
+}
+
+function switchAuth(){
+  authMode=authMode==="login"?"signup":"login";
+  $("aBtn").textContent=authMode==="login"?"Login":"Join करा 💘";
+  $("aSwitch").textContent=authMode==="login"?"नवीन आहात? Join करा":"आधीच account आहे? Login";
+}
+async function doAuth(){
+  const email=$("aEmail").value.trim(),pw=$("aPass").value;
+  if(!email||pw.length<6)return toast("Email आणि किमान 6 अक्षरांचा password टाका");
+  $("aBtn").disabled=true;
+  try{
+    if(authMode==="signup"){
+      const {data,error}=await sb.auth.signUp({email,password:pw});
+      if(error)throw error;
+      if(!data.session){toast("📧 Email confirm करा आणि मग Login करा");switchAuth();return}
+    }else{
+      const {error}=await sb.auth.signInWithPassword({email,password:pw});
+      if(error)throw error;
+    }
+    await boot();
+  }catch(err){toast(err.message||"Error")}
+  finally{$("aBtn").disabled=false}
+}
+async function boot(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){show("sAuth");return}
+  me=session.user;
+  const {data,error}=await sb.from("lg_profiles").select("*").eq("id",me.id).maybeSingle();
+  if(error)toast("DB error: "+error.message+" (SQL run केले का?)");
+  if(!data){startOnb();return}
+  prof=data;pcache[me.id]=prof;
+  await enterApp();
+}
+
+let ob={gender:"",into:"",interests:[],photo:"",step:1};
+const INTERESTS=["🎵 संगीत","✈️ प्रवास","🍕 खाणे","📚 वाचन","🎬 सिनेमा","🏏 क्रिकेट","💪 Fitness","🎮 Gaming","🎨 Art","🍳 स्वयंपाक","🐶 Pets","📷 Photography","💻 Tech","🌿 Nature","💃 Dance"];
+function chipsInit(id,opts,multi,sel,cb){
+  const box=$(id),draw=()=>{box.innerHTML=opts.map(o=>`<span class="chip ${(multi?sel().includes(o):sel()===o)?"on":""}" data-v="${e(o)}">${e(o)}</span>`).join("")};
+  box.onclick=ev=>{const c=ev.target.closest(".chip");if(!c)return;cb(c.dataset.v);draw()};draw();
+}
+function startOnb(){
+  ob={gender:"",into:"",interests:[],photo:"",step:1};
+  chipsInit("oGender",["Male","Female","Other"],false,()=>ob.gender,v=>ob.gender=v);
+  chipsInit("oInto",["Male","Female","Everyone"],false,()=>ob.into,v=>ob.into=v);
+  chipsInit("oInt",INTERESTS,true,()=>ob.interests,v=>{ob.interests=ob.interests.includes(v)?ob.interests.filter(x=>x!==v):[...ob.interests,v].slice(0,8)});
+  obShow();show("sOnb");
+}
+function obShow(){
+  for(let i=1;i<=3;i++)$("ob"+i).style.display=i===ob.step?"block":"none";
+  document.querySelectorAll("#obSteps i").forEach((x,i)=>x.classList.toggle("on",i<ob.step));
+  $("obBack").style.display=ob.step>1?"block":"none";
+  $("obNext").textContent=ob.step===3?"सुरू करा 🚀":"पुढे";
+}
+function pickPhoto(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{
+    const s=Math.min(1,520/Math.max(img.width,img.height)),c=document.createElement("canvas");
+    c.width=img.width*s;c.height=img.height*s;c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    ob.photo=c.toDataURL("image/jpeg",.72);$("oPhoto").style.backgroundImage=`url(${ob.photo})`;$("oPhoto").innerHTML="";
+  };img.src=r.result};r.readAsDataURL(f);
+}
+async function obGo(d){
+  if(d>0){
+    if(ob.step===1){
+      if(!$("oName").value.trim())return toast("नाव लिहा");
+      if(!ob.gender)return toast("Gender निवडा");
+      const a=ageOf($("oDob").value);
+      if(!$("oDob").value||a<18)return toast("18 वर्षांपेक्षा जास्त वय आवश्यक आहे");
+      if(a>80)return toast("जन्मतारीख तपासा");
+    }
+    if(ob.step===2){
+      if(!ob.into)return toast("तुम्हाला कोण हवे ते निवडा");
+      if(!$("oSingle").checked)return toast("हे app फक्त Single लोकांसाठी आहे");
+    }
+    if(ob.step===3){
+      if(!ob.photo)return toast("Profile photo आवश्यक आहे");
+      if(ob.interests.length<3)return toast("किमान 3 आवड निवडा");
+      if(guard($("oBio").value).lvl>=1)return toast("🛡️ Bio मध्ये phone/link/पैसे संबंधित मजकूर चालणार नाही");
+      await saveProfile();return;
+    }
+  }
+  ob.step=Math.max(1,Math.min(3,ob.step+d));obShow();
+}
+async function saveProfile(){
+  const row={id:me.id,name:$("oName").value.trim(),gender:ob.gender,interested_in:ob.into,birth_date:$("oDob").value,
+    city:$("oCity").value.trim(),bio:$("oBio").value.trim(),interests:ob.interests,photo:ob.photo,status:"Single"};
+  $("obNext").disabled=true;
+  const {data,error}=await sb.from("lg_profiles").upsert(row).select().single();
+  $("obNext").disabled=false;
+  if(error)return toast("Save झाले नाही: "+error.message);
+  prof=data;pcache[me.id]=prof;
+  await enterApp();
+}
+
+async function enterApp(){
+  show("sApp");
+  $("deck").innerHTML='<div class="loader"></div>';
+  await loadSocial();
+  refreshBadge();
+  await loadDeck();
+  startRealtime();
+}
+async function loadSocial(){
+  const [a,b,c]=await Promise.all([
+    sb.from("lg_likes").select("to_id").eq("from_id",me.id),
+    sb.from("lg_likes").select("from_id").eq("to_id",me.id),
+    sb.from("lg_blocks").select("blocked").eq("blocker",me.id)]);
+  myLikes=new Set((a.data||[]).map(x=>x.to_id));
+  likedMe=new Set((b.data||[]).map(x=>x.from_id));
+  blocked=new Set((c.data||[]).map(x=>x.blocked));
+  await fetchProfiles([...myLikes,...likedMe]);
+}
+async function fetchProfiles(ids){
+  const need=[...new Set(ids)].filter(i=>!pcache[i]);if(!need.length)return;
+  const {data}=await sb.from("lg_profiles").select("*").in("id",need);
+  (data||[]).forEach(p=>pcache[p.id]=p);
+}
+async function refreshBadge(){
+  const {count}=await sb.from("lg_messages").select("id",{count:"exact",head:true}).eq("receiver_id",me.id).eq("is_read",false).or("kind.is.null,kind.neq.call");
+  setBadge(count||0);
+}
+let unreadN=0;
+function setBadge(n){unreadN=n;const b=$("nbChats");b.textContent=n>99?"99+":n;b.style.display=n?"flex":"none"}
+
+async function loadDeck(){
+  const {data,error}=await sb.from("lg_profiles").select("*").neq("id",me.id).eq("paused",false).order("created_at",{ascending:false}).limit(300);
+  if(error){$("deck").innerHTML=`<div class="empty"><b>⚠️</b>${e(error.message)}</div>`;return}
+  (data||[]).forEach(p=>pcache[p.id]=p);
+  deckList=(data||[]).filter(p=>ageOf(p.birth_date)>=18);
+  renderFilters();renderDeck();
+}
+function candidates(){
+  const on=p=>onlineSet.has(p.id)&&p.show_online!==false;
+  return deckList.filter(p=>!blocked.has(p.id)&&!passed.has(p.id)
+    &&(filt.gender==="all"||p.gender===filt.gender)
+    &&(!filt.verified||p.verified)&&(!filt.online||on(p))
+    &&(!filt.city||(p.city||"").toLowerCase().includes(filt.city.toLowerCase()))
+    &&(filt.age==="all"||(filt.age==="18"&&ageOf(p.birth_date)<=25)||(filt.age==="26"&&ageOf(p.birth_date)>25&&ageOf(p.birth_date)<=35)||(filt.age==="36"&&ageOf(p.birth_date)>35)))
+    .sort((x,y)=>on(y)-on(x));
+}
+function setF(k,v){filt[k]=v;renderFilters();renderDeck()}
+function renderFilters(){
+  $("discFilters").innerHTML=`
+   <button class="chip ${filt.online?"on":""}" onclick="setF('online',!filt.online)">🟢 Online</button>
+   <button class="chip ${filt.gender==="all"?"on":""}" onclick="setF('gender','all')">सर्व</button>
+   <button class="chip ${filt.gender==="Female"?"on":""}" onclick="setF('gender','Female')">👩 मुली</button>
+   <button class="chip ${filt.gender==="Male"?"on":""}" onclick="setF('gender','Male')">👨 मुलगे</button>
+   <button class="chip ${filt.verified?"on":""}" onclick="setF('verified',!filt.verified)">✓ Verified</button>
+   <button class="chip ${filt.age==="all"?"on":""}" onclick="setF('age','all')">सर्व वय</button>
+   <button class="chip ${filt.age==="18"?"on":""}" onclick="setF('age','18')">18-25</button>
+   <button class="chip ${filt.age==="26"?"on":""}" onclick="setF('age','26')">26-35</button>
+   <button class="chip ${filt.age==="36"?"on":""}" onclick="setF('age','36')">36+</button>
+   <button class="chip ${filt.city?"on":""}" onclick="askCity()">📍 ${e(filt.city||"शहर")}</button>`;
+}
+function askCity(){const c=prompt("शहर (रिकामे सोडा = सर्व)",filt.city);if(c===null)return;setF("city",c.trim())}
+function compat(p){
+  const a=prof?.interests||[],b=p.interests||[];if(!a.length||!b.length)return 0;
+  const c=b.filter(x=>a.includes(x)).length;
+  return Math.min(99,Math.round(45+55*c/Math.max(3,Math.min(a.length,b.length))));
+}
+function renderDeck(){
+  const list=candidates();
+  $("deck").innerHTML=`<div class="grid">`+list.map(p=>`<div class="gc" style="background-image:url(${p.photo||""})" onclick="viewProfile('${p.id}')"></div>`).join("")+`</div>`;
+}
+async function likeUser(id){
+  if(myLikes.has(id))return;
+  const {error}=await sb.from("lg_likes").insert({from_id:me.id,to_id:id});
+  if(error&&!/duplicate/i.test(error.message))return toast("Like झाले नाही: "+error.message);
+  myLikes.add(id);
+  if($("ovProf").classList.contains("show"))closeProf();
+  renderDeck();
+  if(likedMe.has(id)){toast("💘 It's a Match! "+(pcache[id]?.name||""));setTimeout(()=>location.href="chats.html?chat="+id,900)}
+  else toast("❤️ Like पाठवला");
+}
+async function unlikeUser(id){
+  if(!myLikes.has(id))return;
+  if(likedMe.has(id)&&!confirm("हा Match आहे. Unlike केल्यास Match संपेल आणि chat/call बंद होईल. खात्री?"))return;
+  const {error}=await sb.from("lg_likes").delete().eq("from_id",me.id).eq("to_id",id);
+  if(error)return toast("Unlike झाले नाही: "+error.message);
+  myLikes.delete(id);toast("💔 Unlike केले");renderDeck();
+  if($("ovProf").classList.contains("show"))viewProfile(id);
+}
+
+async function viewProfile(id){
+  await fetchProfiles([id]);const p=pcache[id];if(!p)return;
+  const m=matches().includes(id),a=p.show_age===false?"":", "+ageOf(p.birth_date),c=compat(p);
+  $("pvBody").innerHTML=`
+   <div class="pdet" style="background-image:url(${p.photo||""})"><div class="shade"></div>
+     <button class="ib" style="position:absolute;left:12px;top:12px;background:rgba(0,0,0,.5);color:#fff" onclick="closeProf()">‹</button></div>
+   <div style="padding:0 18px 30px;margin-top:-30px;position:relative">
+     <h2 style="font-size:28px;font-weight:900">${e(p.name)}${a} ${vbadgeU(p)}</h2>
+     <div style="color:var(--muted);margin-top:4px">📍 ${e(p.city||"—")} • Single ${newAcct(p)?"• 🆕 नवीन":""}${c?" • 💞 "+c+"% match":""}</div>
+     <p style="margin:14px 0;line-height:1.6">${e(p.bio||"")}</p>
+     <div class="chips">${(p.interests||[]).map(i=>`<span class="chip">${e(i)}</span>`).join("")}</div>
+     <div style="display:flex;gap:10px;margin-top:14px">
+       ${m?`<button class="btn" onclick="location.href='chats.html?chat=${id}'">💬 Message</button>`:(myLikes.has(id)?`<button class="btn ghost" onclick="unlikeUser('${id}')">💔 Unlike (Like पाठवला)</button>`:`<button class="btn" onclick="likeUser('${id}')">❤️ Like</button>`)}
+       <button class="btn ghost" onclick="faceScan('${id}')">🔍 Face Scan</button>
+     </div>
+     <div style="display:flex;gap:10px;margin-top:6px">
+       ${m?`<button class="link" onclick="unlikeUser('${id}')">💔 Unlike</button>`:""}
+       <button class="link" onclick="reportUser('${id}')">🚩 Report</button>
+       <button class="link" style="color:var(--bad)" onclick="blockUser('${id}')">🚫 Block</button>
+     </div>
+   </div>`;
+  $("ovProf").classList.add("show");
+}
+function closeProf(){$("ovProf").classList.remove("show")}
+
+const gKey=g=>g==="Male"?"male":g==="Female"?"female":null;
+const gLabel=g=>g==="male"?"मुलगा":g==="female"?"मुलगी":"अस्पष्ट";
+async function callAI(question,image,ms){
+  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),ms||30000);
+  try{
+    const r=await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctl.signal,body:JSON.stringify({question,image:image||null,imageType:image?"image/jpeg":null})});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    const d=await r.json();return d.answer||d.message||d.response||d.text||"";
+  }finally{clearTimeout(tm)}
+}
+async function aiFace(img){
+  try{
+    const a=await callAI('Look at this photo. Reply ONLY with JSON, no other text: {"faces":<number of human faces>,"real_live_person":<true if a real live person, false if a photo of a screen/printed photo/drawing>,"apparent_gender":"male"|"female"|"unclear","confidence":<0-100>}. apparent_gender is only your visual impression of the person\'s presented gender; answer "unclear" if not sure.',img);
+    const m=a.match(/\{[\s\S]*\}/);if(!m)return null;const j=JSON.parse(m[0]);
+    const g=String(j.apparent_gender||"").toLowerCase();
+    return{faces:Number(j.faces)||0,real:j.real_live_person!==false,g:g==="male"||g==="female"?g:"unclear",c:Number(j.confidence)||0};
+  }catch(_){return null}
+}
+function gcLine(p){
+  const g=p.ai_gender;if(!g||g==="unclear")return p.verified?"🤖 AI ला selfie वरून स्पष्ट अंदाज करता आला नाही.":"";
+  if(p.gender_check==="match")return"🤖 AI ने live selfie बघून अंदाज केला: <b>"+gLabel(g)+"</b> — profile शी जुळते ✅";
+  if(p.gender_check==="corrected")return"🤖 AI ने live selfie बघून ठरवले: <b>"+gLabel(g)+"</b> (profile gender AI नुसार ठेवला आहे) ✅";
+  if(p.gender_check==="mismatch")return"⚠️ AI अंदाज: <b>"+gLabel(g)+"</b>, पण profile वर <b>"+e(p.gender)+"</b> आहे. अंदाज चुकूही शकतो — स्वतः खात्री करा, काळजी घ्या.";
+  return"🤖 AI अंदाज: <b>"+gLabel(g)+"</b>";
+}
+async function faceScan(id){
+  await fetchProfiles([id]);const p=pcache[id];if(!p)return;
+  openSheet(`<h3>🔍 Face Scan: ${e(p.name)}</h3>
+   <div class="cmp"><div style="background-image:url(${p.photo||""})"><small>Profile photo</small></div>
+   <div style="background-image:url(${p.selfie||""})">${p.selfie?"":'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;padding:8px">Live selfie नाही</span>'}<small>Live selfie ${p.verified?"✓":""}</small></div></div>
+   <p style="font-size:13.5px;line-height:1.6;color:${p.verified?"var(--ok)":"var(--bad)"}">${p.verified?"✅ या व्यक्तीने live camera face-check पूर्ण केला आहे. दोन्ही चेहरे तुम्ही स्वतः जुळवून पहा.":"⚠️ ही व्यक्ती अजून verified नाही. Verify होईपर्यंत personal माहिती/पैसे देऊ नका."}</p>
+   <div id="gcOut" style="font-size:13.5px;line-height:1.6;margin:8px 0;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line)${gcLine(p)?"":";display:none"}">${gcLine(p)}</div>
+   ${p.photo?`<button class="btn ghost" onclick="$('gcOut').style.display='block';aiPhotoCheck('${id}')">🤖 AI ने photo तपासा (मुलगा/मुलगी)</button>`:""}
+   ${p.verified?"":`<button class="btn" onclick="reqVerify('${id}')">🛡️ Verification मागा</button>`}
+   <p style="font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5">AI फक्त अंदाज देतो, तो १००% बरोबर नसतो. कोणावर अन्याय करू नका; संशय असल्यास Report करा.</p>
+   <button class="btn ghost" onclick="closeSheet()">बंद करा</button>`);
+}
+async function aiPhotoCheck(id){
+  const p=pcache[id];if(!p||!p.photo)return;
+  const out=$("gcOut");out.innerHTML="🤖 AI तपासत आहे...";
+  const ai=await aiFace(p.photo);
+  if(!ai){out.textContent="AI उपलब्ध नाही, नंतर प्रयत्न करा.";return}
+  if(ai.faces!==1){out.innerHTML="🤖 Photo मध्ये एक स्पष्ट चेहरा दिसला नाही ("+ai.faces+" चेहरे). सावध रहा.";return}
+  const dec=gKey(p.gender);
+  if(ai.g==="unclear"||ai.c<60)out.innerHTML="🤖 AI ला photo वरून स्पष्ट अंदाज करता आला नाही.";
+  else if(!dec)out.innerHTML="🤖 AI अंदाज: <b>"+gLabel(ai.g)+"</b>";
+  else if(ai.g===dec)out.innerHTML="🤖 AI ने photo बघून अंदाज केला: <b>"+gLabel(ai.g)+"</b> — profile शी जुळते ✅";
+  else out.innerHTML="⚠️ AI अंदाज: <b>"+gLabel(ai.g)+"</b>, पण profile वर <b>"+e(p.gender)+"</b> आहे. अंदाज चुकूही शकतो — स्वतः खात्री करा.";
+}
+async function reqVerify(id){
+  if(!matches().includes(id))return toast("Match झाल्यावरच request पाठवता येते");
+  await sb.from("lg_messages").insert({sender_id:me.id,receiver_id:id,content:"🛡️ कृपया तुमचा Face Verification पूर्ण करा (Me → Face Verify).",kind:"system"});
+  closeSheet();toast("Request पाठवली");
+}
+async function reportUser(id,reason,auto){
+  reason=reason||prompt("Report चे कारण? (fraud / fake / abuse / नको असलेला मजकूर)");if(!reason)return;
+  await sb.from("lg_reports").insert({reporter:me.id,target:id,reason,detail:"",auto:!!auto});
+  if(!auto)toast("🚩 Report नोंदवला. धन्यवाद!");
+}
+async function blockUser(id){
+  if(!confirm("या व्यक्तीला block करायचे?"))return;
+  await sb.from("lg_blocks").insert({blocker:me.id,blocked:id});
+  blocked.add(id);closeProf();renderDeck();toast("🚫 Block केले");
+}
+
+function startRealtime(){
+  sb.channel("lg-rt-"+me.id)
+   .on("postgres_changes",{event:"INSERT",schema:"public",table:"lg_messages",filter:"receiver_id=eq."+me.id},async({new:m})=>{
+      if(blocked.has(m.sender_id))return;
+      if(m.kind!=="call")setBadge(unreadN+1);
+      await fetchProfiles([m.sender_id]);ping();
+      toast("💬 "+(pcache[m.sender_id]?.name||"")+": "+prevTxt(m.content).slice(0,40));
+      const g=guard(m.content);if(g.lvl===2)reportUser(m.sender_id,"AI auto-flag: "+g.why,true);
+   })
+   .on("postgres_changes",{event:"INSERT",schema:"public",table:"lg_likes",filter:"to_id=eq."+me.id},async({new:l})=>{
+      likedMe.add(l.from_id);await fetchProfiles([l.from_id]);ping();
+      toast(myLikes.has(l.from_id)?"💘 नवीन Match! "+(pcache[l.from_id]?.name||""):"❤️ कोणीतरी तुम्हाला Like केले");
+      renderDeck();
+   })
+   .on("postgres_changes",{event:"DELETE",schema:"public",table:"lg_likes"},({old:l})=>{
+      if(!l||l.to_id!==me.id)return;
+      likedMe.delete(l.from_id);renderDeck();
+   }).subscribe();
+
+  sb.channel("lg-user-"+me.id)
+   .on("broadcast",{event:"invite"},({payload})=>{toast("📞 "+(payload.name||"कोणीतरी")+" call करत आहे — Chats उघडा");ping()})
+   .subscribe();
+
+  const pres=sb.channel("lg-presence",{config:{presence:{key:me.id}}});
+  pres.on("presence",{event:"sync"},()=>{
+    onlineSet=new Set(Object.keys(pres.presenceState()));onlineSet.delete(me.id);
+    if(!$("ovProf").classList.contains("show"))renderDeck();
+  }).subscribe(async s=>{if(s==="SUBSCRIBED")await pres.track({at:Date.now()})});
+}
+
+$("aPass").addEventListener("keydown",ev=>{if(ev.key==="Enter")doAuth()});
+boot();
+</script>
+<script>
+/* Instagram-style skin */
+(()=>{
+const css=`
+html[data-theme]{--bg:#000;--bg2:#000;--card:#121212;--card2:#262626;--line:#262626;--text:#f5f5f5;--muted:#a8a8a8;--a:#0095f6;--b:#a033ff;--ig:linear-gradient(45deg,#f9ce34,#ee2a7b,#6228d7)}
+html[data-theme=light]{--bg:#fff;--bg2:#fff;--card:#fafafa;--card2:#efefef;--line:#dbdbdb;--text:#262626;--muted:#737373}
+.screen{background:var(--bg)!important}
+.hdr{background:var(--bg)!important;border-bottom:1px solid var(--line)}.hdr::after{display:none}
+.gtext{background:none;-webkit-text-fill-color:currentColor;font-family:'Grand Hotel','Brush Script MT',cursive;font-style:italic;font-weight:400}
+.btn{background:var(--a);box-shadow:none;border-radius:10px;font-weight:600}
+.btn.ghost{background:var(--card2)}
+.chip{border-radius:10px;background:var(--card2);border:0}.chip.on{background:var(--text);color:var(--bg)}
+.ib{background:none;position:relative;color:var(--text)}
+.ib i{position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;background:#ff3040;display:none}
+.nav{background:var(--bg);border-top:1px solid var(--line)}
+.nav button{padding:12px 0;color:var(--text)}.nav button.on svg{stroke-width:2.8}
+svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8}
+.deck{padding:0!important}
+.stories{display:flex;gap:14px;padding:10px 12px 8px;overflow-x:auto;border-bottom:1px solid var(--line)}.stories::-webkit-scrollbar{display:none}
+.sti{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;width:68px;position:relative;padding-top:20px}
+.sti small{font-size:11.5px;max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.note{position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--card2);border-radius:14px;padding:3px 8px;font-size:10px;font-style:normal;white-space:nowrap;max-width:76px;overflow:hidden;text-overflow:ellipsis;z-index:1}
+.ring{padding:2.5px;border-radius:50%;background:var(--ig);display:inline-flex}.ring.seen{background:var(--line)}.ring .av{border:2.5px solid var(--bg)}
+.post{padding-bottom:12px}
+.ph{display:flex;align-items:center;gap:10px;padding:8px 12px}
+.mini{background:none;font-size:16px;color:var(--muted)}
+.pimg{width:100%;aspect-ratio:4/5;background-size:cover;background-position:center;background-color:var(--card)}
+.act{display:flex;gap:16px;padding:10px 12px 2px;align-items:center}.act button{background:none;padding:0;display:flex;color:var(--text)}
+.act .on svg{fill:#ff3040;stroke:#ff3040}.act span{margin-left:auto;font-size:12px;color:var(--muted)}
+.cap{padding:2px 12px;font-size:13.5px;line-height:1.5}.cap em{color:#4aa8ff;font-style:normal}
+.sbx{padding:10px 12px}.sbx input{width:100%;padding:10px 14px;border-radius:10px;border:0;background:var(--card2);font-size:15px;outline:0}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}.g3 div{aspect-ratio:1;background-size:cover;background-position:center;background-color:var(--card)}
+.reels{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory}.reels::-webkit-scrollbar{display:none}
+.reel{height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;background-size:cover;background-position:center;background-color:var(--card);color:#fff}
+.rs{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 50%)}
+.rr{position:absolute;right:10px;bottom:90px;display:flex;flex-direction:column;gap:20px}.rr button{background:none;color:#fff}.rr .on svg{fill:#ff3040;stroke:#ff3040}
+.rb{position:absolute;left:12px;right:70px;bottom:16px}.rb p{font-size:13px;margin-top:6px;line-height:1.4}
+.rb .f{border:1px solid #fff;background:none;border-radius:8px;padding:4px 10px;font-size:12px;font-weight:600;margin-left:6px}
+.nr{display:flex;align-items:center;gap:12px;padding:10px 0}
+#igSt{display:none;position:fixed;inset:0;z-index:600;background:#000;flex-direction:column;color:#fff}
+.sbar2{height:3px;background:#555;margin:8px 10px;border-radius:3px;overflow:hidden}.sbar2 i{display:block;height:100%;background:#fff;animation:fl 5s linear forwards}@keyframes fl{from{width:0}to{width:100%}}
+.sh{display:flex;align-items:center;gap:8px;padding:4px 12px}.sh b{flex:0}.sh small{flex:1;opacity:.7}.sh button{background:none;font-size:22px}
+.sbody{flex:1;background-size:contain;background-repeat:no-repeat;background-position:center;display:flex}.sbody div{flex:1}
+.sf{display:flex;gap:10px;padding:12px}.sf .btn{flex:1;margin:0}`;
+const st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
+if(!$("sApp"))return; /* baki pages var fakt look lagto */
+
+const P={home:'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/>',reel:'<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M10 8l6 4-6 4z"/>',heart:'<path d="M12 21s-8-5.5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.5-8 11-8 11z"/>',chat:'<path d="M21 12a8 8 0 01-11.500 7.200L3 21l1.800-6A8 8 0 1121 12z"/>',send:'<path d="M22 3L9.500 13.500M22 3l-7 18-5.500-7.500L2 9z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/>'};
+const ic=n=>`<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
+const av=(u,s)=>`<div class="av" style="width:${s}px;height:${s}px;background-image:url(${u||""})"></div>`;
+let T="home",lastT="",SQ="",stT;const seen=new Set();
+
+document.querySelector("#sApp .hdr").innerHTML=`<h1><span class="gtext" style="font-size:30px">Love Guru</span></h1><button class="ib" onclick="igNotif()">${ic("heart")}<i id="ndot"></i></button><button class="ib" onclick="location.href='chats.html'">${ic("send")}</button>`;
+document.querySelector("#sApp .nav").innerHTML=`<button data-t="home" class="on" onclick="igTab('home')">${ic("home")}</button><button data-t="search" onclick="igTab('search')">${ic("search")}</button><button data-t="reels" onclick="igTab('reels')">${ic("reel")}</button><button onclick="location.href='chats.html'">${ic("chat")}<b class="nbadge" id="nbChats"></b></button><button onclick="location.href='me.html'">${ic("user")}</button>`;
+$("discFilters").style.display="none";
+
+window.igTab=t=>{T=t;document.querySelectorAll("#sApp .nav [data-t]").forEach(b=>b.classList.toggle("on",b.dataset.t===t));$("discFilters").style.display=t==="search"?"flex":"none";renderDeck()};
+window.igShare=()=>{navigator.share?navigator.share({title:"Love Guru 💘",url:location.href}).catch(()=>{}):toast("Link copy करा: "+location.href)};
+window.igChat=(id,m)=>m?location.href="chats.html?chat="+id:toast("💬 Message साठी आधी Match व्हा");
+const heartBtn=(p,c)=>{const l=myLikes.has(p.id);return`<button class="${l?"on":""}" onclick="${l?"unlikeUser":"likeUser"}('${p.id}')">${ic("heart")}</button>`};
+
+function post(p){
+  const l=myLikes.has(p.id),mt=l&&likedMe.has(p.id),c=compat(p),a=p.show_age===false?"":", "+ageOf(p.birth_date),on=onlineSet.has(p.id)&&p.show_online!==false;
+  return`<div class="post"><div class="ph" onclick="viewProfile('${p.id}')"><div class="ring">${av(p.photo,34)}</div><div style="flex:1;font-weight:600;font-size:14px">${e(p.name)}${a} ${vbadgeU(p)}<div style="font-weight:400;font-size:12px;color:var(--muted)">${e(p.city||"")}${on?" • 🟢":""}</div></div><button class="mini" onclick="event.stopPropagation();passed.add('${p.id}');renderDeck()">✕</button></div>
+  <div class="pimg" style="background-image:url(${p.photo||""})" ondblclick="likeUser('${p.id}')" onclick="viewProfile('${p.id}')"></div>
+  <div class="act">${heartBtn(p)}<button onclick="igChat('${p.id}',${mt})">${ic("chat")}</button><button onclick="igShare()">${ic("send")}</button>${c?`<span>💞 ${c}% match</span>`:""}</div>
+  <div class="cap"><b>${e(p.name)}</b> ${e(p.bio||"")}<br>${(p.interests||[]).slice(0,4).map(i=>`<em>#${e(i.replace(/^\S+\s/,""))}</em>`).join(" ")}</div></div>`;
+}
+function home(d,L){
+  d.innerHTML=`<div class="stories"><div class="sti" onclick="location.href='me.html'"><div class="ring seen">${av(prof&&prof.photo,62)}</div><small>तुमची story</small></div>`+
+   L.slice(0,20).map(p=>`<div class="sti" onclick="igStory('${p.id}')">${p.interests&&p.interests[0]?`<i class="note">${e(p.interests[0])}</i>`:""}<div class="ring ${seen.has(p.id)?"seen":""}">${av(p.photo,62)}</div><small>${e((p.name||"").split(" ")[0])}</small></div>`).join("")+`</div>`+
+   (L.length?L.map(post).join(""):`<div class="empty"><b>🌙</b>सध्या कोणतेही post नाही.</div>`);
+}
+function srch(d){
+  d.innerHTML=`<div class="sbx"><input id="sq" placeholder="नाव, शहर किंवा आवड शोधा" value="${e(SQ)}" oninput="SQ=this.value;igRes()"></div><div id="sres"></div>`;igRes();
+}
+window.igRes=()=>{const q=SQ.toLowerCase(),R=candidates().filter(p=>!q||((p.name||"")+" "+(p.city||"")+" "+(p.interests||[]).join(" ")).toLowerCase().includes(q));
+  $("sres").innerHTML=R.length?`<div class="g3">`+R.map(p=>`<div style="background-image:url(${p.photo||""})" onclick="viewProfile('${p.id}')"></div>`).join("")+`</div>`:`<div class="empty"><b>🔍</b>काही सापडले नाही</div>`};
+function reels(d,L){
+  d.innerHTML=`<div class="reels">`+(L.length?L.map(p=>{const mt=myLikes.has(p.id)&&likedMe.has(p.id);
+   return`<div class="reel" style="background-image:url(${p.photo||""})" ondblclick="likeUser('${p.id}')"><div class="rs"></div>
+   <div class="rr">${heartBtn(p)}<button onclick="igChat('${p.id}',${mt})">${ic("chat")}</button><button onclick="igShare()">${ic("send")}</button></div>
+   <div class="rb"><div style="display:flex;align-items:center;gap:8px" onclick="viewProfile('${p.id}')">${av(p.photo,34)}<b>${e(p.name)}${p.show_age===false?"":", "+ageOf(p.birth_date)}</b>${vbadgeU(p)}${myLikes.has(p.id)?"":`<button class="f" onclick="event.stopPropagation();likeUser('${p.id}')">Like</button>`}</div><p>${e(p.bio||"")}</p></div></div>`}).join(""):`<div class="empty"><b>🌙</b>Reels संपले</div>`)+`</div>`;
+}
+window.renderDeck=()=>{
+  const d=$("deck");
+  if(T==="search"&&$("sq")&&document.activeElement===$("sq")){igRes();return}
+  const sc=()=>T==="reels"?d.querySelector(".reels"):d,o=lastT===T&&sc(),s=o?o.scrollTop:0;
+  d.style.overflow=T==="reels"?"hidden":"auto";
+  (T==="home"?home:T==="search"?srch:reels)(d,candidates());
+  if(sc())sc().scrollTop=s;lastT=T;
+  const n=$("ndot");if(n)n.style.display=[...likedMe].some(i=>!myLikes.has(i))?"block":"none";
+};
+
+window.igStory=id=>{
+  const L=candidates().slice(0,20);let i=L.findIndex(x=>x.id===id);if(i<0)return;
+  let o=$("igSt");if(!o){o=document.createElement("div");o.id="igSt";document.body.appendChild(o)}
+  const go=k=>{clearTimeout(stT);i+=k;if(i<0)i=0;if(i>=L.length)return igStClose();
+    const p=L[i];seen.add(p.id);o.style.display="flex";
+    o.innerHTML=`<div class="sbar2"><i></i></div><div class="sh">${av(p.photo,34)}<b>${e(p.name)}</b><small>${e(p.city||"")}</small><button onclick="igStClose()">✕</button></div><div class="sbody" style="background-image:url(${p.photo||""})"><div class="l"></div><div class="r"></div></div><div class="sf"><button class="btn sm" id="sLk">❤️ Like</button><button class="btn sm ghost" id="sPf">Profile</button></div>`;
+    o.querySelector(".l").onclick=()=>go(-1);o.querySelector(".r").onclick=()=>go(1);
+    $("sLk").onclick=()=>likeUser(p.id);$("sPf").onclick=()=>{igStClose();viewProfile(p.id)};
+    stT=setTimeout(()=>go(1),5000)};
+  go(0);
+};
+window.igStClose=()=>{clearTimeout(stT);const o=$("igSt");if(o)o.style.display="none";renderDeck()};
+
+window.igNotif=async()=>{
+  await fetchProfiles([...likedMe]);
+  const L=[...likedMe].filter(i=>!blocked.has(i)&&pcache[i]);
+  openSheet(`<h3>Notifications</h3>`+(L.length?L.map(i=>{const p=pcache[i],m=myLikes.has(i);
+   return`<div class="nr" onclick="closeSheet();viewProfile('${i}')">${av(p.photo,44)}<div style="flex:1;font-size:14px"><b>${e(p.name)}</b> ${m?"सोबत तुमचा 💘 Match झाला":"ने तुम्हाला Like केले"}</div>${m?`<button class="btn sm" onclick="event.stopPropagation();location.href='chats.html?chat=${i}'">Message</button>`:`<button class="btn sm" onclick="event.stopPropagation();likeUser('${i}');closeSheet()">Like back</button>`}</div>`}).join(""):`<div class="empty">अजून काही नाही 💫</div>`));
+};
+})();
+
+</script>
+</body>
 </html>
